@@ -36,6 +36,8 @@ public class testone {
                bts[index]=(byte)ch;
                index++;
             }  
+            isr.close();
+            fis.close();
 		} catch (Exception e) {
 			return null;
 		}
