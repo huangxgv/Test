@@ -26,7 +26,12 @@ public class test3 {
 		int numInt=out.nextInt();
 		tArr=TreeLevel(tree,numInt);
 		for(int i=0;i<tArr.size();i++){
-			System.out.print(tArr.get(i).value);
+			if(i<tArr.size()-1){
+				System.out.print(tArr.get(i).value+"-");
+			}else{
+				System.out.print(tArr.get(i).value);
+			}
+				
 		}
 	}
 	static ArrayList<TNode> TreeLevel(TNode tree, int n){
