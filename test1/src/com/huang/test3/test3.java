@@ -66,4 +66,4 @@ class TNode  {
         	this.left=left;
         	this.right=right;
         }
-    }
+  }
