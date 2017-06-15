@@ -39,10 +39,8 @@ public class test3 {
 
 	/**
 	 * 
-	 * @param {tree}
-	 * 			tree 遍历树
-	 * @param {n}
-	 * 			n 树的第n层
+	 * @param {TNode} tree 遍历树
+	 * @param {int} n 树的第n层
 	 * @return
 	 */
 	static ArrayList<TNode> TreeLevel(TNode tree, int n) {

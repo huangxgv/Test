@@ -19,8 +19,7 @@ public class Testtwo {
 
 	/**
 	 * 
-	 * @param {num}
-	 *			num 原十进制数
+	 * @param {int} num 原十进制数
 	 * @return
 	 */
 	static String intToHex(int num) {
