@@ -18,10 +18,6 @@ public class Server extends ServerSocket {
 	private ServerSocket server;
 
 	private Socket client;
-
-//	private DataInputStream dis;
-//
-//	private FileOutputStream fos;
 	
 	private FileInputStream fis;
 
