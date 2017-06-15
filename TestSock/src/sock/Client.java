@@ -1,56 +1,62 @@
 package sock;
 
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.net.Socket;
+import java.util.Scanner;
 
 /**
  * 客户端
  */
 public class Client extends Socket {
 
-	private static final String SERVER_IP = "127.0.0.1";
-
-	private static final int SERVER_PORT = 2017;
+	private int SERVER_PORT;
 
 	private Socket client;
 
-	private FileInputStream fis;
+	private DataInputStream dis;
 
-	private DataOutputStream dos;
+	private FileOutputStream fos;
+	
+	public Client(String SERVER_IP,int SERVER_PORT) {
 
-	public Client() {
 		try {
 			try {
 				client = new Socket(SERVER_IP, SERVER_PORT);
-				//向服务端传送文件
-				File file = new File("D:/download/test.txt");
-				fis = new FileInputStream(file);
-				dos = new DataOutputStream(client.getOutputStream());
-
+				
+				dis = new DataInputStream(client.getInputStream());
 				//文件名和长度
-				dos.writeUTF(file.getName());
-				dos.flush();
-				dos.writeLong(file.length());
-				dos.flush();
+				String fileName = dis.readUTF();
+				long fileLength = dis.readLong();
+				fos = new FileOutputStream(new File("d:/" + fileName));
 
-				//传输文件
 				byte[] sendBytes = new byte[1024];
-				int length = 0;
-				while ((length = fis.read(sendBytes, 0, sendBytes.length)) > 0) {
-					dos.write(sendBytes, 0, length);
-					dos.flush();
+				int transLen = 0;
+				System.out.println("----开始接收文件<" + fileName + ">,文件大小为<" + fileLength + ">----");
+				while (true) {
+					int read = 0;
+					if ((read = dis.read(sendBytes)) == -1)
+						break;
+					transLen += read;
+					System.out.println("接收文件进度" + 100 * transLen / fileLength + "%...");
+					fos.write(sendBytes, 0, read);
+					fos.flush();
 				}
+				System.out.println("----接收文件<" + fileName + ">成功-------");
+				client.close();
+				
 			}
 			catch (Exception e) {
 				e.printStackTrace();
 			}
 			finally {
-				if (fis != null)
-					fis.close();
-				if (dos != null)
-					dos.close();
+				if (fos != null)
+					fos.close();
+				if (dis != null)
+					dis.close();
 				client.close();
 			}
 		}
@@ -58,8 +64,12 @@ public class Client extends Socket {
 			e.printStackTrace();
 		}
 	}
-
+	
 	public static void main(String[] args) throws Exception {
-		new Client();
+		System.out.print("请输入文件下载地址:");
+		Scanner out=new Scanner(System.in);
+		String url=out.nextLine();
+		String[] strArr=url.split(":");
+		new Client(strArr[0],Integer.parseInt(strArr[1]));
 	}
 }

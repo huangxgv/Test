@@ -1,7 +1,9 @@
 package sock;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -11,15 +13,20 @@ import java.net.Socket;
  */
 public class Server extends ServerSocket {
 
-	private static final int PORT = 2017;
+	private static final int PORT = 2016;
 
 	private ServerSocket server;
 
 	private Socket client;
 
-	private DataInputStream dis;
+//	private DataInputStream dis;
+//
+//	private FileOutputStream fos;
+	
+	private FileInputStream fis;
 
-	private FileOutputStream fos;
+	private DataOutputStream dos;
+
 
 	public Server() throws Exception {
 		try {
@@ -29,36 +36,34 @@ public class Server extends ServerSocket {
 				while (true) {
 					client = server.accept();
 
-					dis = new DataInputStream(client.getInputStream());
+					//向客户端传送文件
+					File file = new File("D:/download/test.txt");
+					fis = new FileInputStream(file);
+					dos = new DataOutputStream(client.getOutputStream());
+					
 					//文件名和长度
-					String fileName = dis.readUTF();
-					long fileLength = dis.readLong();
-					fos = new FileOutputStream(new File("d:/" + fileName));
+					dos.writeUTF(file.getName());
+					dos.flush();
+					dos.writeLong(file.length());
+					dos.flush();
 
+					//传输文件
 					byte[] sendBytes = new byte[1024];
-					int transLen = 0;
-					System.out.println("----开始接收文件<" + fileName + ">,文件大小为<" + fileLength + ">----");
-					while (true) {
-						int read = 0;
-						if ((read = dis.read(sendBytes)) == -1)
-							break;
-						transLen += read;
-						System.out.println("接收文件进度" + 100 * transLen / fileLength + "%...");
-						fos.write(sendBytes, 0, read);
-						fos.flush();
+					int length = 0;
+					while ((length = fis.read(sendBytes, 0, sendBytes.length)) > 0) {
+						dos.write(sendBytes, 0, length);
+						dos.flush();
 					}
-					System.out.println("----接收文件<" + fileName + ">成功-------");
-					client.close();
 				}
 			}
 			catch (Exception e) {
 				e.printStackTrace();
 			}
 			finally {
-				if (dis != null)
-					dis.close();
-				if (fos != null)
-					fos.close();
+				if (dos != null)
+					dos.close();
+				if (fis != null)
+					fis.close();
 				server.close();
 			}
 		}
