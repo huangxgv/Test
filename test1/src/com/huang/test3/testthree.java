@@ -6,10 +6,12 @@ import java.util.Scanner;
 /**
  * 根据输入层次按顺序返回二叉树该层树节点
  * 
- * @author huangxg@succez.com
- * @createdate 2017/6/14
+ * <p>Copyright: Copyright (c) 2017</p>
+ * <p>succez</p>
+ * @author huangxg
+ * @createdate 2017年6月19日
  */
-public class test3 {
+public class testthree {
 
 	public static void main(String[] args) {
 		//测试树
@@ -66,20 +68,5 @@ public class test3 {
 			}
 		}
 		return nodeArr;
-	}
-}
-
-class TNode {
-	String value;
-
-	TNode left, right;
-
-	TNode() {
-	}
-
-	TNode(String value, TNode left, TNode right) {
-		this.value = value;
-		this.left = left;
-		this.right = right;
 	}
 }
