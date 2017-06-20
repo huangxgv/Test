@@ -1,4 +1,4 @@
-package com.huang.test3;
+package com.huaang.Test;
 
 import static org.junit.Assert.assertArrayEquals;
 
@@ -6,12 +6,15 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.huang.test3.TNode;
+import com.huang.test3.TestThree;
+
 public class ThreeTest {
-	testthree tThree = null;
+	TestThree tThree = null;
 	@Before
 	public void setUp() throws Exception {
 		System.out.println("测试开始！");
-		tThree = new testthree();
+		tThree = new TestThree();
 		System.out.println("testthree对象已经被实例化！");
 	}
 
@@ -33,11 +36,11 @@ public class ThreeTest {
 		TNode tree2 = new TNode("C", tree5, tree6);
 		TNode tree1 = new TNode("B", tree3, tree4);
 		TNode tree = new TNode("A", tree1, tree2);
-		assertArrayEquals(new String[] { "A" }, tThree.TreeLevel(tree, 1));
-		assertArrayEquals(new String[] { "B", "C" }, tThree.TreeLevel(tree, 2));
-		assertArrayEquals(new String[] { "D", "E", "F", "G" }, tThree.TreeLevel(tree, 3));
-		assertArrayEquals(new String[] { "H", "I" }, tThree.TreeLevel(tree, 4));
-		assertArrayEquals(new String[] {}, tThree.TreeLevel(tree, 5));
+		assertArrayEquals(new String[] { "A" }, tThree.treeLevel(tree, 1));
+		assertArrayEquals(new String[] { "B", "C" }, tThree.treeLevel(tree, 2));
+		assertArrayEquals(new String[] { "D", "E", "F", "G" }, tThree.treeLevel(tree, 3));
+		assertArrayEquals(new String[] { "H", "I" }, tThree.treeLevel(tree, 4));
+		assertArrayEquals(new String[] {}, tThree.treeLevel(tree, 5));
 	}
 
 }

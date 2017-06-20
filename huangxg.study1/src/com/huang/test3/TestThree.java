@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * @author huangxg
  * @createdate 2017年6月19日
  */
-public class testthree {
+public class TestThree {
 
 	/**
 	 * 
@@ -18,7 +18,7 @@ public class testthree {
 	 * @param {int} n 树的第n层,n>0的整数
 	 * @return
 	 */
-	String[] TreeLevel(TNode tree, int n) {
+	public String[] treeLevel(TNode tree, int n) {
 		ArrayList<TNode> nodeArr = new ArrayList<TNode>();
 		ArrayList<TNode> nodeArrS = new ArrayList<TNode>();
 		int strIndex = 0;

@@ -7,7 +7,7 @@ public class Testtwo {
 	 * @author huangxg@succez.com
 	 * @createdate 2017/6/14
 	 */
-	String intToHex(int num) {
+	public String intToHex(int num) {
 		String[] charnum = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F" };
 		String hex1 = "";
 		String plusMinusFlag = "";

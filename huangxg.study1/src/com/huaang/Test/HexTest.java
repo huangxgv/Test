@@ -1,10 +1,12 @@
-package com.huang.test2;
+package com.huaang.Test;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import com.huang.test2.Testtwo;
 
 public class HexTest {
 	Testtwo testtwo = null;

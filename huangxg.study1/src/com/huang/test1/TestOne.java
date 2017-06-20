@@ -11,7 +11,7 @@ import java.io.InputStreamReader;
  * @author huangxg@succez.com
  * @createdate 2017/6/14
  */
-public class testone {
+public class TestOne {
 
 	/**
 	 * 用byte数组替换读取到的文件内容
@@ -19,7 +19,7 @@ public class testone {
 	 * @param fobj
 	 * @return
 	 */
-	byte[] file2buf(File fobj) {
+	public byte[] file2buf(File fobj) {
 		if (!fobj.exists()) {
 			return null;
 		}

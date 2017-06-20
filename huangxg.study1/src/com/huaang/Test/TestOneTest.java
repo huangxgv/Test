@@ -1,4 +1,4 @@
-package com.huang.test1;
+package com.huaang.Test;
 
 import static org.junit.Assert.assertArrayEquals;
 
@@ -8,13 +8,15 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class testoneTest {
-	testone tOne = null;
+import com.huang.test1.TestOne;
+
+public class TestOneTest {
+	TestOne tOne = null;
 
 	@Before
 	public void setUp() throws Exception {
 		System.out.println("测试开始！");
-		tOne = new testone();
+		tOne = new TestOne();
 		System.out.println("testone的对象已被实例化！");
 	}
 
