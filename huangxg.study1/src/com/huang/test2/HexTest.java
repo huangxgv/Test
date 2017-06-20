@@ -8,6 +8,7 @@ import org.junit.Test;
 
 public class HexTest {
 	Testtwo testtwo = null;
+
 	@Before
 	public void setUp() throws Exception {
 		System.out.println("测试开始！");
