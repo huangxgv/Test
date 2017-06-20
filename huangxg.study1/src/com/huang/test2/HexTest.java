@@ -25,19 +25,19 @@ public class HexTest {
 
 	@Test
 	public void test() {
-		assertEquals("-F", testtwo.intToHex(-15));
+		assertEquals(Integer.toHexString(-15), testtwo.intToHex(-15));
 		System.out.println("-15测试完毕");
-		assertEquals("-10", testtwo.intToHex(-16));
+		assertEquals(Integer.toHexString(-10), testtwo.intToHex(-16));
 		System.out.println("-16测试完毕");
-		assertEquals("-80000000", testtwo.intToHex(Integer.MIN_VALUE));
+		assertEquals(Integer.toHexString(Integer.MIN_VALUE), testtwo.intToHex(Integer.MIN_VALUE));
 		System.out.println("Integer.MIN_VALUE测试完毕");
-		assertEquals("0", testtwo.intToHex(0));
+		assertEquals(Integer.toHexString(0), testtwo.intToHex(0));
 		System.out.println("0测试完毕");
-		assertEquals("F", testtwo.intToHex(15));
+		assertEquals(Integer.toHexString(15), testtwo.intToHex(15));
 		System.out.println("15测试完毕");
-		assertEquals("10", testtwo.intToHex(16));
+		assertEquals(Integer.toHexString(16), testtwo.intToHex(16));
 		System.out.println("16测试完毕");
-		assertEquals("7FFFFFFF", testtwo.intToHex(Integer.MAX_VALUE));
+		assertEquals(Integer.toHexString(Integer.MAX_VALUE), testtwo.intToHex(Integer.MAX_VALUE));
 		System.out.println("Integer.MAX_VALUE测试完毕");
 	}
 

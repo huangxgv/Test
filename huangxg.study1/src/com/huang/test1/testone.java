@@ -13,30 +13,21 @@ import java.io.InputStreamReader;
  */
 public class testone {
 
-	public static void main(String[] args) {
-		File file = new File("D:/workSpace/test1", "fileread.txt");
-		byte[] byts = file2buf(file);
-		for (int i = 0; i < byts.length; i++) {
-			System.out.print(byts[i] + "  ");
-			if ((i + 1) % 5 == 0) {
-				System.out.println();
-			}
-		}
-	}
-
 	/**
 	 * 用byte数组替换读取到的文件内容
 	 * 
 	 * @param fobj
 	 * @return
 	 */
-
-	static byte[] file2buf(File fobj) {
+	byte[] file2buf(File fobj) {
+		if (!fobj.exists()) {
+			return null;
+		}
 		FileInputStream fis = null;
 		InputStreamReader isr = null;
 		//利用缓存加快读取速度
 		BufferedReader buf = null;
-		String context = null;
+		String context = "";
 		/**
 		 * 每次读取一行，将所有读取的String内容连接起来
 		 * 将最终字符串一次转换为byte数组
@@ -69,12 +60,6 @@ public class testone {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-		//通过字符串设置数组长度节约资源空间还不会造成数组脚标越界
-		byte[] btyArr = new byte[context.length()];
-		if (btyArr.length == 0) {
-			return null;
-		}
-		btyArr = context.getBytes();
-		return btyArr;
+		return context.getBytes();
 	}
 }
