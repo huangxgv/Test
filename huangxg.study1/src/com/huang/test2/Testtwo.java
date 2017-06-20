@@ -25,6 +25,17 @@ public class Testtwo {
 	static String intToHex(int num) {
 		String[] charnum = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F" };
 		String hex1 = "";
+		String plusMinusFlag = "";
+		if (num < 0) {
+			/**
+			 * 解决最小int值-2147483648的绝对值超出int上限
+			 */
+			if (num == Integer.MIN_VALUE) {
+				return "-80000000";
+			}
+			plusMinusFlag = "-";
+			num = Math.abs(num);
+		}
 		/**
 		 * 解决num为0时，while不循环导致程序不能输出的错误
 		 */
@@ -40,6 +51,6 @@ public class Testtwo {
 		for (int i = 0; i < hex1.length(); i++) {
 			hex[hex1.length() - 1 - i] = hex2[i];
 		}
-		return new String(hex);
+		return plusMinusFlag + new String(hex);
 	}
 }

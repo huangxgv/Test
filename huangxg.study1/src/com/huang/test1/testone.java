@@ -3,7 +3,6 @@ package com.huang.test1;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 
 /**
@@ -31,6 +30,7 @@ public class testone {
 	 * @param fobj
 	 * @return
 	 */
+
 	static byte[] file2buf(File fobj) {
 		FileInputStream fis = null;
 		InputStreamReader isr = null;
