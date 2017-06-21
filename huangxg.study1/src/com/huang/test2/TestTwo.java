@@ -10,13 +10,17 @@ package com.huang.test2;
  */
 public class TestTwo {
 	/**
+	 * 20170621 huangxg
+	 * 修改字符串的拼接带来的内存浪费问题
 	 * 
 	 * @param num
-	 * @return
+	 * @return num=0,直接返回"0"，num=Integer.MIN_VALUE,直接返回"-80000000"
 	 */
 	public String intToHex(int num) {
 		char[] charnum = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
-		String plusMinusFlag = "";
+		char plusMinusFlag = ' ';
+		//取0和取1都可以的情况下，取与1可避免1位数的循环
+		int len = 1;
 		if (num < 0) {
 			/**
 			 * 解决最小int值-2147483648的绝对值超出int上限
@@ -24,7 +28,8 @@ public class TestTwo {
 			if (num == Integer.MIN_VALUE) {
 				return "-80000000";
 			}
-			plusMinusFlag = "-";
+			len++;
+			plusMinusFlag = '-';
 			num = Math.abs(num);
 		}
 		/**
@@ -32,19 +37,18 @@ public class TestTwo {
 		 */
 		if (num == 0)
 			return "0";
-		//取0和取1都可以的情况下，取与1可避免1位数的循环
-		int len = 1;
 		int num1 = num;
 		while (num1 / 16 != 0) {
 			num1 = num1 / 16;
 			len++;
 		}
 		char[] hex = new char[len];
+		hex[0] = plusMinusFlag;
 		while (num != 0) {
 			len--;
 			hex[len] = charnum[num % 16];
 			num = num / 16;
 		}
-		return plusMinusFlag + new String(hex);
+		return new String(hex);
 	}
 }
