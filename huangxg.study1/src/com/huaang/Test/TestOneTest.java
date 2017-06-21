@@ -1,8 +1,10 @@
 package com.huaang.Test;
 
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 
 import org.junit.After;
 import org.junit.Before;
@@ -22,31 +24,44 @@ public class TestOneTest {
 	}
 
 	@Test
-	public void test() {
+	public void txtTest() {
+		try {
+			File testFile1 = new File("D:/succezIDE/workspace/huangxg.devstudy/huangxg.study1", "chinese.txt");
+			assertEquals(testFile1.length(), tOne.file2buf(testFile1).length);
+			File testFile2 = new File("D:/succezIDE/workspace/huangxg.devstudy/huangxg.study1", "english.txt");
+			assertArrayEquals("abcdefghijklmnopqrstuvwxyz".getBytes(), tOne.file2buf(testFile2));
+			File testFile3 = new File("D:/succezIDE/workspace/huangxg.devstudy/huangxg.study1", "null.txt");
+			assertArrayEquals("".getBytes(), tOne.file2buf(testFile3));
+			File testFile4 = new File("D:/succezIDE/workspace/huangxg.devstudy/huangxg.study1", "number.txt");
+			assertArrayEquals("1234567890".getBytes(), tOne.file2buf(testFile4));
+			File testFile5 = new File("D:/succezIDE/workspace/huangxg.devstudy/huangxg.study1", "sign.txt");
+			assertArrayEquals("!@#$%^&*()-_=+\":'?/\\,.><".getBytes(), tOne.file2buf(testFile5));
+			File testFile6 = new File("D:/succezIDE/workspace/huangxg.devstudy/huangxg.study1", "notExit.txt");
+			assertArrayEquals(null, tOne.file2buf(testFile6));
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
 
-		File testFile1 = new File("D:/succezIDE/workspace/huangxg.devstudy/huangxg.study1", "chinese.txt");
-		assertArrayEquals("我是一个用于进行读练习的写文件".getBytes(), tOne.file2buf(testFile1));
-		System.out.println("读取中文转byte数组测试完毕");
+	@Test
+	public void binaryTest() {
 
-		File testFile2 = new File("D:/succezIDE/workspace/huangxg.devstudy/huangxg.study1", "english.txt");
-		assertArrayEquals("abcdefghijklmnopqrstuvwxyz".getBytes(), tOne.file2buf(testFile2));
-		System.out.println("读取英文转byte数组测试完毕");
+	}
 
-		File testFile3 = new File("D:/succezIDE/workspace/huangxg.devstudy/huangxg.study1", "null.txt");
-		assertArrayEquals("".getBytes(), tOne.file2buf(testFile3));
-		System.out.println("读取空文件测试完毕");
+	@Test
+	public void mediaTest() {
+		try {
+			File testFile1 = new File("D:/succezIDE/workspace/huangxg.devstudy/huangxg.study1", "music.mp3");
+			assertEquals("测试音乐文件", testFile1.length(), tOne.file2buf(testFile1).length);
+			File testFile2 = new File("D:/succezIDE/workspace/huangxg.devstudy/huangxg.study1", "pic.jpg");
+			assertEquals("测试图片文件", testFile1.length(), tOne.file2buf(testFile1).length);
 
-		File testFile4 = new File("D:/succezIDE/workspace/huangxg.devstudy/huangxg.study1", "number.txt");
-		assertArrayEquals("1234567890".getBytes(), tOne.file2buf(testFile4));
-		System.out.println("读取数字转byte数组测试完毕");
-
-		File testFile5 = new File("D:/succezIDE/workspace/huangxg.devstudy/huangxg.study1", "sign.txt");
-		assertArrayEquals("!@#$%^&*()-_=+\":'?/\\,.><".getBytes(), tOne.file2buf(testFile5));
-		System.out.println("读取标点符号转byte数组测试完毕");
-
-		File testFile6 = new File("D:/succezIDE/workspace/huangxg.devstudy/huangxg.study1", "notExit.txt");
-		assertArrayEquals(null, tOne.file2buf(testFile6));
-		System.out.println("读取文件失败测试完毕");
+		}
+		catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
