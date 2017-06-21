@@ -11,20 +11,14 @@ import org.junit.Test;
 import com.huang.test1.TestOne;
 
 public class TestOneTest {
-	TestOne tOne = null;
+	TestOne tOne = new TestOne();
 
 	@Before
 	public void setUp() throws Exception {
-		System.out.println("测试开始！");
-		tOne = new TestOne();
-		System.out.println("testone的对象已被实例化！");
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		System.out.println("测试结束！");
-		tOne = null;
-		System.out.println("testone对象已被销毁！");
 	}
 
 	@Test

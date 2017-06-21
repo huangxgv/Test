@@ -10,19 +10,14 @@ import com.huang.test3.TNode;
 import com.huang.test3.TestThree;
 
 public class ThreeTest {
-	TestThree tThree = null;
+	TestThree tThree = new TestThree();
+
 	@Before
 	public void setUp() throws Exception {
-		System.out.println("测试开始！");
-		tThree = new TestThree();
-		System.out.println("testthree对象已经被实例化！");
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		System.out.println("测试结束！");
-		tThree = null;
-		System.out.println("testthree对象已经被销毁！");
 	}
 
 	@Test
