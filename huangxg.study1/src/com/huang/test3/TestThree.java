@@ -1,7 +1,5 @@
 package com.huang.test3;
 
-import java.util.ArrayList;
-
 /**
  * 根据输入层次按顺序返回二叉树该层树节点
  * 
@@ -16,36 +14,26 @@ public class TestThree {
 	 * 
 	 * @param {TNode} tree 遍历树
 	 * @param {int} n 树的第n层,n>0的整数
-	 * @return
+	 * @return 返回处理后的字符串，如"A","C-D"
 	 */
-	public String[] treeLevel(TNode tree, int n) {
-		ArrayList<TNode> nodeArr = new ArrayList<TNode>();
-		ArrayList<TNode> nodeArrS = new ArrayList<TNode>();
-		int strIndex = 0;
-		/**
-		 * 当n=1，直接返回根节点
-		 */
-		nodeArr.add(tree);
-		for (int i = 1; i < n; i++) {
-			//清除nodeArrS里面原有的节点
-			nodeArrS.clear();
-			nodeArrS.addAll(nodeArr);
-			nodeArr.clear();
-			/**
-			 * 从根向下查找left与right子节点，得到left与right子节点再进行下一层节点的查找
-			 */
-			for (int j = 0; j < nodeArrS.size(); j++) {
-				if (nodeArrS.get(j).left != null)
-					nodeArr.add(nodeArrS.get(j).left);
-				if (nodeArrS.get(j).right != null)
-					nodeArr.add(nodeArrS.get(j).right);
-			}
+	public String treeLevel(TNode tree, int treeLvl) {
+		String resultValue = treeString(tree, treeLvl);
+		return "".equals(resultValue) ? "" : resultValue.substring(0, resultValue.length() - 1);
+	}
+
+	/**
+	 * 
+	 * @param tree
+	 * @param treeLvl
+	 * @return 返回节点值+"-"拼接，如"A-","C-D-"
+	 */
+	String treeString(TNode tree, int treeLvl) {
+		if (treeLvl > 1 && tree != null) {
+			int parentLvl = treeLvl - 1;
+			return treeString(tree.left, parentLvl) + treeString(tree.right, parentLvl);
 		}
-		String[] resultStringArr = new String[nodeArr.size()];
-		for (TNode tNode : nodeArr) {
-			resultStringArr[strIndex] = tNode.value;
-			strIndex++;
+		else {
+			return tree == null ? "" : tree.value + '-';
 		}
-		return resultStringArr;
 	}
 }
