@@ -17,23 +17,28 @@ public class TestThree {
 	 * @return 返回处理后的字符串，如"A","C-D"
 	 */
 	public String treeLevel(TNode tree, int treeLvl) {
-		String resultValue = treeString(tree, treeLvl);
-		return "".equals(resultValue) ? "" : resultValue.substring(0, resultValue.length() - 1);
+		//空树和1层以下的都不存在节点
+		if (tree == null || treeLvl < 1) {
+			return "";
+		}
+		StringBuilder resultStr = new StringBuilder();
+		treeString(tree, treeLvl, resultStr);
+		return "".equals(resultStr) ? "" : resultStr.substring(0, resultStr.length() - 1);
 	}
 
 	/**
 	 * 
 	 * @param tree
 	 * @param treeLvl
-	 * @return 返回节点值+"-"拼接，如"A-","C-D-"
+	 * @return 返回节点值+"-"拼接，如"A-","C-D-",tree=null时返回""
 	 */
-	String treeString(TNode tree, int treeLvl) {
+	void treeString(TNode tree, int treeLvl, StringBuilder resultStr) {
 		if (treeLvl > 1 && tree != null) {
-			int parentLvl = treeLvl - 1;
-			return treeString(tree.left, parentLvl) + treeString(tree.right, parentLvl);
+			treeString(tree.left, --treeLvl, resultStr);
+			treeString(tree.right, --treeLvl, resultStr);
 		}
 		else {
-			return tree == null ? "" : tree.value + '-';
+			resultStr.append(tree == null ? "" : tree.value+'-');
 		}
 	}
 }
