@@ -20,9 +20,12 @@ public class TestOne {
 	 * @return
 	 * @throws FileNotFoundException 
 	 */
-	public byte[] file2buf(File file) throws FileNotFoundException {
+	@SuppressWarnings("unused")
+	public byte[] file2buf(File file) throws FileNotFoundException, NullPointerException {
 		if (!file.exists() || file.isDirectory())
 			throw new FileNotFoundException();
+		if (file == null)
+			throw new NullPointerException();
 		long fileSize = file.length();
 		if (fileSize > Integer.MAX_VALUE) {
 			System.out.println("file too big...");
@@ -34,12 +37,13 @@ public class TestOne {
 		int numRead = 0;
 		try {
 			int length = buffer.length;
-			while (offset < buffer.length && (numRead = fi.read(buffer, offset, length - offset)) >= 0) {
+			while (offset < length
+					&& (numRead = fi.read(buffer, offset, length - offset > 4096 ? 4096 : length - offset)) >= 0) {
 				offset += numRead;
-				// 确保所有数据均被读取  
-				if (offset != buffer.length) {
-					throw new IOException("Could not completely read file " + file.getName());
-				}
+			}
+			// 确保所有数据均被读取  
+			if (offset != length) {
+				throw new IOException("Could not completely read file " + file.getName());
 			}
 		}
 		catch (IOException e) {

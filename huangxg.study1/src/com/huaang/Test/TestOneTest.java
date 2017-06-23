@@ -1,10 +1,11 @@
 package com.huaang.Test;
 
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import org.junit.After;
 import org.junit.Before;
@@ -23,21 +24,44 @@ public class TestOneTest {
 	public void tearDown() throws Exception {
 	}
 
+	private byte[] mediaFileRead(File file) throws FileNotFoundException {
+		if (!file.exists() || file.isDirectory() || file == null)
+			throw new FileNotFoundException();
+		long fileSize = file.length();
+		FileInputStream fi = new FileInputStream(file);
+		byte[] buffer = new byte[(int) fileSize];
+		int offset = 0;
+		int numRead = 0;
+		try {
+			int length = buffer.length;
+			while (offset < length
+					&& (numRead = fi.read(buffer, offset, length - offset > 8 ? 8 : length - offset)) >= 0) {
+				offset += numRead;
+			}
+		}
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally {
+			try {
+				fi.close();
+			}
+			catch (IOException e) {
+			}
+		}
+		return buffer;
+	}
+
+	private String txtRead(File file) {
+		return null;
+	}
+
 	@Test
 	public void txtTest() {
 		try {
 			File testFile1 = new File("D:/succezIDE/workspace/huangxg.devstudy/huangxg.study1", "chinese.txt");
-			assertEquals(testFile1.length(), tOne.file2buf(testFile1).length);
-			File testFile2 = new File("D:/succezIDE/workspace/huangxg.devstudy/huangxg.study1", "english.txt");
-			assertArrayEquals("abcdefghijklmnopqrstuvwxyz".getBytes(), tOne.file2buf(testFile2));
-			File testFile3 = new File("D:/succezIDE/workspace/huangxg.devstudy/huangxg.study1", "null.txt");
-			assertArrayEquals("".getBytes(), tOne.file2buf(testFile3));
-			File testFile4 = new File("D:/succezIDE/workspace/huangxg.devstudy/huangxg.study1", "number.txt");
-			assertArrayEquals("1234567890".getBytes(), tOne.file2buf(testFile4));
-			File testFile5 = new File("D:/succezIDE/workspace/huangxg.devstudy/huangxg.study1", "sign.txt");
-			assertArrayEquals("!@#$%^&*()-_=+\":'?/\\,.><".getBytes(), tOne.file2buf(testFile5));
-			File testFile6 = new File("D:/succezIDE/workspace/huangxg.devstudy/huangxg.study1", "notExit.txt");
-			assertArrayEquals(null, tOne.file2buf(testFile6));
+
 		}
 		catch (Exception e) {
 			// TODO: handle exception
@@ -45,18 +69,21 @@ public class TestOneTest {
 	}
 
 	@Test
-	public void binaryTest() {
-
-	}
-
-	@Test
 	public void mediaTest() {
 		try {
 			File testFile1 = new File("D:/succezIDE/workspace/huangxg.devstudy/huangxg.study1", "music.mp3");
-			assertEquals("测试音乐文件", testFile1.length(), tOne.file2buf(testFile1).length);
-			File testFile2 = new File("D:/succezIDE/workspace/huangxg.devstudy/huangxg.study1", "pic.jpg");
-			assertEquals("测试图片文件", testFile1.length(), tOne.file2buf(testFile1).length);
+			long length1 = testFile1.length();
+			assertEquals("测试音乐文件", length1, tOne.file2buf(testFile1).length);
+			byte[] bs1 = new byte[(int) length1];
+			bs1 = mediaFileRead(testFile1);
+			bs1.equals(tOne.file2buf(testFile1));
 
+			File testFile2 = new File("D:/succezIDE/workspace/huangxg.devstudy/huangxg.study1", "pic.jpg");
+			long length2 = testFile2.length();
+			assertEquals("测试图片文件", testFile2.length(), tOne.file2buf(testFile2).length);
+			byte[] bs2 = new byte[(int) length2];
+			bs2 = mediaFileRead(testFile2);
+			bs2.equals(tOne.file2buf(testFile2));
 		}
 		catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -64,4 +91,14 @@ public class TestOneTest {
 		}
 	}
 
+	@Test(expected = NullPointerException.class)
+	public void expectNullPointerTest() throws NullPointerException, FileNotFoundException {
+		tOne.file2buf(null);
+	}
+
+	@Test(expected = FileNotFoundException.class)
+	public void expectNotFoundTest() throws NullPointerException, FileNotFoundException {
+		File testFile1 = new File("D:/succezIDE/workspace/huangxg.devstudy/huangxg.study1", "notExit.txt");
+		tOne.file2buf(testFile1);
+	}
 }
