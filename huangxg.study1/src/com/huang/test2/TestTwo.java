@@ -13,11 +13,17 @@ public class TestTwo {
 			'F' };
 
 	/**
-	 * 20170621 huangxg
-	 * 修改字符串的拼接带来的内存浪费问题
+	 * 实现获取指定的整数对应的十六进制字符串
 	 * 
+	 * <pre>
+	 * intToHex(0) == "0"
+	 * intToHex(-1) == "-1"
+	 * intToHex(10) == "A"
+	 * intToHex(Integer.MIN_VALUE) == "-80000000"
+	 * 
+	 * </pre>
 	 * @param num
-	 * @return num=0,直接返回"0"，num=Integer.MIN_VALUE,直接返回"-80000000"
+	 * @return
 	 */
 	public String intToHex(int num) {
 		/**
@@ -26,9 +32,6 @@ public class TestTwo {
 		if (num == Integer.MIN_VALUE) {
 			return "-80000000";
 		}
-		/**
-		 * 解决num为0时，while不循环导致程序不能输出的错误
-		 */
 		if (num == 0)
 			return "0";
 		char plusMinusFlag = ' ';
