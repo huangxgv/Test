@@ -16,16 +16,17 @@ public class TestOne {
 	/**
 	 * 用byte数组替换读取到的文件内容
 	 * 
-	 * @param file
-	 * @return
-	 * @throws FileNotFoundException 
+	 * @param file 读取的文件对象
+	 * @return 返回文件内容转换成的byte数组
+	 * @throws FileNotFoundException 如果文件不存在或者传入的是目录
+	 * @throws NullPointerException  如果传入的是null
 	 */
-	@SuppressWarnings("unused")
+
 	public byte[] file2buf(File file) throws FileNotFoundException, NullPointerException {
-		if (!file.exists() || file.isDirectory())
-			throw new FileNotFoundException();
 		if (file == null)
 			throw new NullPointerException();
+		if (!file.exists() || file.isDirectory())
+			throw new FileNotFoundException();
 		long fileSize = file.length();
 		if (fileSize > Integer.MAX_VALUE) {
 			System.out.println("file too big...");
@@ -41,13 +42,11 @@ public class TestOne {
 					&& (numRead = fi.read(buffer, offset, length - offset > 4096 ? 4096 : length - offset)) >= 0) {
 				offset += numRead;
 			}
-			// 确保所有数据均被读取  
 			if (offset != length) {
 				throw new IOException("Could not completely read file " + file.getName());
 			}
 		}
 		catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		finally {

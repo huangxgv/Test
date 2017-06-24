@@ -9,7 +9,7 @@ import org.junit.Test;
 import com.huang.test2.TestTwo;
 
 public class HexTest {
-	TestTwo testtwo = new TestTwo();
+	TestTwo testTwo = new TestTwo();
 
 	@Before
 	public void setUp() throws Exception {
@@ -21,15 +21,15 @@ public class HexTest {
 
 	@Test
 	public void test() {
-		assertEquals("-15测试", "-F", testtwo.intToHex(-15));
-		assertEquals("-9测试", "-9", testtwo.intToHex(-9));
-		assertEquals("-16测试", "-10", testtwo.intToHex(-16));
-		assertEquals("Integer.MIN_VALUE测试", "-80000000", testtwo.intToHex(Integer.MIN_VALUE));
-		assertEquals("0测试", "0", testtwo.intToHex(0));
-		assertEquals("15测试", "F", testtwo.intToHex(15));
-		assertEquals("9测试", "9", testtwo.intToHex(9));
-		assertEquals("16测试", "10", testtwo.intToHex(16));
-		assertEquals("Integer.MAX_VALUE测试", "7FFFFFFF", testtwo.intToHex(Integer.MAX_VALUE));
+		assertEquals("-F", testTwo.intToHex(-15));
+		assertEquals("-9", testTwo.intToHex(-9));
+		assertEquals("-10", testTwo.intToHex(-16));
+		assertEquals("-80000000", testTwo.intToHex(Integer.MIN_VALUE));
+		assertEquals("0", testTwo.intToHex(0));
+		assertEquals("F", testTwo.intToHex(15));
+		assertEquals("9", testTwo.intToHex(9));
+		assertEquals("10", testTwo.intToHex(16));
+		assertEquals("7FFFFFFF", testTwo.intToHex(Integer.MAX_VALUE));
 	}
 
 }

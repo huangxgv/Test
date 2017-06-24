@@ -16,11 +16,11 @@ public class TestTwo {
 	 * 实现获取指定的整数对应的十六进制字符串
 	 * 
 	 * <pre>
-	 * intToHex(0) == "0"
-	 * intToHex(-1) == "-1"
-	 * intToHex(10) == "A"
-	 * intToHex(Integer.MIN_VALUE) == "-80000000"
-	 * 
+	 * intToHex(0)="0"
+	 * intToHex(-1)="-1"
+	 * intToHex(15)="F"
+	 * intToHex(Integer.MIN_VALUE)="-80000000"
+	 * intToHex(Integer.MAX_VALUE)="7FFFFFFF"
 	 * </pre>
 	 * @param num
 	 * @return

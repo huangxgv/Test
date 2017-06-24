@@ -73,14 +73,14 @@ public class TestOneTest {
 		try {
 			File testFile1 = new File("D:/succezIDE/workspace/huangxg.devstudy/huangxg.study1", "music.mp3");
 			long length1 = testFile1.length();
-			assertEquals("测试音乐文件", length1, tOne.file2buf(testFile1).length);
+			assertEquals(length1, tOne.file2buf(testFile1).length);
 			byte[] bs1 = new byte[(int) length1];
 			bs1 = mediaFileRead(testFile1);
 			bs1.equals(tOne.file2buf(testFile1));
 
 			File testFile2 = new File("D:/succezIDE/workspace/huangxg.devstudy/huangxg.study1", "pic.jpg");
 			long length2 = testFile2.length();
-			assertEquals("测试图片文件", testFile2.length(), tOne.file2buf(testFile2).length);
+			assertEquals(testFile2.length(), tOne.file2buf(testFile2).length);
 			byte[] bs2 = new byte[(int) length2];
 			bs2 = mediaFileRead(testFile2);
 			bs2.equals(tOne.file2buf(testFile2));
