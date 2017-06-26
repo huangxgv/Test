@@ -2,7 +2,6 @@ package com.huaang.Test;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 import org.junit.After;
@@ -32,10 +31,6 @@ public class ThreeTest {
 	private TNode createTree() {
 		int nodes = new Random().nextInt(25) + 1;
 		TNode[] tNodeArr = new TNode[nodes];
-		System.out.println(nodes);
-		//树的层数
-		int lvlTreeNumber = 1;
-		//每一层包含的节点数
 		//当前处理节点的索引值
 		int doNodeIndex = 0;
 		//当前分配节点的索引值
@@ -54,33 +49,33 @@ public class ThreeTest {
 		return tNodeArr[0];
 	}
 
-	//获取层节点字符串
 	String treeString(TNode tree, int n) {
-		ArrayList<TNode> nodeArr = new ArrayList<TNode>();
-		ArrayList<TNode> nodeArrS = new ArrayList<TNode>();
-		nodeArr.add(tree);
-		for (int i = 1; i < n; i++) {
-			nodeArrS.clear();
-			nodeArrS.addAll(nodeArr);
-			nodeArr.clear();
+		if (n <= 0 || tree == null) {
+			return "";
+		}
+		StringBuffer str = new StringBuffer();
+		treeQuery(tree, n, str);
+		return str.toString();
+	}
 
-			for (int j = 0; j < nodeArrS.size(); j++) {
-				if (nodeArrS.get(j).getLeft() != null)
-					nodeArr.add(nodeArrS.get(j).getLeft());
-				if (nodeArrS.get(j).getRight() != null)
-					nodeArr.add(nodeArrS.get(j).getRight());
+	public void treeQuery(TNode tree, int n, StringBuffer str) {
+		if (n <= 0 || tree == null) {
+			return;
+		}
+		if (n == 1) {
+			if (str.length() > 0) {
+				str.append('-');
 			}
+			str.append(tree.getValue());
 		}
-		String resultStringArr = new String();
-		for (TNode tNode : nodeArr) {
-			resultStringArr += tNode.getValue()==""?"": tNode.getValue()+ '-';
-		}
-		return resultStringArr.length() > 0 ? resultStringArr.substring(0, resultStringArr.length() - 1) : "";
+		treeQuery(tree.getLeft(), n - 1, str);
+		treeQuery(tree.getRight(), n - 1, str);
 	}
 
 	@Test
 	public void TreeTreeTest() {
 		TNode tree = createTree();
+		assertEquals(treeString(tree, -1), tThree.treeLevel(tree, -1));
 		assertEquals(treeString(tree, 1), tThree.treeLevel(tree, 1));
 		assertEquals(treeString(tree, 2), tThree.treeLevel(tree, 2));
 		assertEquals(treeString(tree, 3), tThree.treeLevel(tree, 3));
