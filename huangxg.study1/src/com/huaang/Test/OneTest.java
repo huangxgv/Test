@@ -13,7 +13,7 @@ import org.junit.Test;
 
 import com.huang.test1.TestOne;
 
-public class TestOneTest {
+public class OneTest {
 	TestOne tOne = new TestOne();
 
 	@Before
