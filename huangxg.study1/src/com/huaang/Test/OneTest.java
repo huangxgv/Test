@@ -2,10 +2,16 @@ package com.huaang.Test;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.Arrays;
 
 import org.junit.After;
 import org.junit.Before;
@@ -16,6 +22,7 @@ import com.huang.test1.TestOne;
 public class OneTest {
 	TestOne tOne = new TestOne();
 
+	String[] ENCODING = { "UTF-8", "GBK", "UNICODE" };
 	@Before
 	public void setUp() throws Exception {
 	}
@@ -24,69 +31,80 @@ public class OneTest {
 	public void tearDown() throws Exception {
 	}
 
-	private byte[] mediaFileRead(File file) throws FileNotFoundException {
-		if (!file.exists() || file.isDirectory() || file == null)
-			throw new FileNotFoundException();
-		long fileSize = file.length();
-		FileInputStream fi = new FileInputStream(file);
-		byte[] buffer = new byte[(int) fileSize];
-		int offset = 0;
-		int numRead = 0;
+	private void write(String path, String content, String encoding) {
+		File file = new File(path);
+		if (file.exists()) {
+			file.delete();
+		}
+		BufferedWriter writer = null;
 		try {
-			int length = buffer.length;
-			while (offset < length
-					&& (numRead = fi.read(buffer, offset, length - offset > 8 ? 8 : length - offset)) >= 0) {
-				offset += numRead;
-			}
+			file.createNewFile();
+			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), encoding));
+			writer.write(content);
 		}
 		catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		finally {
 			try {
-				fi.close();
+				writer.close();
 			}
 			catch (IOException e) {
 			}
 		}
-		return buffer;
 	}
 
-	private String txtRead(File file) {
-		return null;
+	private String read(String path, String encoding) {
+		String content = "";
+		File file = new File(path);
+		BufferedReader reader = null;
+		try {
+			String line = null;
+			reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), encoding));
+			while ((line = reader.readLine()) != null) {
+				content += line;
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			try {
+				reader.close();
+			}
+			catch (IOException e) {
+			}
+		}
+		return content;
 	}
 
 	@Test
 	public void txtTest() {
-		try {
-			File testFile1 = new File("D:/succezIDE/workspace/huangxg.devstudy/huangxg.study1", "chinese.txt");
 
+		String testString = "测试写入的中文字符串";
+		String path = "D:/succezIDE/workspace/huangxg.devstudy/huangxg.study1/chinese.txt";
+		for (int i = 0; i < ENCODING.length; i++) {
+			write(path, testString, ENCODING[i]);
+		File testFile1 = new File("D:/succezIDE/workspace/huangxg.devstudy/huangxg.study1", "chinese.txt");
+		try {
+				assertEquals(Arrays.toString(testString.getBytes(ENCODING[i])),
+						Arrays.toString(tOne.file2buf(testFile1)));
+				assertEquals(Arrays.toString(read(path, ENCODING[i]).getBytes(ENCODING[i])),
+					Arrays.toString(tOne.file2buf(testFile1)));
 		}
 		catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
+		}
 		}
 	}
 
 	@Test
 	public void mediaTest() {
+		File testFile1 = new File("D:/succezIDE/workspace/huangxg.devstudy/huangxg.study1", "music.mp3");
 		try {
-			File testFile1 = new File("D:/succezIDE/workspace/huangxg.devstudy/huangxg.study1", "music.mp3");
-			long length1 = testFile1.length();
-			assertEquals(length1, tOne.file2buf(testFile1).length);
-			byte[] bs1 = new byte[(int) length1];
-			bs1 = mediaFileRead(testFile1);
-			bs1.equals(tOne.file2buf(testFile1));
-
-			File testFile2 = new File("D:/succezIDE/workspace/huangxg.devstudy/huangxg.study1", "pic.jpg");
-			long length2 = testFile2.length();
-			assertEquals(testFile2.length(), tOne.file2buf(testFile2).length);
-			byte[] bs2 = new byte[(int) length2];
-			bs2 = mediaFileRead(testFile2);
-			bs2.equals(tOne.file2buf(testFile2));
+			assertEquals(testFile1.length(), tOne.file2buf(testFile1).length);
 		}
-		catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+		catch (FileNotFoundException | NullPointerException e) {
 			e.printStackTrace();
 		}
 	}
