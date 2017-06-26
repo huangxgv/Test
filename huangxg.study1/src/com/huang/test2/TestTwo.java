@@ -13,7 +13,7 @@ public class TestTwo {
 			'F' };
 
 	/**
-	 * 实现获取指定的整数对应的十六进制字符串
+	 * 将int类型数转换成16进制字符串
 	 * 
 	 * <pre>
 	 * intToHex(0)="0"
@@ -34,11 +34,11 @@ public class TestTwo {
 		}
 		if (num == 0)
 			return "0";
-		char plusMinusFlag = ' ';
+		boolean plusMinusFlag = false;
 		int len = 8;
 		if (num < 0) {
 			len++;
-			plusMinusFlag = '-';
+			plusMinusFlag = true;
 			num = Math.abs(num);
 		}
 		char[] hex = new char[len];
@@ -46,9 +46,9 @@ public class TestTwo {
 			hex[--len] = CHARNUM[num & 0xF];
 			num = num >>> 4;
 		}
-		if (plusMinusFlag == '-') {
-			hex[--len] = plusMinusFlag;
+		if (plusMinusFlag) {
+			hex[--len] = '-';
 		}
-		return new String(hex, len, plusMinusFlag == '-' ? 9 - len : 8 - len);
+		return new String(hex, len, plusMinusFlag ? 9 - len : 8 - len);
 	}
 }
