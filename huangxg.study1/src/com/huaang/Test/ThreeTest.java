@@ -68,8 +68,8 @@ public class ThreeTest {
 			}
 			str.append(tree.getValue());
 		}
-		treeQuery(tree.getLeft(), n--, str);
-		treeQuery(tree.getRight(), n--, str);
+		treeQuery(tree.getLeft(), n - 1, str);
+		treeQuery(tree.getRight(), n - 1, str);
 	}
 
 	@Test
