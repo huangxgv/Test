@@ -9,7 +9,7 @@ package com.huang.test2;
  * @createdate 2017年6月21日
  */
 public class TestTwo {
-	private static final char[] CHARNUM = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E',
+	private char[] CHARNUM = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E',
 			'F' };
 
 	/**

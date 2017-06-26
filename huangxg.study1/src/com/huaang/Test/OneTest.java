@@ -82,14 +82,15 @@ public class OneTest {
 	public void txtTest() {
 		String testString = "测试写入的字符串";
 		String path = "chinese.txt";
-		for (int i = 0; i < ENCODING.length; i++) {
+		File testFile = null;
+		for (int i = 0, length = ENCODING.length; i < length; i++) {
 			String codeType = ENCODING[i];
 			write(path, testString, codeType);
-			File testFile = new File("chinese.txt");
+			testFile = new File("chinese.txt");
 			try {
-				assertEquals(Arrays.toString(testString.getBytes(codeType)), Arrays.toString(tOne.file2buf(testFile)));
-				assertEquals(Arrays.toString(read(path, codeType).getBytes(codeType)),
-						Arrays.toString(tOne.file2buf(testFile)));
+				String retString = Arrays.toString(tOne.file2buf(testFile));
+				assertEquals(Arrays.toString(testString.getBytes(codeType)), retString);
+				assertEquals(Arrays.toString(read(path, codeType).getBytes(codeType)), retString);
 			}
 			catch (Exception e) {
 				e.printStackTrace();
@@ -99,9 +100,9 @@ public class OneTest {
 
 	@Test
 	public void mediaTest() {
-		File testFile1 = new File("music.mp3");
+		File testFile = new File("music.mp3");
 		try {
-			assertEquals(testFile1.length(), tOne.file2buf(testFile1).length);
+			assertEquals(testFile.length(), tOne.file2buf(testFile).length);
 		}
 		catch (FileNotFoundException | NullPointerException e) {
 			e.printStackTrace();
@@ -115,7 +116,7 @@ public class OneTest {
 
 	@Test(expected = FileNotFoundException.class)
 	public void expectNotFoundTest() throws NullPointerException, FileNotFoundException {
-		File testFile1 = new File("notExit.txt");
-		tOne.file2buf(testFile1);
+		File testFile = new File("notExit.txt");
+		tOne.file2buf(testFile);
 	}
 }

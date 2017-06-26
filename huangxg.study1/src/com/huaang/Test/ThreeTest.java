@@ -12,7 +12,7 @@ import com.huang.test3.TNode;
 import com.huang.test3.TestThree;
 
 public class ThreeTest {
-	private static final String[] nodesValueArr = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
+	private String[] nodesValueArr = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
 			"N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
 
 	StringBuilder[] sBuilders = new StringBuilder[26];
@@ -68,8 +68,8 @@ public class ThreeTest {
 			}
 			str.append(tree.getValue());
 		}
-		treeQuery(tree.getLeft(), n - 1, str);
-		treeQuery(tree.getRight(), n - 1, str);
+		treeQuery(tree.getLeft(), n--, str);
+		treeQuery(tree.getRight(), n--, str);
 	}
 
 	@Test
