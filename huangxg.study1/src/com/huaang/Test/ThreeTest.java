@@ -85,7 +85,7 @@ public class ThreeTest {
 
 	@Test
 	public void nullTree() {
-		assertEquals("传入null树", "", tThree.treeLevel(null, 1));
+		assertEquals("", tThree.treeLevel(null, 1));
 	}
 
 }

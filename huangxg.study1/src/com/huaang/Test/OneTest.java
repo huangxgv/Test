@@ -55,14 +55,14 @@ public class OneTest {
 	}
 
 	private String read(String path, String encoding) {
-		String content = "";
+		StringBuilder content = new StringBuilder();
 		File file = new File(path);
 		BufferedReader reader = null;
 		try {
 			String line = null;
 			reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), encoding));
 			while ((line = reader.readLine()) != null) {
-				content += line;
+				content.append(line);
 			}
 		}
 		catch (Exception e) {
@@ -75,7 +75,7 @@ public class OneTest {
 			catch (IOException e) {
 			}
 		}
-		return content;
+		return new String(content);
 	}
 
 	@Test
