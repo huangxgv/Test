@@ -81,11 +81,11 @@ public class OneTest {
 	@Test
 	public void txtTest() {
 
-		String testString = "测试写入的中文字符串";
-		String path = "D:/succezIDE/workspace/huangxg.devstudy/huangxg.study1/chinese.txt";
+		String testString = "测试写入的字符串";
+		String path = "chinese.txt";
 		for (int i = 0; i < ENCODING.length; i++) {
 			write(path, testString, ENCODING[i]);
-		File testFile1 = new File("D:/succezIDE/workspace/huangxg.devstudy/huangxg.study1", "chinese.txt");
+			File testFile1 = new File("chinese.txt");
 		try {
 				assertEquals(Arrays.toString(testString.getBytes(ENCODING[i])),
 						Arrays.toString(tOne.file2buf(testFile1)));
@@ -100,7 +100,7 @@ public class OneTest {
 
 	@Test
 	public void mediaTest() {
-		File testFile1 = new File("D:/succezIDE/workspace/huangxg.devstudy/huangxg.study1", "music.mp3");
+		File testFile1 = new File("music.mp3");
 		try {
 			assertEquals(testFile1.length(), tOne.file2buf(testFile1).length);
 		}
@@ -116,7 +116,7 @@ public class OneTest {
 
 	@Test(expected = FileNotFoundException.class)
 	public void expectNotFoundTest() throws NullPointerException, FileNotFoundException {
-		File testFile1 = new File("D:/succezIDE/workspace/huangxg.devstudy/huangxg.study1", "notExit.txt");
+		File testFile1 = new File("notExit.txt");
 		tOne.file2buf(testFile1);
 	}
 }
