@@ -80,21 +80,20 @@ public class OneTest {
 
 	@Test
 	public void txtTest() {
-
 		String testString = "测试写入的字符串";
 		String path = "chinese.txt";
 		for (int i = 0; i < ENCODING.length; i++) {
-			write(path, testString, ENCODING[i]);
-			File testFile1 = new File("chinese.txt");
-		try {
-				assertEquals(Arrays.toString(testString.getBytes(ENCODING[i])),
-						Arrays.toString(tOne.file2buf(testFile1)));
-				assertEquals(Arrays.toString(read(path, ENCODING[i]).getBytes(ENCODING[i])),
-					Arrays.toString(tOne.file2buf(testFile1)));
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
+			String codeType = ENCODING[i];
+			write(path, testString, codeType);
+			File testFile = new File("chinese.txt");
+			try {
+				assertEquals(Arrays.toString(testString.getBytes(codeType)), Arrays.toString(tOne.file2buf(testFile)));
+				assertEquals(Arrays.toString(read(path, codeType).getBytes(codeType)),
+						Arrays.toString(tOne.file2buf(testFile)));
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
