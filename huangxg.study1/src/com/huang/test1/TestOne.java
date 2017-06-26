@@ -21,7 +21,6 @@ public class TestOne {
 	 * @throws FileNotFoundException 如果文件不存在或者传入的是目录
 	 * @throws NullPointerException  如果传入的是null
 	 */
-
 	public byte[] file2buf(File file) throws FileNotFoundException, NullPointerException {
 		if (file == null)
 			throw new NullPointerException();

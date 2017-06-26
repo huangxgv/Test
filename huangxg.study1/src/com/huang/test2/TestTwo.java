@@ -26,7 +26,7 @@ public class TestTwo {
 	 * @return
 	 */
 	public String intToHex(int num) {
-		/**
+		/*
 		 * 解决最小int值-2147483648的绝对值超出int上限
 		 */
 		if (num == Integer.MIN_VALUE) {

@@ -10,7 +10,7 @@ package com.huang.test3;
 public class TestThree {
 
 	/**
-	 * 根据输入层次按顺序返回二叉树该层树节点
+	 * 根据输入层次按从左到右的顺序返回二叉树该层树节点
 	 * <pre>
 	 * 树：
 	 * treeLvl		tree
@@ -24,7 +24,7 @@ public class TestThree {
 	 * </pre>
 	 * @param {TNode} tree 遍历树
 	 * @param {int} n 树的第n层,n>0的整数
-	 * @return 返回处理后的字符串，如"A","C-D"
+	 * @return
 	 */
 	public String treeLevel(TNode tree, int treeLvl) {
 		//空树和1层以下的都不存在节点
