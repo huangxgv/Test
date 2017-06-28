@@ -31,11 +31,13 @@ public class TestOne {
 			System.out.println("file too big...");
 			return null;
 		}
-		FileInputStream fi = new FileInputStream(file);
-		byte[] buffer = new byte[(int) fileSize];
 		int offset = 0;
 		int numRead = 0;
+		FileInputStream fi = null;
+		byte[] buffer = null;
 		try {
+			fi = new FileInputStream(file);
+			buffer = new byte[(int) fileSize];
 			int length = buffer.length;
 			while (offset < length
 					&& (numRead = fi.read(buffer, offset, length - offset > 4096 ? 4096 : length - offset)) >= 0) {
@@ -45,12 +47,14 @@ public class TestOne {
 				throw new IOException("Could not completely read file " + file.getName());
 			}
 		}
-		catch (IOException e) {
+		catch (Exception e) {
 			e.printStackTrace();
 		}
 		finally {
 			try {
-				fi.close();
+				if (fi != null) {
+					fi.close();
+				}
 			}
 			catch (IOException e) {
 			}

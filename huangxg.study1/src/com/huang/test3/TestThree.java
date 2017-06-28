@@ -48,8 +48,8 @@ public class TestThree {
 			treeString(tree.left, treeLvl, resultStr);
 			treeString(tree.right, treeLvl, resultStr);
 		}
-		else {
-			resultStr.append(tree == null ? "" : tree.value + '-');
+		else if (tree != null) {
+			resultStr.append(tree.value).append('-');
 		}
 	}
 }
