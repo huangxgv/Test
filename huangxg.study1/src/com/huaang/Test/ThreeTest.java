@@ -121,7 +121,7 @@ public class ThreeTest {
 
 	@Test
 	public void TreeTest() {
-		String[] treeStr = new String[] { "A(B(D(H, ),E(J, )),C(F( ,M),G( ,O)))", "", null,
+		String[] treeStr = new String[] { "A(B(D(H, ),E(J, )),C(F( ,M),G( ,O)))",
 				"A(B(D(H,I),E(J,K)),C(F(L,M),G(N,O)))" };
 		for (int i = 0, length = treeStr.length; i < length; i++) {
 			TNode tree = createTree(treeStr[i]);
@@ -131,8 +131,9 @@ public class ThreeTest {
 			assertEquals(createTreeString(treeStr[i], 3), tThree.treeLevel(tree, 3));
 			assertEquals(createTreeString(treeStr[i], 4), tThree.treeLevel(tree, 4));
 			assertEquals(createTreeString(treeStr[i], 5), tThree.treeLevel(tree, 5));
+		}
 	}
-	}
+
 	@Test
 	public void nullTree() {
 		assertEquals("", tThree.treeLevel(null, 1));
