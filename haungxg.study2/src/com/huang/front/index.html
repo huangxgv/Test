@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>文件管理系统</title>
+<link href="style.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+	<div id="path">
+		<h1>D:/</h1>
+	</div>
+	<div id="top_tools">
+		<div class="topCreate">
+			<select>
+				<option value="file" name="file">文件</option>
+				<option vvalue="folder" name="folder">文件夹</option>
+			</select> <input type="text" placeholder="输入文件或文件夹名" id="createFileName">
+			<button id="fileCreateBtn">创建</button>
+		</div>
+		<div class="topSearch">
+			<input type="text" placeholder="输入文件或文件夹名" id="createFileName">
+			<button id="fileCreateBtn">查找</button>
+		</div>
+	</div>
+	<table id="folderList">
+		<thead>
+			<tr>
+				<th>名称</th>
+				<th>大小</th>
+				<th>存储位置</th>
+			</tr>
+		</thead>
+		<tbody>
+		</tbody>
+	</table>
+</body>
+</html>

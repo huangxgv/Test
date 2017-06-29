@@ -1,0 +1,74 @@
+@CHARSET "UTF-8";
+
+body {
+	margin: 0;
+	padding: 0;
+}
+
+input {
+	width: 200px;
+	height: 24px;
+	line-height: 60px;
+}
+
+button,select {
+	width: 70px;
+	height: 30px;
+	margin-top: 25px;
+	border: 1px groove #D9DADC;
+	cursor: pointer;
+	border: 1px groove #D9DADC;
+}
+
+button {
+	border-radius: 8px;
+	box-shadow: 2px 2px 5px #bbb;
+	font-size: 16px
+}
+
+#path {
+	position: fixed;
+	top: 0;
+	z-index: 1000;
+	height: 80px;
+	width: 100%;
+	background: #F9F9D9;
+}
+
+#path h1 {
+	margin-left: 20px
+}
+
+#top_tools {
+	position: fixed;
+	top: 80px;
+	z-index: 1000;
+	height: 80px;
+	width: 100%;
+	background: #98C73D;
+}
+
+#top_tools .topCreate {
+	height: 100%;
+	display: inline-block;
+	margin-left: 50px;
+}
+
+#top_tools .topSearch {
+	height: 100%;
+	display: inline-block;
+	float: right;
+	margin-right: 50px;
+}
+
+#folderList {
+	position: absolute;
+	top: 170px;
+	left: 10px;
+	font-size: 14px;
+	text-align: center;
+}
+
+#folderList thead th {
+	
+}
