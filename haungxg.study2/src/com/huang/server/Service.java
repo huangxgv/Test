@@ -11,6 +11,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Objects;
 
+import com.huang.dao.DelFileDao;
+
 public class Service {
 	private int port = 8000;
 
@@ -19,10 +21,6 @@ public class Service {
 	public Service() throws IOException {
 		serverSocket = new ServerSocket(port);
 		System.out.println("服务器启动");
-	}
-
-	public String echo(String msg) {
-		return "echo:" + msg;
 	}
 
 	public PrintWriter getWriter(Socket socket) throws IOException {
@@ -52,6 +50,7 @@ public class Service {
 	public void service() {
 		while (true) {
 			Socket socket = null;
+			DelFileDao dFile = new DelFileDao();
 			try {
 				socket = serverSocket.accept();
 				BufferedReader br = getReader(socket);
