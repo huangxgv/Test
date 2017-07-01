@@ -12,8 +12,8 @@ window.onload = function() {
 			"isFile" : "",
 			"context" : ""
 		}
-		var resultStr = ajaxRequest("www.baidu.com","POST",jsonParame);
-		alert(resultStr);
+		var resultStr = ajaxRequest("http://127.0.0.1:8080","GET",jsonParame);
+//		alert(resultStr);
 		// showList(resultStr);
 	}
 	tableList.init();
@@ -24,4 +24,3 @@ window.onload = function() {
 		}
 	}
 }
-// ajaxRequest()

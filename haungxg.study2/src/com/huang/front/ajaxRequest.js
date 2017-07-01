@@ -34,10 +34,12 @@ function getajaxHttp() {
  */
 function ajaxRequest(url, methodtype, parameter) {
 	var xhr = getajaxHttp();
-	xhr.onreadystatechange=resultStr;
-	xhr.open(methodtype, url);
-	xhr.send(parameter);
-	var resultStr = function() {
+	var string = JSON.stringify(parameter);
+	xhr.open(methodtype, url, true);
+	xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded"); 
+	// xhr.onreadystatechange=resultStr;
+	xhr.send();
+	xhr.onreadystatechange = function() {
 		if (xhr.readyState == 4 && xhr.status == 200) {
 			return xhr.responseText;
 		}
