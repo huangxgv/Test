@@ -21,7 +21,7 @@ public class ServiceTest {
 	}
 
 	@Test
-	public void fileTest() {
+	public void delFileDaoTest() {
 		init("test.txt", "D:/", true, "", "");
 		assertEquals("success", fileDao.delFile(doBean));
 		init("test.txt", "D:/", true, "", "");
