@@ -1,5 +1,9 @@
 package com.huang.beans;
 
+import java.util.Objects;
+
+import net.sf.json.JSONObject;
+
 public class DoInfoBean {
 	private String type;
 
@@ -51,4 +55,51 @@ public class DoInfoBean {
 		this.context = context;
 	}
 
+	public boolean setDoInfo(String Info) {
+		if (Objects.equals(Info, "")) {
+			return false;
+		}
+		JSONObject json = JSONObject.fromObject(Info);
+		String type;
+		String path;
+		String name;
+		boolean isFile;
+		String context;
+		try {
+			type = json.getString("type");
+		}
+		catch (Exception e) {
+			type = null;
+		}
+		try {
+			path = json.getString("path");
+		}
+		catch (Exception e) {
+			path = null;
+		}
+		try {
+			name = json.getString("name");
+		}
+		catch (Exception e) {
+			name = null;
+		}
+		try {
+			isFile = Objects.equals("true", json.getString("isFile"));
+		}
+		catch (Exception e) {
+			isFile = false;
+		}
+		try {
+			context = json.getString("type");
+		}
+		catch (Exception e) {
+			context = null;
+		}
+		this.isFile = isFile;
+		this.name = name;
+		this.path = path;
+		this.context = context;
+		this.type = type;
+		return true;
+	}
 }
