@@ -1,85 +1,123 @@
 package com.huang.server;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Objects;
 
+import com.huang.beans.DoInfoBean;
 import com.huang.dao.DelFileDao;
 
-public class Service {
-	private int port = 8000;
-
-	private ServerSocket serverSocket;
-
-	public Service() throws IOException {
-		serverSocket = new ServerSocket(port);
-		System.out.println("服务器启动");
+/**
+ * 用socket来收发http协议报文
+ */
+public class SocketHttp {
+	public static void main(String[] args) {
+		Thread threadReceive = new Thread(new TestReceiveHttp());
+		threadReceive.start();
 	}
+}
 
-	public PrintWriter getWriter(Socket socket) throws IOException {
-		OutputStream socketOut = socket.getOutputStream();
-		return new PrintWriter(socketOut, true);
-	}
-
-	public BufferedReader getReader(Socket socket) throws IOException {
-		InputStream socketIn = socket.getInputStream();
-		return new BufferedReader(new InputStreamReader(socketIn));
-	}
-
-	private StringBuilder getFolder(String path) {
-		File f = new File(path);
-		if (!f.exists()) {
-			return null;
-		}
-		File fa[] = f.listFiles();
-		int length = fa.length;
-		StringBuilder folderNameArr = new StringBuilder();
-		for (int i = 0; i < length; i++) {
-			folderNameArr.append(fa[i].getName()).append(':');
-		}
-		return folderNameArr;
-	}
-
-	public void service() {
-		while (true) {
-			Socket socket = null;
-			DelFileDao dFile = new DelFileDao();
-			try {
-				socket = serverSocket.accept();
-				BufferedReader br = getReader(socket);
-				PrintWriter pw = getWriter(socket);
-				String path = br.readLine();
-				if (!Objects.equals(path, null)) {
-					path = path.split(" ")[1].substring(1);
-					StringBuilder reString = getFolder(path);
-					pw.write(path);
-					System.out.println(reString);
+class TestReceiveHttp implements Runnable {
+	@Override
+	public void run() {
+		ServerSocket server;
+		Socket socket;
+		try {
+			server = new ServerSocket(8080);
+			System.out.println("正在等待8080端口的请求");
+			while (true) {
+				socket = server.accept();
+				if (socket != null) {
+					new Thread(new TestReveiveThread(socket)).start();
 				}
+			}
+		}
+		catch (Exception e) {
+			System.out.println("异常");
+		}
+	}
+}
 
+class TestReveiveThread implements Runnable {
+	private Socket socket;
+
+	public TestReveiveThread(Socket s) {
+		socket = s;
+	}
+
+	public void run() {
+		BufferedReader bufferedReader = null;
+		OutputStreamWriter osw = null;
+		DoInfoBean doBean = new DoInfoBean();
+		DelFileDao fileDao = new DelFileDao();
+		String result = new String();
+		try {
+			bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "utf-8"));
+			osw = new OutputStreamWriter(socket.getOutputStream(), "utf-8");
+			String line = bufferedReader.readLine();
+			System.out.println(line);
+			//			line = line.split(" ")[1].substring(1);
+			if (doBean.setDoInfo(line)) {
+				switch (doBean.getType()) {
+					case "search":
+						result = fileDao.searchFile(doBean);
+						break;
+					case "delete":
+						result = fileDao.delFile(doBean);
+						break;
+					case "update":
+						result = fileDao.updateFile(doBean);
+						break;
+					case "add":
+						result = fileDao.addFile(doBean);
+						break;
+					case "download":
+						result = fileDao.addFile(doBean);
+						break;
+					case "watch":
+						result = fileDao.getFolderList(doBean);
+						break;
+					default:
+						break;
+				}
+			}
+			//使用append代替多次write可以提升服务器响应速度
+			StringBuffer sb = new StringBuffer("HTTP/1.1 200 OK\r\n");
+			sb.append("Content-Type:text/html\r\n\r\n");
+			sb.append(result);
+			osw.write(new String(sb));
+			osw.flush();
+		}
+		catch (
+
+		Exception e) {
+			System.out.println("客户端接受异常" + e.getMessage());
+		}
+		finally {
+			try {
+				if (bufferedReader != null) {
+					bufferedReader.close();
+				}
 			}
 			catch (IOException e) {
-				e.printStackTrace();
 			}
-			finally {
-				try {
-					if (socket != null)
-						socket.close();
+			try {
+				if (osw != null) {
+					osw.close();
 				}
-				catch (IOException e) {
+			}
+			catch (IOException e) {
+			}
+			try {
+				if (socket != null) {
+					socket.close();
 				}
+			}
+			catch (IOException e) {
 			}
 		}
 	}
-
-	public static void main(String[] args) throws IOException {
-		new Service().service();
-	}
-
 }
