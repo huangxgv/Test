@@ -6,6 +6,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Objects;
 
 import com.huang.beans.DoInfoBean;
@@ -23,6 +25,30 @@ public class DelFileDao {
 	private static final String FAIL = "fail";
 
 	DoInfoBean dInfoBean = new DoInfoBean();
+
+	private static String[] fileSize = { "B", "KB", "M", "G", "T" };
+
+	//获取文件大小
+	private String getFileLength(File file) {
+		long size = file.length();
+		int index = 0;
+		double length = size;
+		while (length > 1024) {
+			length /= 1024;
+			index++;
+		}
+		String lenStr = Double.toString(length);
+		int pointAddress = lenStr.indexOf(".");
+		return lenStr.substring(0, pointAddress + 3) + fileSize[index];
+	}
+
+	private String getFileLastUpdateTime(File file) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(file.lastModified());
+		String modify = sdf.format(cal.getTime());
+		return modify;
+	}
 
 	/**
 	 * 在指定的目录中添加文件
