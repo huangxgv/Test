@@ -42,10 +42,12 @@ button {
 #top_tools {
 	position: fixed;
 	top: 80px;
+	margin: auto;
 	z-index: 1000;
 	height: 80px;
-	width: 100%;
+	width: 1540px;
 	background: #98C73D;
+	z-index: 1000;
 }
 
 #top_tools .topCreate {
@@ -57,8 +59,8 @@ button {
 #top_tools .topSearch {
 	height: 100%;
 	display: inline-block;
-	float: right;
-	margin-right: 50px;
+	position: absolute;
+	right: 50px;
 }
 
 #folderList {
@@ -69,6 +71,41 @@ button {
 	text-align: center;
 }
 
-#folderList thead th {
-	
+#folderList thead tr {
+	height: 40px;
+	width: 1540px;
+	background: #ECECED;
+}
+
+#folderList thead tr th {
+	height: 40px;
+	width: 510px;
+}
+
+#bodyList {
+	position: relative;
+	left: 10px;
+	text-align: left;
+	font-size: 18px;
+	font-weight: 500;
+}
+
+#bodyList tr:nth-of-type(odd) {
+	background: #FFFFD0;
+	cursor: pointer;
+	height: 30px;
+}
+
+#bodyList tr:nth-of-type(even) {
+	background: #F0F0F0;
+	cursor: pointer;
+	height: 30px;
+}
+
+#bodyList tr td:nth-child(1):hover {
+	color: blue;
+}
+
+#bodyList tr td:nth-child(1):active {
+	color: red;
 }
