@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.URLDecoder;
 
 import com.huang.beans.DoInfoBean;
 import com.huang.dao.DelFileDao;
@@ -58,9 +59,9 @@ class TestReveiveThread implements Runnable {
 			bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "utf-8"));
 			osw = new OutputStreamWriter(socket.getOutputStream(), "utf-8");
 			String line = bufferedReader.readLine();
-			System.out.println(line);
-			//			line = line.split(" ")[1].substring(1);
-			if (doBean.setDoInfo(line)) {
+			String orderString = URLDecoder.decode(line.split(" ")[1].substring(1), "utf-8");
+			System.out.println(orderString);
+			if (doBean.setDoInfo(orderString)) {
 				switch (doBean.getType()) {
 					case "search":
 						result = fileDao.searchFile(doBean);
@@ -86,14 +87,12 @@ class TestReveiveThread implements Runnable {
 			}
 			//使用append代替多次write可以提升服务器响应速度
 			StringBuffer sb = new StringBuffer("HTTP/1.1 200 OK\r\n");
-			sb.append("Content-Type:text/html\r\n\r\n");
+			sb.append("Access-Control-Allow-Origin:*\r\n\r\n");
 			sb.append(result);
 			osw.write(new String(sb));
 			osw.flush();
 		}
-		catch (
-
-		Exception e) {
+		catch (Exception e) {
 			System.out.println("客户端接受异常" + e.getMessage());
 		}
 		finally {
