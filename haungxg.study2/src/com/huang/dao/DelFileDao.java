@@ -39,7 +39,7 @@ public class DelFileDao {
 		}
 		String lenStr = Double.toString(length);
 		int pointAddress = lenStr.indexOf(".");
-		return lenStr.substring(0, pointAddress + 3) + fileSize[index];
+		return lenStr.substring(0, pointAddress + 4) + fileSize[index];
 	}
 
 	private String getFileLastUpdateTime(File file) {
@@ -228,18 +228,28 @@ public class DelFileDao {
 			return FAIL;
 		}
 		String filenameTemp = info.getPath();
-		File f = new File(filenameTemp);
-		if (!f.exists()) {
-			return null;
+		File file = new File(filenameTemp);
+		if (!file.exists()) {
+			return FAIL;
 		}
-		File fa[] = f.listFiles();
+		File fa[] = file.listFiles();
 		int length = fa.length;
 		if (length == 0) {
-			return "";
+			return FAIL;
 		}
 		StringBuilder folderNameArr = new StringBuilder();
 		for (int i = 0; i < length; i++) {
-			folderNameArr.append(fa[i].getName()).append(':');
+			folderNameArr.append(fa[i].getName()).append('|');
+			if (fa[i] != null && fa[i].isFile()) {
+				folderNameArr.append(getFileLength(fa[i])).append('|');
+				folderNameArr.append(getFileLastUpdateTime(fa[i])).append('|');
+				folderNameArr.append("true").append('*');
+			}
+			else {
+				folderNameArr.append('\0').append('|');
+				folderNameArr.append(getFileLastUpdateTime(fa[i])).append('|');
+				folderNameArr.append("false").append('*');
+			}
 		}
 		int strLength = folderNameArr.length() - 1;
 		return new String(folderNameArr.substring(0, strLength));
