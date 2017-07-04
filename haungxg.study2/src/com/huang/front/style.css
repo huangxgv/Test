@@ -66,19 +66,18 @@ button {
 #folderList {
 	position: absolute;
 	top: 170px;
-	left: 10px;
-	font-size: 14px;
+	font-size: 22px;
 	text-align: center;
 }
 
 #folderList thead tr {
-	height: 40px;
+	height: 56px;
 	width: 1540px;
 	background: #ECECED;
 }
 
 #folderList thead tr th {
-	height: 40px;
+	height: 56px;
 	width: 510px;
 }
 
@@ -88,18 +87,34 @@ button {
 	text-align: left;
 	font-size: 18px;
 	font-weight: 500;
+	text-align: left;
 }
 
 #bodyList tr:nth-of-type(odd) {
 	background: #FFFFD0;
-	cursor: pointer;
+	width: 1540px;
 	height: 30px;
 }
 
 #bodyList tr:nth-of-type(even) {
 	background: #F0F0F0;
-	cursor: pointer;
+	width: 1540px;
 	height: 30px;
+}
+
+#bodyList tr td:nth-child(1) {
+	cursor: pointer;
+	padding-left: 36px;
+}
+
+#bodyList .file_folder {
+	background-image: url("../../../../folderImg.png");
+	background-repeat: no-repeat;
+	background-size: 30px 30px;
+}
+
+#bodyList .file_type_txt {
+	
 }
 
 #bodyList tr td:nth-child(1):hover {
