@@ -239,13 +239,14 @@ public class DelFileDao {
 		}
 		StringBuilder folderNameArr = new StringBuilder();
 		for (int i = 0; i < length; i++) {
-			folderNameArr.append(fa[i].getName()).append('|');
-			if (fa[i] != null && fa[i].isFile()) {
+			if (fa[i] != null && fa[i].isFile() && !fa[i].isHidden()) {
+				folderNameArr.append(fa[i].getName()).append('|');
 				folderNameArr.append(getFileLength(fa[i])).append('|');
 				folderNameArr.append(getFileLastUpdateTime(fa[i])).append('|');
 				folderNameArr.append("true").append('*');
 			}
-			else {
+			else if (!fa[i].isHidden()) {
+				folderNameArr.append(fa[i].getName()).append('|');
 				folderNameArr.append('\0').append('|');
 				folderNameArr.append(getFileLastUpdateTime(fa[i])).append('|');
 				folderNameArr.append("false").append('*');
