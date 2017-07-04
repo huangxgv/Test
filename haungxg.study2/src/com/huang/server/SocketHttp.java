@@ -7,6 +7,7 @@ import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URLDecoder;
+import java.util.Objects;
 
 import com.huang.beans.DoInfoBean;
 import com.huang.dao.DelFileDao;
@@ -88,7 +89,9 @@ class TestReveiveThread implements Runnable {
 			//使用append代替多次write可以提升服务器响应速度
 			StringBuffer sb = new StringBuffer("HTTP/1.1 200 OK\r\n");
 			sb.append("Access-Control-Allow-Origin:*\r\n\r\n");
-			sb.append(result);
+			if (!Objects.equals(result, "fail")) {
+				sb.append(result);
+			}
 			osw.write(new String(sb));
 			osw.flush();
 		}
