@@ -101,7 +101,7 @@ TableList.prototype.appendNodes = function(list, length, resultArr, sortType) {
 				case "zip" :
 					tdNode1.setAttribute("class", "file_type_zip");
 					break;
-				case "doc" :
+				case "docx" :
 					tdNode1.setAttribute("class", "file_type_doc");
 					break;
 				case "js" :
@@ -146,6 +146,8 @@ TableList.prototype.appendNodes = function(list, length, resultArr, sortType) {
 		list.appendChild(trNode);
 	}
 }
+
+
 /**
  * 将数据以列表的形式显示出来
  * @param {} resultStr
@@ -156,6 +158,7 @@ TableList.prototype.showList = function(resultStr, sortType) {
 	if (list.childNodes.length != 0) {
 		tableList.cleanTableList();
 	}
+	var list = document.getElementById("bodyList");
 	var resultArr = resultStr.split("*");
 	var length = resultArr.length;
 	tableList.appendNodes(list, length, resultArr, sortType)
@@ -193,17 +196,16 @@ TableList.prototype.getajaxHttp = function() {
  * parameter(参数)
  * state_change(回调方法名，不需要引号,这里只有成功的时候才调用)
  */
-TableList.prototype.ajaxRequest = function(url, methodtype, parameter, sycn) {
+TableList.prototype.ajaxRequest = function(url, methodtype, parameter, orderType) {
 	var xhr = tableList.getajaxHttp();
 	var stringParameter = JSON.stringify(parameter);
 	xhr.onreadystatechange = state_change;
-	xhr.open(methodtype, url + "/" + stringParameter, sycn);
+	xhr.open(methodtype, url + "/" + stringParameter, true);
 	xhr.send();
 	function state_change() {
 		if (xhr.readyState == 4 && status == 0) {
 			if (xhr.responseText != null || xhr.responseText != "") {
-				tableList.string = xhr.responseText;
-				tableList.showList(xhr.responseText, sortType.SORTBYNAMEASC);
+				tableList.showList(xhr.responseText, orderType);
 			}
 		}
 	};
@@ -211,24 +213,34 @@ TableList.prototype.ajaxRequest = function(url, methodtype, parameter, sycn) {
 /**
  * 页面初始化
  */
-TableList.prototype.init = function() {
+TableList.prototype.init = function(orderType) {
 	var jsonParame = {
 		"type" : "watch",
 		"name" : "",
-		"path" : "D:/",
+		"path" : "",
 		"isFile" : "",
 		"context" : ""
 	}
-	var resultStr = tableList.ajaxRequest("http://127.0.0.1:8080", "GET", jsonParame, true);
+	var resultStr = tableList.ajaxRequest("http://127.0.0.1:8080", "GET", jsonParame, orderType);
+}
+
+TableList.prototype.clickToOrder = function(flag) {
+	if (flag % 2 == 0) {
+		tableList.init(sortType.SORTBYNAMEDESC);
+		flag = sortType.SORTBYNAMEDESC;
+	}
+	else {
+		tableList.init(sortType.SORTBYNAMEASC);
+		flag = sortType.SORTBYNAMEASC;
+	}
 }
 
 window.onload = function() {
-	var tableList = new TableList();
-	tableList.init();
-	var thName = document.getElementsByTagName("thead")[0].childNodes[0].childNodes[0];
-//	var trName = thName.getElementsByTagName("tr")[0];
-//	var thName = trName.getElementsByTagName("th")[0];
-	function orderByNameDesc() {
-		tableList.showList(tableList.string,1);
+	var flag = sortType.SORTBYNAMEASC;
+	tableList.init(sortType.SORTBYNAMEASC);
+	var thName = document.getElementsByTagName("thead")[0].childNodes;
+//	alert(thName[1].childNodes[1])
+	for (var i = 1; i <= thName.length; i++) {
+		thName[i].childNodes[1].onclick = tableList.clickToOrder(i);
 	}
 }
