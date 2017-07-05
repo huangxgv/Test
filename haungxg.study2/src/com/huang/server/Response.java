@@ -10,8 +10,6 @@ public class Response {
 
 	private Request request;
 
-	private FileAction action;
-
 	public Response(OutputStreamWriter output) {
 		this.output = output;
 	}
@@ -22,6 +20,7 @@ public class Response {
 
 	public void sendStaticResource() {
 		StringBuilder sendString = new StringBuilder();
+		FileAction action = new FileAction();
 		action.setDirect(request.getUri());
 		action.setPath(request.getPath());
 		sendString.append(action.getSendString());
@@ -31,16 +30,6 @@ public class Response {
 		}
 		catch (IOException e) {
 			e.printStackTrace();
-		}
-		finally {
-			try {
-				if (output != null) {
-					output.close();
-				}
-			}
-			catch (IOException e) {
-				e.printStackTrace();
-			}
 		}
 	}
 

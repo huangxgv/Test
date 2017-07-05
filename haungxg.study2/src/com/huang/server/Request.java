@@ -24,9 +24,10 @@ public class Request {
 	 * 如地址为localhost：8080/hello,获取hello
 	 */
 	public void parse() {
-		StringBuilder request = new StringBuilder(1024);
+		StringBuilder request = new StringBuilder();
 		try {
 			request.append(input.readLine());
+			System.out.println(request.toString());
 		}
 		catch (IOException e) {
 			e.printStackTrace();
@@ -41,7 +42,7 @@ public class Request {
 	 */
 	private String parseUri(String requestString) {
 		String uri = null;
-		if (Objects.equals(requestString, null)) {
+		if (!Objects.equals(requestString, null)) {
 			try {
 				uri = URLDecoder.decode(requestString.split(" ")[1].substring(1), "utf-8");
 				if (uri.startsWith("{")) {
