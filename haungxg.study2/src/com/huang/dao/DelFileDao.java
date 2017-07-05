@@ -165,4 +165,18 @@ public class DelFileDao {
 		folderNameArr.append(Arrays.toString(fa));
 		return new String(folderNameArr);
 	}
+
+	private boolean checkInfo(DoInfoBean info) {
+		if (info == null) {
+			return false;
+		}
+		else if (Objects.equals(info.getPath(), null)) {
+			return false;
+		}
+		return true;
+	}
+
+	public void downFile(DoInfoBean info) {
+
+	}
 }

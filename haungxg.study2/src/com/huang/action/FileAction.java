@@ -21,7 +21,7 @@ public class FileAction {
 	 * @param path
 	 */
 	public void setPath(String path) {
-		this.path = path;
+		this.path = "D:/TestTwo" + path;
 	}
 
 	/**

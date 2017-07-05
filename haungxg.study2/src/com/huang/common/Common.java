@@ -9,8 +9,6 @@ import java.util.Calendar;
 
 public class Common {
 
-	private static String[] fileSize = { "B", "KB", "M", "G", "T" };
-
 	/**
 	 * 用byte数组替换读取到的文件内容
 	 * 
@@ -22,8 +20,7 @@ public class Common {
 	public String file2buf(String fileInput) throws FileNotFoundException {
 		File file = new File(fileInput);
 		if (file.isDirectory()) {
-			StringBuilder result = new StringBuilder();
-			return result.append(file.list()).toString();
+			return getFilesJson(file);
 		}
 		if (!file.exists())
 			throw new FileNotFoundException();
@@ -60,28 +57,29 @@ public class Common {
 			catch (IOException e) {
 			}
 		}
-		return buffer.toString();
+		return new String(buffer);
 	}
 
-	//获取文件大小
-	public String getFileLength(File file) {
-		long size = file.length();
-		int index = 0;
-		double length = size;
-		while (length > 1024) {
-			length /= 1024;
-			index++;
+	private String getFilesJson(File Catalog) {
+		if (Catalog.isFile()) {
+			return null;
 		}
-		String lenStr = Double.toString(length);
-		int pointAddress = lenStr.indexOf(".");
-		return lenStr.substring(0, pointAddress + 4) + fileSize[index];
-	}
-
-	public String getFileLastUpdateTime(File file) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(file.lastModified());
-		String modify = sdf.format(cal.getTime());
-		return modify;
+		StringBuilder jsonString = new StringBuilder("{");
+		String[] listNameArr = Catalog.list();
+		int length = listNameArr.length;
+		String name;
+		File[] files = Catalog.listFiles();
+		File file;
+		for (int i = 0; i < length; i++) {
+			name = listNameArr[i];
+			file = files[i];
+			jsonString.append("{\"name\":\"").append(name).append("\",");
+			jsonString.append("\"size\":\"").append(file.isFile() ? file.length() : "").append("\",");
+			cal.setTimeInMillis(file.lastModified());
+			jsonString.append("\"date\":\"").append(sdf.format(cal.getTime())).append("\"},");
+		}
+		return jsonString.substring(0, jsonString.length() - 1);
 	}
 }
