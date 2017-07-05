@@ -6,11 +6,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.URLDecoder;
-import java.util.Objects;
-
-import com.huang.beans.DoInfoBean;
-import com.huang.dao.DelFileDao;
 
 /**
  * 用socket来收发http协议报文
@@ -51,64 +46,32 @@ class TestReveiveThread implements Runnable {
 	}
 
 	public void run() {
-		BufferedReader bufferedReader = null;
-		OutputStreamWriter osw = null;
-		DoInfoBean doBean = new DoInfoBean();
-		DelFileDao fileDao = new DelFileDao();
-		String result = new String();
+		BufferedReader input = null;
+		OutputStreamWriter output = null;
 		try {
-			bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "utf-8"));
-			osw = new OutputStreamWriter(socket.getOutputStream(), "utf-8");
-			String line = bufferedReader.readLine();
-			String orderString = URLDecoder.decode(line.split(" ")[1].substring(1), "utf-8");
-			System.out.println(orderString);
-			if (doBean.setDoInfo(orderString)) {
-				switch (doBean.getType()) {
-					case "search":
-						result = fileDao.searchFile(doBean);
-						break;
-					case "delete":
-						result = fileDao.delFile(doBean);
-						break;
-					case "update":
-						result = fileDao.updateFile(doBean);
-						break;
-					case "add":
-						result = fileDao.addFile(doBean);
-						break;
-					case "download":
-						result = fileDao.addFile(doBean);
-						break;
-					case "watch":
-						result = fileDao.getFolderList(doBean);
-						break;
-					default:
-						break;
-				}
-			}
-			//使用append代替多次write可以提升服务器响应速度
-			StringBuffer sb = new StringBuffer("HTTP/1.1 200 OK\r\n");
-			sb.append("Access-Control-Allow-Origin:*\r\n\r\n");
-			if (!Objects.equals(result, "fail")) {
-				sb.append(result);
-			}
-			osw.write(new String(sb));
-			osw.flush();
+			input = new BufferedReader(new InputStreamReader(socket.getInputStream(), "utf-8"));
+			output = new OutputStreamWriter(socket.getOutputStream(), "utf-8");
+			Request request = new Request(input);
+			request.parse();
+
+			Response response = new Response(output);
+			response.setRequest(request);
+			response.sendStaticResource();
 		}
 		catch (Exception e) {
 			System.out.println("客户端接受异常" + e.getMessage());
 		}
 		finally {
 			try {
-				if (bufferedReader != null) {
-					bufferedReader.close();
+				if (input != null) {
+					input.close();
 				}
 			}
 			catch (IOException e) {
 			}
 			try {
-				if (osw != null) {
-					osw.close();
+				if (output != null) {
+					output.close();
 				}
 			}
 			catch (IOException e) {
