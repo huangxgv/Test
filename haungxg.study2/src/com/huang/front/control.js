@@ -46,50 +46,51 @@ TableList.prototype.cleanTableList = function() {
  * @param {} resultArr
  * @param {} sortType
  */
-TableList.prototype.appendNodes = function(list, length, resultArr, sortType) {
+TableList.prototype.appendNodes = function(list, resultJson, sortType) {
 	var tdArr = new Array();
-	for (var i = 0; i < length; i++) {
-		tdArr[i] = resultArr[i].split("|");
-	}
 	switch (sortType) {
 		case 0 :
-			tdArr.sort(function(pramA, pramB) {
-				    return pramA[0].localeCompare(pramB[0]);
-			    });
-			break;
-		case 1 :
 			tdArr.sort(function(pramA, pramB) {
 				    return pramB[0].localeCompare(pramA[0]);
 			    });
 			break;
-		case 2 :
+		case 1 :
 			tdArr.sort(function(pramA, pramB) {
-				    return pramA[1].localeCompare(pramB[1]);
+				    return pramA[0].localeCompare(pramB[0]);
 			    });
 			break;
-		case 3 :
+		case 2 :
 			tdArr.sort(function(pramA, pramB) {
 				    return pramB[1].localeCompare(pramA[1]);
 			    });
 			break;
+		case 3 :
+			tdArr.sort(function(pramA, pramB) {
+				    return pramA[1].localeCompare(pramB[1]);
+			    });
+			break;
 		case 4 :
 			tdArr.sort(function(pramA, pramB) {
-				    return pramA[2].localeCompare(pramB[2]);
+				    return pramB[2].localeCompare(pramA[2]);
 			    });
 			break;
 		case 5 :
 			tdArr.sort(function(pramA, pramB) {
-				    return pramB[2].localeCompare(pramA[2]);
+				    return pramA[2].localeCompare(pramB[2]);
 			    });
 			break;
 		default :
 			break;
 	}
+	var resultArr = resultJson.callback;
+	var length = resultArr.length;
 	for (var index = 0; index < length; index++) {
 		var trNode = document.createElement("tr");
 		var tdNode1 = document.createElement("td");
-		if (tdArr[index][3] == "true") {
-			var classStyle = tdArr[index][0].split(".");
+		var creadeNodesJson = resultArr[index];
+		var creadeNodesJsonName = creadeNodesJson.name;
+		if (creadeNodesJson.isFile == "true") {
+			var classStyle = creadeNodesJsonName.split(".");
 			var fileNameLength = classStyle.length;
 			switch (classStyle[fileNameLength - 1]) {
 				case "txt" :
@@ -132,11 +133,11 @@ TableList.prototype.appendNodes = function(list, length, resultArr, sortType) {
 		}
 		var tdNode2 = document.createElement("td");
 		var tdNode3 = document.createElement("td");
-		var textNode1 = document.createTextNode(tdArr[index][0]);
-		var textNode3 = document.createTextNode(tdArr[index][2]);
+		var textNode1 = document.createTextNode(creadeNodesJsonName);
+		var textNode3 = document.createTextNode(creadeNodesJson.date);
 		tdNode1.appendChild(textNode1);
-		if (tdArr[index][1] != "\0") {
-			var textNode2 = document.createTextNode(tdArr[index][1]);
+		if (creadeNodesJson.size != "") {
+			var textNode2 = document.createTextNode(creadeNodesJson.size);
 			tdNode2.appendChild(textNode2);
 		}
 		tdNode3.appendChild(textNode3);
@@ -146,7 +147,6 @@ TableList.prototype.appendNodes = function(list, length, resultArr, sortType) {
 		list.appendChild(trNode);
 	}
 }
-
 
 /**
  * 将数据以列表的形式显示出来
@@ -159,9 +159,8 @@ TableList.prototype.showList = function(resultStr, sortType) {
 		tableList.cleanTableList();
 	}
 	var list = document.getElementById("bodyList");
-	var resultArr = resultStr.split("*");
-	var length = resultArr.length;
-	tableList.appendNodes(list, length, resultArr, sortType)
+	var resultJson = JSON.parse(resultStr);
+	tableList.appendNodes(list, resultJson, sortType)
 }
 
 /**
@@ -239,7 +238,7 @@ window.onload = function() {
 	var flag = sortType.SORTBYNAMEASC;
 	tableList.init(sortType.SORTBYNAMEASC);
 	var thName = document.getElementsByTagName("thead")[0].childNodes;
-//	alert(thName[1].childNodes[1])
+	// alert(thName[1].childNodes[1])
 	for (var i = 1; i <= thName.length; i++) {
 		thName[i].childNodes[1].onclick = tableList.clickToOrder(i);
 	}

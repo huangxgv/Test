@@ -7,8 +7,22 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+/**
+ * 工具类
+ * <p>Copyright: Copyright (c) 2017</p>
+ * <p>succez</p>
+ * @author huangxg
+ * @createdate 2017年7月6日
+ */
 public class Common {
 
+	public String getFolderList(String fileInput) {
+		File file = new File(fileInput);
+		if (file.isDirectory()) {
+			return getFilesJson(file);
+		}
+		return null;
+	}
 	/**
 	 * 用byte数组替换读取到的文件内容
 	 * 
@@ -17,10 +31,10 @@ public class Common {
 	 * @throws FileNotFoundException 如果文件不存在或者传入的是目录
 	 * @throws NullPointerException  如果传入的是null
 	 */
-	public String file2buf(String fileInput) throws FileNotFoundException {
+	public byte[] file2buf(String fileInput) throws FileNotFoundException {
 		File file = new File(fileInput);
 		if (file.isDirectory()) {
-			return getFilesJson(file);
+			return null;
 		}
 		if (!file.exists())
 			throw new FileNotFoundException();
@@ -57,7 +71,7 @@ public class Common {
 			catch (IOException e) {
 			}
 		}
-		return new String(buffer);
+		return buffer;
 	}
 
 	private String getFilesJson(File Catalog) {
@@ -66,20 +80,27 @@ public class Common {
 		}
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Calendar cal = Calendar.getInstance();
-		StringBuilder jsonString = new StringBuilder("{");
+		StringBuilder jsonString = new StringBuilder("{\"callback\":[");
 		String[] listNameArr = Catalog.list();
 		int length = listNameArr.length;
 		String name;
 		File[] files = Catalog.listFiles();
 		File file;
-		for (int i = 0; i < length; i++) {
+		for (int i = 0; i < length - 1; i++) {
 			name = listNameArr[i];
 			file = files[i];
 			jsonString.append("{\"name\":\"").append(name).append("\",");
 			jsonString.append("\"size\":\"").append(file.isFile() ? file.length() : "").append("\",");
+			jsonString.append("\"isFile\":\"").append(file.isFile()).append("\",");
 			cal.setTimeInMillis(file.lastModified());
 			jsonString.append("\"date\":\"").append(sdf.format(cal.getTime())).append("\"},");
 		}
-		return jsonString.substring(0, jsonString.length() - 1);
+		File fileLast = files[length - 1];
+		jsonString.append("{\"name\":\"").append(listNameArr[length - 1]).append("\",");
+		jsonString.append("\"size\":\"").append(fileLast.isFile() ? fileLast.length() : "").append("\",");
+		jsonString.append("\"isFile\":\"").append(fileLast.isFile()).append("\",");
+		cal.setTimeInMillis(fileLast.lastModified());
+		jsonString.append("\"date\":\"").append(sdf.format(cal.getTime())).append("\"}]}");
+		return new String(jsonString);
 	}
 }

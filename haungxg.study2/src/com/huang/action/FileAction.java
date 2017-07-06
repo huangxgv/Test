@@ -1,5 +1,7 @@
 package com.huang.action;
 
+import java.util.Arrays;
+
 import com.huang.common.Common;
 
 public class FileAction {
@@ -40,27 +42,28 @@ public class FileAction {
 				case "":
 					sendString.append(httpHeader);
 					sendString.append("Content-Type:text/html\r\n\r\n");
-					sendString.append(com.file2buf("src/com/huang/front/index.html")).append("\r\n");
+					sendString.append(new String(com.file2buf("src/com/huang/front/index.html"))).append("\r\n");
 					break;
 				case "style.css":
 					sendString.append(httpHeader);
 					sendString.append("Content-Type:text/css\r\n\r\n");
-					sendString.append(com.file2buf("src/com/huang/front/style.css")).append("\r\n");
+					sendString.append(new String(com.file2buf("src/com/huang/front/style.css"))).append("\r\n");
 					break;
 				case "control.js":
 					sendString.append(httpHeader);
 					sendString.append("Content-Type:application/x-javascript\r\n\r\n");
-					sendString.append(com.file2buf("src/com/huang/front/control.js")).append("\r\n");
+					sendString.append(new String(com.file2buf("src/com/huang/front/control.js"))).append("\r\n");
 					break;
 				case "folderImg.png":
 					sendString.append(httpHeader);
 					sendString.append("Content-Type:image/png\r\n\r\n");
-					sendString.append(com.file2buf("folderImg.png")).append("\r\n");
+					sendString.append(Arrays.toString(com.file2buf("folderImg.png"))).append("\r\n");
+					System.out.println(sendString);
 					break;
 				case "watch":
 					sendString.append(httpHeader);
 					sendString.append("Access-Control-Allow-Origin:*\r\n\r\n");
-					sendString.append(com.file2buf(path)).append("\r\n");
+					sendString.append(com.getFolderList(path)).append("\r\n");
 					break;
 				case "update":
 					break;
