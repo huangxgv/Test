@@ -25,6 +25,10 @@ public class FileAction {
 		System.out.println(this.path);
 	}
 
+	public String getPath() {
+		return this.path;
+	}
+
 	/**
 	 * 获取后台输出字符串
 	 * @return
@@ -66,9 +70,8 @@ public class FileAction {
 				case "update":
 					break;
 				case "download":
-					sendString.append(httpHeader);
-					sendString.append("Content-Type:application/octet-stream\r\n\r\n");
-					sendString.append(new String(com.file2buf(path), "UTF-8")).append("\r\n");
+					System.out.println("***********" + path);
+					sendString.append(new String(com.file2buf(path)));
 					break;
 				case "delete":
 					break;

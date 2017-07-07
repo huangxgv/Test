@@ -1,18 +1,10 @@
 var TableList = function() {
 }
 
-var SortType = function() {
-}
-
-var sortType = new SortType();
-sortType.SORTBYNAMEASC = 0;
-sortType.SORTBYNAMEDESC = 1;
-sortType.SORTBYSIZEASC = 2;
-sortType.SORTBYSIZEDESC = 3;
-sortType.SORTBYDATEASC = 4;
-sortType.SORTBYDATEDESC = 5;
 var tableList = new TableList();
-
+/**
+ * 清除界面原有信息列表
+ */
 TableList.prototype.cleanTableList = function() {
 	var list = document.getElementById("bodyList");
 	var folderList = document.getElementById("folderList");
@@ -23,13 +15,22 @@ TableList.prototype.cleanTableList = function() {
 }
 /**
  * table中的tr双击事件
- * @param {} trArr
+ * @param {} tr 列表行
  */
 TableList.prototype.doubleClick = function(tr) {
 	var type = "";
 	var isFile = false;
 	tr.ondblclick = function() {
 		var fileSizeFlag = tr.childNodes[1].innerHTML;
+		var thisName = this.childNodes[0].innerHTML;
+		var path = document.getElementById("source").innerHTML.substring(1) + thisName;
+		var jsonParame = {
+			"type" : "watch",
+			"name" : "",
+			"path" : path,
+			"isFile" : isFile,
+			"context" : ""
+		}
 		if (fileSizeFlag == "") {
 			type = "watch";
 		}
@@ -38,17 +39,10 @@ TableList.prototype.doubleClick = function(tr) {
 				return;
 			}
 			else {
-				type = "download";
-				isFile = true;
+				window.open("http://127.0.0.1:8080/%7B%22type%22:%22download%22,%22name%22:%22%22,%22path%22:%22" + path
+				    + "%22,%22isFile%22:true,%22context%22:%22%22%7D");
+				return;
 			}
-		}
-		var thisName = this.childNodes[0].innerHTML;
-		var jsonParame = {
-			"type" : type,
-			"name" : "",
-			"path" : thisName,
-			"isFile" : isFile,
-			"context" : ""
 		}
 		tableList.ajaxRequest("http://127.0.0.1:8080", "GET", jsonParame, 1);
 		if (!isFile) {
@@ -56,20 +50,47 @@ TableList.prototype.doubleClick = function(tr) {
 		}
 	}
 }
+/*
+ * 隐藏右键菜单
+ */
+TableList.prototype.menuHidden = function() {
+
+}
 /**
- * 右键菜单
+ * 右键功能菜单
  * @param {} menu
  * @param {} trArr
  */
 TableList.prototype.menuList = function(menu, trArr) {
+	document.onclick = function() {
+		var e = e || window.event;
+		menu.style.display = "none";
+	};
 	for (var i = 0, len = trArr.length; i < len; i++) {
 		trArr[i].oncontextmenu = function(e) {
-			var thisName = this.childNodes[0].innerHTML;
+			var firstChildTd = this.childNodes[0];
+			var thisName = firstChildTd.innerHTML;
+			var folderFlag = firstChildTd.getAttribute("name") == "folder" ? true : false;
 			var liElementArr = menu.getElementsByTagName("li");
 			liElementArr[0].onclick = function() {
+				if(folderFlag){
+					
+				}
 			}
-			liElementArr[1].onclick = function() {
-				alert(1)
+			if (folderFlag) {
+				liElementArr[1].setAttribute("class", "disabled");
+				liElementArr[1].onclick = function(e) {
+					var e = e || window.event;
+					e.stopPropagation = true;
+				}
+			}
+			else {
+				liElementArr[1].setAttribute("class", "");
+				liElementArr[1].onclick = function(e) {
+					var path = document.getElementById("source").innerHTML.substring(1) + thisName;
+					window.open("http://127.0.0.1:8080/%7B%22type%22:%22download%22,%22name%22:%22%22,%22path%22:%22" + path
+					    + "%22,%22isFile%22:true,%22context%22:%22%22%7D");
+				}
 			}
 			liElementArr[2].onclick = function() {
 				alert(1)
@@ -77,10 +98,10 @@ TableList.prototype.menuList = function(menu, trArr) {
 			liElementArr[3].onclick = function() {
 				alert(1)
 			}
-			menu.onclick = function() {
+			menu.onclick = function(e) {
 				var e = e || window.event;
-				menu.style.display = "none";
-			};
+				e.stopPropagation = true;
+			}
 			var e = e || window.event;
 			var oX = e.clientX;
 			var oY = e.clientY;
@@ -89,18 +110,12 @@ TableList.prototype.menuList = function(menu, trArr) {
 			menu.style.top = oY + "px";
 			return false;
 		}
-		trArr[i].onclick = function() {
-			var e = e || window.event;
-			menu.style.display = "none";
-		};
 	}
 }
 /**
  * 返回按钮点击事件
  */
 TableList.prototype.retBtn = function() {
-	var menu = document.getElementById("menu");
-	menu.style.display = "none";
 	var path = document.getElementById("source").innerHTML;
 	if (path == "/") {
 		return;
@@ -134,43 +149,9 @@ TableList.prototype.retBtn = function() {
  * @param {} resultArr
  * @param {} sortType
  */
-TableList.prototype.appendNodes = function(list, resultJson, sortType) {
-	var tdArr = new Array();
-	switch (sortType) {
-		case 0 :
-			tdArr.sort(function(pramA, pramB) {
-				    return pramB[0].localeCompare(pramA[0]);
-			    });
-			break;
-		case 1 :
-			tdArr.sort(function(pramA, pramB) {
-				    return pramA[0].localeCompare(pramB[0]);
-			    });
-			break;
-		case 2 :
-			tdArr.sort(function(pramA, pramB) {
-				    return pramB[1].localeCompare(pramA[1]);
-			    });
-			break;
-		case 3 :
-			tdArr.sort(function(pramA, pramB) {
-				    return pramA[1].localeCompare(pramB[1]);
-			    });
-			break;
-		case 4 :
-			tdArr.sort(function(pramA, pramB) {
-				    return pramB[2].localeCompare(pramA[2]);
-			    });
-			break;
-		case 5 :
-			tdArr.sort(function(pramA, pramB) {
-				    return pramA[2].localeCompare(pramB[2]);
-			    });
-			break;
-		default :
-			break;
-	}
+TableList.prototype.appendNodes = function(list, resultJson) {
 	var resultArr = resultJson.callback;
+	resultArr.sort()
 	var length = resultArr.length;
 	for (var index = 0; index < length; index++) {
 		var trNode = document.createElement("tr");
@@ -218,6 +199,7 @@ TableList.prototype.appendNodes = function(list, resultJson, sortType) {
 		}
 		else {
 			tdNode1.setAttribute("class", "file_folder");
+			tdNode1.setAttribute("name", "folder");
 		}
 		var tdNode2 = document.createElement("td");
 		var tdNode3 = document.createElement("td");
@@ -241,27 +223,18 @@ TableList.prototype.appendNodes = function(list, resultJson, sortType) {
  * @param {} resultStr
  * @param {} sortType
  */
-TableList.prototype.showList = function(resultStr, sortType) {
+TableList.prototype.showList = function(resultStr) {
 	var resultJson;
 	var list = document.getElementById("bodyList");
 	var resultJson = JSON.parse(resultStr);
-	// if (resultStr != "") {
-	// var fso = new ActiveXObject(Scripting.FileSystemObject);
-	// var f = fso.createtextfile("C:\a.txt", 2, true);
-	// f.writeLine(resultStr);
-	// f.close();
-	// }
-	// else {
-	// return;
-	//	}
 	if (list.childNodes.length != 0) {
 		tableList.cleanTableList();
 	}
-	if(resultJson.length==0){
+	if (resultJson.length == 0) {
 		return;
 	}
 	var list = document.getElementById("bodyList");
-	tableList.appendNodes(list, resultJson, sortType);
+	tableList.appendNodes(list, resultJson);
 	tableList.addEvent();
 }
 
@@ -297,7 +270,7 @@ TableList.prototype.getajaxHttp = function() {
  * parameter(参数)
  * state_change(回调方法名，不需要引号,这里只有成功的时候才调用)
  */
-TableList.prototype.ajaxRequest = function(url, methodtype, parameter, orderType) {
+TableList.prototype.ajaxRequest = function(url, methodtype, parameter) {
 	var xhr = tableList.getajaxHttp();
 	var stringParameter = JSON.stringify(parameter);
 	xhr.onreadystatechange = state_change;
@@ -306,15 +279,27 @@ TableList.prototype.ajaxRequest = function(url, methodtype, parameter, orderType
 	function state_change() {
 		if (xhr.readyState == 4 && status == 0) {
 			if (xhr.responseText != null || xhr.responseText != "") {
-				tableList.showList(xhr.responseText, orderType);
+				tableList.showList(xhr.responseText);
 			}
 		}
 	};
 }
 /**
+ * 下载文件
+ * @param {} url
+ * @param {} methodtype
+ * @param {} parameter
+ */
+TableList.prototype.download = function(url, methodtype, parameter) {
+	var xhr = tableList.getajaxHttp();
+	var stringParameter = JSON.stringify(parameter);
+	xhr.open(methodtype, url + "/" + stringParameter, true);
+	xhr.send();
+}
+/**
  * 页面初始化
  */
-TableList.prototype.init = function(orderType) {
+TableList.prototype.init = function() {
 	var jsonParame = {
 		"type" : "watch",
 		"name" : "",
@@ -322,37 +307,11 @@ TableList.prototype.init = function(orderType) {
 		"isFile" : "",
 		"context" : ""
 	}
-	var resultStr = tableList.ajaxRequest("http://127.0.0.1:8080", "GET", jsonParame, orderType);
+	var resultStr = tableList.ajaxRequest("http://127.0.0.1:8080", "GET", jsonParame);
 }
 
 TableList.prototype.clickToOrder = function(flag) {
-	switch (flag) {
-		case 0 :
-			tableList.init(sortType.SORTBYNAMEASC);
-			flag = sortType.SORTBYNAMEASC;
-			break;
-		case 1 :
 
-			break;
-		case 2 :
-			tableList.init(sortType.SORTBYSIZEASC);
-			flag = sortType.SORTBYSIZEASC;
-			break;
-		case 3 :
-			tableList.init(sortType.SORTBYSIZEDESC);
-			flag = sortType.SORTBYSIZEDESC;
-			break;
-		case 4 :
-			tableList.init(sortType.SORTBYDATEASC);
-			flag = sortType.SORTBYDATEASC;
-			break;
-		case 5 :
-			tableList.init(sortType.SORTBYDATEDESC);
-			flag = sortType.SORTBYDATEDESC;
-			break;
-		default :
-			break;
-	}
 }
 
 /**
@@ -376,7 +335,6 @@ TableList.prototype.addEvent = function() {
 }
 
 window.onload = function() {
-	var flag = sortType.SORTBYNAMEASC;
-	tableList.init(sortType.SORTBYNAMEASC);
+	tableList.init();
 	setTimeout(tableList.addEvent, 500);
 }

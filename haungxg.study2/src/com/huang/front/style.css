@@ -33,6 +33,22 @@ body {
 	cursor: pointer;
 }
 
+#menu ul li:hover {
+	background: #D9DADC;
+	color: blue;
+}
+
+#menu ul .disabled {
+	background: #BFBFBF;
+	color: #D9DADC;
+	opacity:.6;
+}
+#menu ul .disabled:hover{
+	background: #BFBFBF;
+	color: #D9DADC;
+	opacity:.6;
+	cursor:default;
+}
 #childMenu {
 	position: relative;
 	left: 120px;
@@ -53,15 +69,10 @@ body {
 	padding-left: 0px;
 }
 
-#menu ul li:hover {
-	background: #D9DADC;
-	color: blue;
-}
-
 #order:hover #childMenu {
 	display: block;
 	color: black;
-	text-align:center;
+	text-align: center;
 }
 
 #order:hover #childMenu li:hover {

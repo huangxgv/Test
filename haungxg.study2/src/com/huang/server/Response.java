@@ -25,7 +25,16 @@ public class Response {
 		action.setPath(request.getPath());
 		sendString.append(action.getSendString());
 		try {
-			output.write(new String(sendString));
+			if (!(new String(sendString).startsWith("HTTP/1.1 200 OK\r\n"))) {
+				String[] pathArr = request.getPath().split("/");
+				String path = pathArr[pathArr.length - 1];
+				output.write("HTTP/1.1 200 OK\r\n");
+				output.write("Content-Disposition:attachment;filename=" + path + "\r\n\r\n");
+				output.write(action.getSendString());
+			}
+			else {
+				output.write(new String(sendString));
+			}
 			output.flush();
 		}
 		catch (IOException e) {

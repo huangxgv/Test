@@ -16,6 +16,11 @@ import java.util.Calendar;
  */
 public class Common {
 
+	/**
+	 * 获取文件列表信息
+	 * @param fileInput
+	 * @return
+	 */
 	public String getFolderList(String fileInput) {
 		File file = new File(fileInput);
 		if (file.isDirectory()) {
@@ -75,6 +80,14 @@ public class Common {
 		return buffer;
 	}
 
+	/**
+	 * 返回文件信息Json字符串
+	 * <pre>
+	 * 	{"callback":["name":"test.txt","size":"1024","date":"2017-07-06 20:04:50"]}
+	 * </pre>
+	 * @param Catalog 文件夹
+	 * @return
+	 */
 	private String getFilesJson(File Catalog) {
 		if (Catalog.isFile()) {
 			return null;
@@ -90,7 +103,7 @@ public class Common {
 		String name;
 		File[] files = Catalog.listFiles();
 		File file;
-		for (int i = 0; i < length; i++) {
+		for (int i = 0; i < length - 1; i++) {
 			name = listNameArr[i];
 			file = files[i];
 			jsonString.append("{\"name\":\"").append(name).append("\",");
