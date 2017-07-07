@@ -13,144 +13,10 @@ TableList.prototype.cleanTableList = function() {
 	tbody.setAttribute("id", "bodyList");
 	folderList.appendChild(tbody);
 }
-<<<<<<< Upstream, based on origin/master
 /**
  * table中的tr双击事件
  * @param {} tr 列表行
  */
-TableList.prototype.doubleClick = function(tr) {
-	var type = "";
-	var isFile = false;
-	tr.ondblclick = function() {
-		var fileSizeFlag = tr.childNodes[1].innerHTML;
-		var thisName = this.childNodes[0].innerHTML;
-		var path = document.getElementById("source").innerHTML.substring(1) + thisName;
-		var jsonParame = {
-			"type" : "watch",
-			"name" : "",
-			"path" : path,
-			"isFile" : isFile,
-			"context" : ""
-		}
-		if (fileSizeFlag == "") {
-			type = "watch";
-		}
-		else {
-			if (!confirm("确认下载文件?")) {
-				return;
-			}
-			else {
-				window.open("http://127.0.0.1:8080/{\"type\":\"download\",\"name\":\"\",\"path\":\"" + path
-				    + "\",\"isFile\":true,\"context\":\"\"}");
-				return;
-			}
-		}
-		tableList.ajaxRequest("http://127.0.0.1:8080", "GET", jsonParame, 1);
-		if (!isFile) {
-			document.getElementById("source").innerHTML += (thisName + "/");
-		}
-	}
-}
-/*
- * 隐藏右键菜单
- */
-TableList.prototype.menuHidden = function() {
-
-}
-/**
- * 右键功能菜单
- * @param {} menu
- * @param {} trArr
- */
-TableList.prototype.menuList = function(menu, trArr) {
-	document.onclick = function() {
-		var e = e || window.event;
-		menu.style.display = "none";
-	};
-	for (var i = 0, len = trArr.length; i < len; i++) {
-		trArr[i].oncontextmenu = function(e) {
-			var firstChildTd = this.childNodes[0];
-			var thisName = firstChildTd.innerHTML;
-			var folderFlag = firstChildTd.getAttribute("name") == "folder" ? true : false;
-			var liElementArr = menu.getElementsByTagName("li");
-			liElementArr[0].onclick = function() {
-				if (folderFlag) {
-
-				}
-			}
-			if (folderFlag) {
-				liElementArr[1].setAttribute("class", "disabled");
-				liElementArr[1].onclick = function(e) {
-				}
-			}
-			else {
-				liElementArr[1].setAttribute("class", "");
-				liElementArr[1].onclick = function(e) {
-					var path = document.getElementById("source").innerHTML.substring(1) + thisName;
-					window.open("http://127.0.0.1:8080/{\"type\":\"download\",\"name\":\"\",\"path\":\"" + path
-				    + "\",\"isFile\":true,\"context\":\"\"}");
-				}
-			}
-			liElementArr[2].onclick = function() {
-				alert(1)
-			}
-			liElementArr[3].onclick = function() {
-				alert(1)
-			}
-			menu.onclick = function(e) {
-				var e = e || window.event;
-				e.stopPropagation = true;
-			}
-			var e = e || window.event;
-			var oX = e.clientX;
-			var oY = e.clientY;
-			menu.style.display = "block";
-			menu.style.left = oX + "px";
-			menu.style.top = oY + "px";
-			return false;
-		}
-	}
-}
-/**
- * 返回按钮点击事件
- */
-TableList.prototype.retBtn = function() {
-	var path = document.getElementById("source").innerHTML;
-	if (path == "/") {
-		return;
-	}
-	path = path.substring(0, path.length - 1);
-	var lastpath = path.substring(0, path.lastIndexOf("/") + 1);
-	var jsonParame = {
-		"type" : "watch",
-		"name" : "",
-		"path" : lastpath,
-		"isFile" : "",
-		"context" : ""
-	}
-	tableList.ajaxRequest("http://127.0.0.1:8080", "GET", jsonParame, 1);
-	document.getElementById("source").innerHTML = lastpath;
-}
-
-=======
->>>>>>> 5565603 实现文件夹下一级查看和文件下载
-/**
- * table中的tr双击事件
- * @param {} tr 列表行
- */
-<<<<<<< Upstream, based on origin/master
-TableList.prototype.appendNodes = function(list, resultJson) {
-	var resultArr = resultJson.callback;
-	resultArr.sort()
-	var length = resultArr.length;
-	for (var index = 0; index < length; index++) {
-		var trNode = document.createElement("tr");
-		var tdNode1 = document.createElement("td");
-		var creadeNodesJson = resultArr[index];
-		var creadeNodesJsonName = creadeNodesJson.name;
-		if (creadeNodesJson.isFile == "true") {
-			var classStyle = creadeNodesJsonName.split(".");
-=======
 TableList.prototype.doubleClick = function(tr) {
 	var type = "";
 	var isFile = false;
@@ -260,11 +126,9 @@ TableList.prototype.retBtn = function() {
 	document.getElementById("source").innerHTML = lastpath;
 }
 
-TableList.prototype.setFileFlag = function(creadeNodesJson, tdNode1) {
+TableList.prototype.setFileFlag=function(creadeNodesJson,tdNode1){
 	if (creadeNodesJson.isFile == "true") {
-<<<<<<< Upstream, based on origin/master
-			var classStyle = (creadeNodesJson.Name).split(".");
->>>>>>> 5565603 实现文件夹下一级查看和文件下载
+			var classStyle = (creadeNodesJson.name).split(".");
 			var fileNameLength = classStyle.length;
 			switch (classStyle[fileNameLength - 1]) {
 				case "txt" :
@@ -301,50 +165,11 @@ TableList.prototype.setFileFlag = function(creadeNodesJson, tdNode1) {
 					tdNode1.setAttribute("class", "file_type_default");
 					break;
 			}
-=======
-		var classStyle = (creadeNodesJson.Name).split(".");
-		var fileNameLength = classStyle.length;
-		switch (classStyle[fileNameLength - 1]) {
-			case "txt" :
-				tdNode1.setAttribute("class", "file_type_txt");
-				break;
-			case "pdf" :
-				tdNode1.setAttribute("class", "file_type_pdf");
-				break;
-			case "zip" :
-				tdNode1.setAttribute("class", "file_type_zip");
-				break;
-			case "docx" :
-				tdNode1.setAttribute("class", "file_type_doc");
-				break;
-			case "js" :
-				tdNode1.setAttribute("class", "file_type_js");
-				break;
-			case "css" :
-				tdNode1.setAttribute("class", "file_type_css");
-				break;
-			case "html" :
-				tdNode1.setAttribute("class", "file_type_html");
-				break;
-			case "png" :
-				tdNode1.setAttribute("class", "file_type_png");
-				break;
-			case "jpg" :
-				tdNode1.setAttribute("class", "file_type_jpg");
-				break;
-			case "mp3" :
-				tdNode1.setAttribute("class", "file_type_mp3");
-				break;
-			default :
-				tdNode1.setAttribute("class", "file_type_default");
-				break;
->>>>>>> 3f630b9 js代码格式化
 		}
-	}
-	else {
-		tdNode1.setAttribute("class", "file_folder");
-		tdNode1.setAttribute("name", "folder");
-	}
+		else {
+			tdNode1.setAttribute("class", "file_folder");
+			tdNode1.setAttribute("name", "folder");
+		}
 }
 
 /**
@@ -372,7 +197,7 @@ TableList.prototype.appendNodes = function(list, resultJson) {
 		var tdNode1 = document.createElement("td");
 		var creadeNodesJson = resultArr[index];
 		var creadeNodesJsonName = creadeNodesJson.name;
-		tableList.setFileFlag(creadeNodesJson, tdNode1)
+		tableList.setFileFlag(creadeNodesJson,tdNode1)
 		var tdNode2 = document.createElement("td");
 		var tdNode3 = document.createElement("td");
 		var textNode1 = document.createTextNode(creadeNodesJsonName);
