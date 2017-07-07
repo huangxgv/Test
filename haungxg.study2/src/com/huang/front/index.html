@@ -8,7 +8,8 @@
 </head>
 <body>
 	<div id="path">
-		<h1>D:/</h1>
+		<button id="return">返回上一页</button>
+		<h1 id="source">/</h1>
 	</div>
 	<div id="top_tools">
 		<div class="topCreate">
@@ -25,7 +26,7 @@
 	</div>
 	<table id="folderList">
 		<thead>
-			<tr>
+			<tr id="fileInfo">
 				<th>名称</th>
 				<th>大小</th>
 				<th>修改时间</th>
@@ -33,5 +34,20 @@
 		</thead>
 		<tbody id="bodyList"></tbody>
 	</table>
+	<div id="menu">
+		<ul>
+			<li>查&nbsp;&nbsp;&nbsp; 看</li>
+			<li>下&nbsp;&nbsp;&nbsp; 载</li>
+			<li>删&nbsp;&nbsp;&nbsp; 除</li>
+			<li>修&nbsp;&nbsp;&nbsp; 改</li>
+			<li id="order">排&nbsp;&nbsp;&nbsp; 序
+				<ul id="childMenu">
+					<li class="file_title">文件名称排序</li>
+					<li class="file_title">文件大小排序</li>
+					<li class="file_title">文件修改日期排序</li>
+				</ul>
+			</li>
+		</ul>
+	</div>
 </body>
 </html>

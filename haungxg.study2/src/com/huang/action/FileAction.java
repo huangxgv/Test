@@ -1,7 +1,5 @@
 package com.huang.action;
 
-import java.util.Arrays;
-
 import com.huang.common.Common;
 
 public class FileAction {
@@ -23,7 +21,8 @@ public class FileAction {
 	 * @param path
 	 */
 	public void setPath(String path) {
-		this.path = "D:/TestTwo" + path;
+		this.path = "D:/TestTwo/" + path;
+		System.out.println(this.path);
 	}
 
 	/**
@@ -57,8 +56,7 @@ public class FileAction {
 				case "folderImg.png":
 					sendString.append(httpHeader);
 					sendString.append("Content-Type:image/png\r\n\r\n");
-					sendString.append(Arrays.toString(com.file2buf("folderImg.png"))).append("\r\n");
-					System.out.println(sendString);
+					sendString.append(new String(com.file2buf("folderImg.png"), "UTF-8")).append("\r\n");
 					break;
 				case "watch":
 					sendString.append(httpHeader);
@@ -66,6 +64,11 @@ public class FileAction {
 					sendString.append(com.getFolderList(path)).append("\r\n");
 					break;
 				case "update":
+					break;
+				case "download":
+					sendString.append(httpHeader);
+					sendString.append("Content-Type:application/octet-stream\r\n\r\n");
+					sendString.append(new String(com.file2buf(path), "UTF-8")).append("\r\n");
 					break;
 				case "delete":
 					break;
@@ -80,6 +83,6 @@ public class FileAction {
 		catch (Exception e) {
 			return null;
 		}
-		return sendString.toString();
+		return new String(sendString);
 	}
 }

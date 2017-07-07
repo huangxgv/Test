@@ -50,7 +50,7 @@ class TestReveiveThread implements Runnable {
 		OutputStreamWriter output = null;
 		try {
 			input = new BufferedReader(new InputStreamReader(socket.getInputStream(), "utf-8"));
-			output = new OutputStreamWriter(socket.getOutputStream(), "utf-8");
+			output = new OutputStreamWriter(socket.getOutputStream(), "UTF-8");
 			Request request = new Request(input);
 			request.parse();
 			//响应请求输出

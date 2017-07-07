@@ -21,15 +21,103 @@ TableList.prototype.cleanTableList = function() {
 	tbody.setAttribute("id", "bodyList");
 	folderList.appendChild(tbody);
 }
+/**
+ * table中的tr双击事件
+ * @param {} trArr
+ */
+TableList.prototype.doubleClick = function(tr) {
+	var type = "";
+	var isFile = false;
+	tr.ondblclick = function() {
+		var fileSizeFlag = tr.childNodes[1].innerHTML;
+		if (fileSizeFlag == "") {
+			type = "watch";
+		}
+		else {
+			if (!confirm("确认下载文件?")) {
+				return;
+			}
+			else {
+				type = "download";
+				isFile = true;
+			}
+		}
+		var thisName = this.childNodes[0].innerHTML;
+		var jsonParame = {
+			"type" : type,
+			"name" : "",
+			"path" : thisName,
+			"isFile" : isFile,
+			"context" : ""
+		}
+		tableList.ajaxRequest("http://127.0.0.1:8080", "GET", jsonParame, 1);
+		if (!isFile) {
+			document.getElementById("source").innerHTML += (thisName + "/");
+		}
+	}
+}
+/**
+ * 右键菜单
+ * @param {} menu
+ * @param {} trArr
+ */
+TableList.prototype.menuList = function(menu, trArr) {
+	for (var i = 0, len = trArr.length; i < len; i++) {
+		trArr[i].oncontextmenu = function(e) {
+			var thisName = this.childNodes[0].innerHTML;
+			var liElementArr = menu.getElementsByTagName("li");
+			liElementArr[0].onclick = function() {
+			}
+			liElementArr[1].onclick = function() {
+				alert(1)
+			}
+			liElementArr[2].onclick = function() {
+				alert(1)
+			}
+			liElementArr[3].onclick = function() {
+				alert(1)
+			}
+			menu.onclick = function() {
+				var e = e || window.event;
+				menu.style.display = "none";
+			};
+			var e = e || window.event;
+			var oX = e.clientX;
+			var oY = e.clientY;
+			menu.style.display = "block";
+			menu.style.left = oX + "px";
+			menu.style.top = oY + "px";
+			return false;
+		}
+		trArr[i].onclick = function() {
+			var e = e || window.event;
+			menu.style.display = "none";
+		};
+	}
+}
+/**
+ * 返回按钮点击事件
+ */
+TableList.prototype.retBtn = function() {
+	var menu = document.getElementById("menu");
+	menu.style.display = "none";
+	var path = document.getElementById("source").innerHTML;
+	if (path == "/") {
+		return;
+	}
+	path = path.substring(0, path.length - 1);
+	var lastpath = path.substring(0, path.lastIndexOf("/") + 1);
+	var jsonParame = {
+		"type" : "watch",
+		"name" : "",
+		"path" : lastpath,
+		"isFile" : "",
+		"context" : ""
+	}
+	tableList.ajaxRequest("http://127.0.0.1:8080", "GET", jsonParame, 1);
+	document.getElementById("source").innerHTML = lastpath;
+}
 
-// TableList.prototype.sort = function(pramA, pramB, orderBy) {
-// if (orderBy) {
-// return pramA - pramB;
-// }
-// else {
-// return pramB - pramB;
-// }
-// }
 /**
  * 向tbody中添加node节点
  * <pre>
@@ -154,13 +242,27 @@ TableList.prototype.appendNodes = function(list, resultJson, sortType) {
  * @param {} sortType
  */
 TableList.prototype.showList = function(resultStr, sortType) {
+	var resultJson;
 	var list = document.getElementById("bodyList");
+	var resultJson = JSON.parse(resultStr);
+	// if (resultStr != "") {
+	// var fso = new ActiveXObject(Scripting.FileSystemObject);
+	// var f = fso.createtextfile("C:\a.txt", 2, true);
+	// f.writeLine(resultStr);
+	// f.close();
+	// }
+	// else {
+	// return;
+	//	}
 	if (list.childNodes.length != 0) {
 		tableList.cleanTableList();
 	}
+	if(resultJson.length==0){
+		return;
+	}
 	var list = document.getElementById("bodyList");
-	var resultJson = JSON.parse(resultStr);
-	tableList.appendNodes(list, resultJson, sortType)
+	tableList.appendNodes(list, resultJson, sortType);
+	tableList.addEvent();
 }
 
 /**
@@ -216,7 +318,7 @@ TableList.prototype.init = function(orderType) {
 	var jsonParame = {
 		"type" : "watch",
 		"name" : "",
-		"path" : "",
+		"path" : "/",
 		"isFile" : "",
 		"context" : ""
 	}
@@ -224,22 +326,57 @@ TableList.prototype.init = function(orderType) {
 }
 
 TableList.prototype.clickToOrder = function(flag) {
-	if (flag % 2 == 0) {
-		tableList.init(sortType.SORTBYNAMEDESC);
-		flag = sortType.SORTBYNAMEDESC;
+	switch (flag) {
+		case 0 :
+			tableList.init(sortType.SORTBYNAMEASC);
+			flag = sortType.SORTBYNAMEASC;
+			break;
+		case 1 :
+
+			break;
+		case 2 :
+			tableList.init(sortType.SORTBYSIZEASC);
+			flag = sortType.SORTBYSIZEASC;
+			break;
+		case 3 :
+			tableList.init(sortType.SORTBYSIZEDESC);
+			flag = sortType.SORTBYSIZEDESC;
+			break;
+		case 4 :
+			tableList.init(sortType.SORTBYDATEASC);
+			flag = sortType.SORTBYDATEASC;
+			break;
+		case 5 :
+			tableList.init(sortType.SORTBYDATEDESC);
+			flag = sortType.SORTBYDATEDESC;
+			break;
+		default :
+			break;
 	}
-	else {
-		tableList.init(sortType.SORTBYNAMEASC);
-		flag = sortType.SORTBYNAMEASC;
+}
+
+/**
+ * 给table，返回按钮，右键菜单等加点击事件
+ */
+TableList.prototype.addEvent = function() {
+	var menu = document.getElementById("menu");
+	var fileNameList = document.getElementById("bodyList");
+	var trArr = fileNameList.getElementsByTagName("tr");
+	var thead = document.getElementById("fileInfo");
+	// 右键菜单
+	tableList.menuList(menu, trArr);
+	// 双击进入目录下一页
+	for (var i = 0, len = trArr.length; i < len; i++) {
+		tableList.doubleClick(trArr[i]);
 	}
+	// 返回按钮点击事件
+	document.getElementById("return").onclick = tableList.retBtn;
+	// 点击排序
+
 }
 
 window.onload = function() {
 	var flag = sortType.SORTBYNAMEASC;
 	tableList.init(sortType.SORTBYNAMEASC);
-	var thName = document.getElementsByTagName("thead")[0].childNodes;
-	// alert(thName[1].childNodes[1])
-	for (var i = 1; i <= thName.length; i++) {
-		thName[i].childNodes[1].onclick = tableList.clickToOrder(i);
-	}
+	setTimeout(tableList.addEvent, 500);
 }

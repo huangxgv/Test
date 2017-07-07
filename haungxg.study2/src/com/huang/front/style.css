@@ -5,6 +5,70 @@ body {
 	padding: 0;
 }
 
+#menu {
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 140px;
+	height: 200px;
+	border: 1px solid #8C8C8C;
+	box-shadow: 5px 5px 3px #888888;
+	background-color: #FFFFFF;
+	display: none;
+	z-index: 999;
+}
+
+#menu ul {
+	list-style: none;
+	text-align: left;
+	margin: 0;
+	padding: 0;
+}
+
+#menu ul li {
+	height: 40px;
+	width: 120px;
+	padding-left: 20px;
+	line-height: 38px;
+	cursor: pointer;
+}
+
+#childMenu {
+	position: relative;
+	left: 120px;
+	top: -36px;
+	width: 160px;
+	height: 120px;
+	display: none;
+	border: 1px solid #8C8C8C;
+	box-shadow: 5px 5px 3px #888888;
+	background-color: #FFFFFF;
+	border: 1px solid #8C8C8C;
+	border: 1px solid #8C8C8C;
+}
+
+#childMenu .file_title {
+	height: 40px;
+	width: 160px;
+	padding-left: 0px;
+}
+
+#menu ul li:hover {
+	background: #D9DADC;
+	color: blue;
+}
+
+#order:hover #childMenu {
+	display: block;
+	color: black;
+	text-align:center;
+}
+
+#order:hover #childMenu li:hover {
+	background: #D9DADC;
+	color: blue;
+}
+
 input {
 	width: 200px;
 	height: 24px;
@@ -35,8 +99,16 @@ button {
 	background: #F9F9D9;
 }
 
-#path h1 {
-	margin-left: 20px
+#source {
+	display: inline-block;
+	margin-left: 20px;
+}
+
+#path button {
+	margin-left: 10px;
+	width: 90px;
+	font-size: 14px;
+	background: #F9F9D9;
 }
 
 #top_tools {
@@ -118,51 +190,61 @@ button {
 	background-repeat: no-repeat;
 	background-size: 30px 30px;
 }
+
 #bodyList .file_type_pdf {
 	background-image: url("../../../../pdfImg.png");
 	background-repeat: no-repeat;
 	background-size: 30px 30px;
 }
+
 #bodyList .file_type_zip {
 	background-image: url("../../../../zipImg.png");
 	background-repeat: no-repeat;
 	background-size: 30px 30px;
 }
+
 #bodyList .file_type_doc {
 	background-image: url("../../../../docImg.png");
 	background-repeat: no-repeat;
 	background-size: 30px 30px;
 }
+
 #bodyList .file_type_js {
 	background-image: url("../../../../jsImg.png");
 	background-repeat: no-repeat;
 	background-size: 30px 30px;
 }
+
 #bodyList .file_type_css {
 	background-image: url("../../../../cssImg.png");
 	background-repeat: no-repeat;
 	background-size: 30px 30px;
 }
+
 #bodyList .file_type_html {
 	background-image: url("../../../../htmlImg.png");
 	background-repeat: no-repeat;
 	background-size: 30px 30px;
 }
+
 #bodyList .file_type_png {
 	background-image: url("../../../../pngImg.png");
 	background-repeat: no-repeat;
 	background-size: 30px 30px;
 }
+
 #bodyList .file_type_jpg {
 	background-image: url("../../../../jpgImg.png");
 	background-repeat: no-repeat;
 	background-size: 30px 30px;
 }
+
 #bodyList .file_type_mp3 {
 	background-image: url("../../../../mp3Img.png");
 	background-repeat: no-repeat;
 	background-size: 30px 30px;
 }
+
 #bodyList .file_type_default {
 	background-image: url("../../../../defaultImg.png");
 	background-repeat: no-repeat;

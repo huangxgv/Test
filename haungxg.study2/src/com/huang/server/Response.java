@@ -25,7 +25,7 @@ public class Response {
 		action.setPath(request.getPath());
 		sendString.append(action.getSendString());
 		try {
-			output.write(sendString.toString());
+			output.write(new String(sendString));
 			output.flush();
 		}
 		catch (IOException e) {

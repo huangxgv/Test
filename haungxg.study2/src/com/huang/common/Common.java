@@ -23,6 +23,7 @@ public class Common {
 		}
 		return null;
 	}
+
 	/**
 	 * 用byte数组替换读取到的文件内容
 	 * 
@@ -83,10 +84,13 @@ public class Common {
 		StringBuilder jsonString = new StringBuilder("{\"callback\":[");
 		String[] listNameArr = Catalog.list();
 		int length = listNameArr.length;
+		if (length == 0) {
+			return "{\"callback\":[]}";
+		}
 		String name;
 		File[] files = Catalog.listFiles();
 		File file;
-		for (int i = 0; i < length - 1; i++) {
+		for (int i = 0; i < length; i++) {
 			name = listNameArr[i];
 			file = files[i];
 			jsonString.append("{\"name\":\"").append(name).append("\",");
