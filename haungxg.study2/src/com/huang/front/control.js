@@ -260,8 +260,9 @@ TableList.prototype.retBtn = function() {
 	document.getElementById("source").innerHTML = lastpath;
 }
 
-TableList.prototype.setFileFlag=function(creadeNodesJson,tdNode1){
+TableList.prototype.setFileFlag = function(creadeNodesJson, tdNode1) {
 	if (creadeNodesJson.isFile == "true") {
+<<<<<<< Upstream, based on origin/master
 			var classStyle = (creadeNodesJson.Name).split(".");
 >>>>>>> 5565603 实现文件夹下一级查看和文件下载
 			var fileNameLength = classStyle.length;
@@ -300,11 +301,50 @@ TableList.prototype.setFileFlag=function(creadeNodesJson,tdNode1){
 					tdNode1.setAttribute("class", "file_type_default");
 					break;
 			}
+=======
+		var classStyle = (creadeNodesJson.Name).split(".");
+		var fileNameLength = classStyle.length;
+		switch (classStyle[fileNameLength - 1]) {
+			case "txt" :
+				tdNode1.setAttribute("class", "file_type_txt");
+				break;
+			case "pdf" :
+				tdNode1.setAttribute("class", "file_type_pdf");
+				break;
+			case "zip" :
+				tdNode1.setAttribute("class", "file_type_zip");
+				break;
+			case "docx" :
+				tdNode1.setAttribute("class", "file_type_doc");
+				break;
+			case "js" :
+				tdNode1.setAttribute("class", "file_type_js");
+				break;
+			case "css" :
+				tdNode1.setAttribute("class", "file_type_css");
+				break;
+			case "html" :
+				tdNode1.setAttribute("class", "file_type_html");
+				break;
+			case "png" :
+				tdNode1.setAttribute("class", "file_type_png");
+				break;
+			case "jpg" :
+				tdNode1.setAttribute("class", "file_type_jpg");
+				break;
+			case "mp3" :
+				tdNode1.setAttribute("class", "file_type_mp3");
+				break;
+			default :
+				tdNode1.setAttribute("class", "file_type_default");
+				break;
+>>>>>>> 3f630b9 js代码格式化
 		}
-		else {
-			tdNode1.setAttribute("class", "file_folder");
-			tdNode1.setAttribute("name", "folder");
-		}
+	}
+	else {
+		tdNode1.setAttribute("class", "file_folder");
+		tdNode1.setAttribute("name", "folder");
+	}
 }
 
 /**
@@ -332,7 +372,7 @@ TableList.prototype.appendNodes = function(list, resultJson) {
 		var tdNode1 = document.createElement("td");
 		var creadeNodesJson = resultArr[index];
 		var creadeNodesJsonName = creadeNodesJson.name;
-		tableList.setFileFlag(creadeNodesJson,tdNode1)
+		tableList.setFileFlag(creadeNodesJson, tdNode1)
 		var tdNode2 = document.createElement("td");
 		var tdNode3 = document.createElement("td");
 		var textNode1 = document.createTextNode(creadeNodesJsonName);
