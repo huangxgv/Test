@@ -66,11 +66,20 @@ TableList.prototype.menuList = function(menu, trArr) {
 		trArr[i].oncontextmenu = function(e) {
 			var firstChildTd = this.childNodes[0];
 			var thisName = firstChildTd.innerHTML;
+			var path = document.getElementById("source").innerHTML.substring(1) + thisName;
 			var folderFlag = firstChildTd.getAttribute("name") == "folder" ? true : false;
 			var liElementArr = menu.getElementsByTagName("li");
 			liElementArr[0].onclick = function() {
 				if (folderFlag) {
-
+					var jsonParame = {
+						"type" : "watch",
+						"name" : "",
+						"path" : path,
+						"isFile" : "",
+						"context" : ""
+					}
+					tableList.ajaxRequest("http://127.0.0.1:8080", "GET", jsonParame);
+					document.getElementById("source").innerHTML += (thisName + "/");
 				}
 			}
 			if (folderFlag) {
@@ -86,7 +95,21 @@ TableList.prototype.menuList = function(menu, trArr) {
 				}
 			}
 			liElementArr[2].onclick = function() {
-				alert(1)
+				var jsonParame = {
+					"type" : "delete",
+					"name" : "",
+					"path" : path,
+					"isFile" : "",
+					"context" : ""
+				}
+				if (folderFlag) {
+					if (confirm("确认删除整个文件夹?")) {
+						tableList.delwithFile("http://127.0.0.1:8080", "GET", jsonParame)
+					}
+				}
+				else {
+					tableList.delwithFile("http://127.0.0.1:8080", "GET", jsonParame)
+				}
 			}
 			liElementArr[3].onclick = function() {
 				alert(1)
@@ -122,54 +145,69 @@ TableList.prototype.retBtn = function() {
 		"isFile" : "",
 		"context" : ""
 	}
-	tableList.ajaxRequest("http://127.0.0.1:8080", "GET", jsonParame, 1);
+	tableList.ajaxRequest("http://127.0.0.1:8080", "GET", jsonParame);
 	document.getElementById("source").innerHTML = lastpath;
 }
 
-TableList.prototype.setFileFlag=function(creadeNodesJson,tdNode1){
+TableList.prototype.setFileFlag = function(creadeNodesJson, tdNode1) {
 	if (creadeNodesJson.isFile == "true") {
-			var classStyle = (creadeNodesJson.name).split(".");
-			var fileNameLength = classStyle.length;
-			switch (classStyle[fileNameLength - 1]) {
-				case "txt" :
-					tdNode1.setAttribute("class", "file_type_txt");
-					break;
-				case "pdf" :
-					tdNode1.setAttribute("class", "file_type_pdf");
-					break;
-				case "zip" :
-					tdNode1.setAttribute("class", "file_type_zip");
-					break;
-				case "docx" :
-					tdNode1.setAttribute("class", "file_type_doc");
-					break;
-				case "js" :
-					tdNode1.setAttribute("class", "file_type_js");
-					break;
-				case "css" :
-					tdNode1.setAttribute("class", "file_type_css");
-					break;
-				case "html" :
-					tdNode1.setAttribute("class", "file_type_html");
-					break;
-				case "png" :
-					tdNode1.setAttribute("class", "file_type_png");
-					break;
-				case "jpg" :
-					tdNode1.setAttribute("class", "file_type_jpg");
-					break;
-				case "mp3" :
-					tdNode1.setAttribute("class", "file_type_mp3");
-					break;
-				default :
-					tdNode1.setAttribute("class", "file_type_default");
-					break;
-			}
+		var classStyle = (creadeNodesJson.name).split(".");
+		var fileNameLength = classStyle.length;
+		switch (classStyle[fileNameLength - 1]) {
+			case "txt" :
+				tdNode1.setAttribute("class", "file_type_txt");
+				break;
+			case "pdf" :
+				tdNode1.setAttribute("class", "file_type_pdf");
+				break;
+			case "zip" :
+				tdNode1.setAttribute("class", "file_type_zip");
+				break;
+			case "docx" :
+				tdNode1.setAttribute("class", "file_type_doc");
+				break;
+			case "js" :
+				tdNode1.setAttribute("class", "file_type_js");
+				break;
+			case "css" :
+				tdNode1.setAttribute("class", "file_type_css");
+				break;
+			case "html" :
+				tdNode1.setAttribute("class", "file_type_html");
+				break;
+			case "png" :
+				tdNode1.setAttribute("class", "file_type_png");
+				break;
+			case "jpg" :
+				tdNode1.setAttribute("class", "file_type_jpg");
+				break;
+			case "mp3" :
+				tdNode1.setAttribute("class", "file_type_mp3");
+				break;
+			default :
+				tdNode1.setAttribute("class", "file_type_default");
+				break;
 		}
-		else {
-			tdNode1.setAttribute("class", "file_folder");
-			tdNode1.setAttribute("name", "folder");
+	}
+	else {
+		tdNode1.setAttribute("class", "file_folder");
+		tdNode1.setAttribute("name", "folder");
+	}
+}
+
+TableList.prototype.fileLength = function(len) {
+	var company = ["B", "KB", "M", "G"];
+	var index = 0;
+	if (len < 1024) {
+		return len + company[0];
+	}
+	else {
+		while (len > 1024 && index < 4) {
+			len /= 1024;
+			index++;
 		}
+		return len.toFixed(3) + company[index];
+	}
 }
 
 /**
@@ -197,14 +235,14 @@ TableList.prototype.appendNodes = function(list, resultJson) {
 		var tdNode1 = document.createElement("td");
 		var creadeNodesJson = resultArr[index];
 		var creadeNodesJsonName = creadeNodesJson.name;
-		tableList.setFileFlag(creadeNodesJson,tdNode1)
+		tableList.setFileFlag(creadeNodesJson, tdNode1)
 		var tdNode2 = document.createElement("td");
 		var tdNode3 = document.createElement("td");
 		var textNode1 = document.createTextNode(creadeNodesJsonName);
 		var textNode3 = document.createTextNode(creadeNodesJson.date);
 		tdNode1.appendChild(textNode1);
 		if (creadeNodesJson.size != "") {
-			var textNode2 = document.createTextNode(creadeNodesJson.size);
+			var textNode2 = document.createTextNode(tableList.fileLength(creadeNodesJson.size));
 			tdNode2.appendChild(textNode2);
 		}
 		tdNode3.appendChild(textNode3);
@@ -287,11 +325,18 @@ TableList.prototype.ajaxRequest = function(url, methodtype, parameter) {
  * @param {} methodtype
  * @param {} parameter
  */
-TableList.prototype.download = function(url, methodtype, parameter) {
+TableList.prototype.delwithFile = function(url, methodtype, parameter) {
 	var xhr = tableList.getajaxHttp();
 	var stringParameter = JSON.stringify(parameter);
+	xhr.onreadystatechange = state_change;
 	xhr.open(methodtype, url + "/" + stringParameter, true);
 	xhr.send();
+	function state_change() {
+		if (xhr.readyState == 4 && status == 0) {
+			alert(xhr.responseText);
+			tableList.init();
+		}
+	}
 }
 /**
  * 页面初始化
@@ -300,7 +345,7 @@ TableList.prototype.init = function() {
 	var jsonParame = {
 		"type" : "watch",
 		"name" : "",
-		"path" : "/",
+		"path" : "",
 		"isFile" : "",
 		"context" : ""
 	}

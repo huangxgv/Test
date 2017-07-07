@@ -1,6 +1,7 @@
 package com.huang.action;
 
 import com.huang.common.Common;
+import com.huang.dao.DelFileDao;
 
 public class FileAction {
 
@@ -70,10 +71,13 @@ public class FileAction {
 				case "update":
 					break;
 				case "download":
-					System.out.println("***********" + path);
 					sendString.append(new String(com.file2buf(path)));
 					break;
 				case "delete":
+					new DelFileDao().delFile(path);
+					sendString.append(httpHeader);
+					sendString.append("Content-Type:text/html\r\n\r\n");
+					sendString.append("Delete Success").append("\r\n");
 					break;
 				case "add":
 					break;
