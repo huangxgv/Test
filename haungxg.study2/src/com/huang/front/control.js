@@ -39,8 +39,8 @@ TableList.prototype.doubleClick = function(tr) {
 				return;
 			}
 			else {
-				window.open("http://127.0.0.1:8080/%7B%22type%22:%22download%22,%22name%22:%22%22,%22path%22:%22" + path
-				    + "%22,%22isFile%22:true,%22context%22:%22%22%7D");
+				window.open("http://127.0.0.1:8080/{\"type\":\"download\",\"name\":\"\",\"path\":\"" + path
+				    + "\",\"isFile\":true,\"context\":\"\"}");
 				return;
 			}
 		}
@@ -73,23 +73,21 @@ TableList.prototype.menuList = function(menu, trArr) {
 			var folderFlag = firstChildTd.getAttribute("name") == "folder" ? true : false;
 			var liElementArr = menu.getElementsByTagName("li");
 			liElementArr[0].onclick = function() {
-				if(folderFlag){
-					
+				if (folderFlag) {
+
 				}
 			}
 			if (folderFlag) {
 				liElementArr[1].setAttribute("class", "disabled");
 				liElementArr[1].onclick = function(e) {
-					var e = e || window.event;
-					e.stopPropagation = true;
 				}
 			}
 			else {
 				liElementArr[1].setAttribute("class", "");
 				liElementArr[1].onclick = function(e) {
 					var path = document.getElementById("source").innerHTML.substring(1) + thisName;
-					window.open("http://127.0.0.1:8080/%7B%22type%22:%22download%22,%22name%22:%22%22,%22path%22:%22" + path
-					    + "%22,%22isFile%22:true,%22context%22:%22%22%7D");
+					window.open("http://127.0.0.1:8080/{\"type\":\"download\",\"name\":\"\",\"path\":\"" + path
+				    + "\",\"isFile\":true,\"context\":\"\"}");
 				}
 			}
 			liElementArr[2].onclick = function() {
