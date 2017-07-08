@@ -64,6 +64,25 @@ TableList.prototype.menuPosition = function(menu) {
 	menu.style.top = oY + "px";
 }
 
+TableList.prototype.editPageShow = function(textArea,contextBackground, fileContext, path, thisName, inputTitle, disEdit) {
+	contextBackground.style.display = "block";
+	fileContext.style.display = "block";
+	var jsonParame = {
+		"type" : "file",
+		"name" : "",
+		"path" : path,
+		"isFile" : "",
+		"context" : ""
+	}
+	if (disEdit) {
+		textArea.setAttribute("readOnly", disEdit);
+	}else{
+		textArea.removeAttribute("readOnly")
+	}
+	tableList.ajaxRequest("http://127.0.0.1:8080", "GET", jsonParame, "file");
+	inputTitle.value = thisName;
+}
+
 /**
  * 右键功能菜单
  * @param {} menu
@@ -76,6 +95,7 @@ TableList.prototype.menuList = function(menu, trArr) {
 	};
 	for (var i = 0, len = trArr.length; i < len; i++) {
 		trArr[i].oncontextmenu = function(e) {
+			var textArea = document.getElementById("file_txt");
 			var firstChildTd = this.childNodes[0];
 			var thisName = firstChildTd.innerHTML;
 			var path = document.getElementById("source").innerHTML.substring(1) + thisName;
@@ -90,8 +110,7 @@ TableList.prototype.menuList = function(menu, trArr) {
 					document.getElementById("source").innerHTML += (thisName + "/");
 				}
 				else {
-					contextBackground.style.display = "block";
-					fileContext.style.display = "block";
+					tableList.editPageShow(textArea,contextBackground, fileContext, path, thisName, inputTitle, true);
 				}
 			}
 			if (folderFlag) {
@@ -124,13 +143,15 @@ TableList.prototype.menuList = function(menu, trArr) {
 				}
 			}
 			liElementArr[3].onclick = function() {
-				contextBackground.style.display = "block";
-				fileContext.style.display = "block";
 				if (folderFlag) {
+					contextBackground.style.display = "block";
+					fileContext.style.display = "block";
+					textArea.value="";
+					textArea.setAttribute("readOnly","true");
 					inputTitle.value = thisName;
 				}
 				else {
-					inputTitle.value = thisName;
+					tableList.editPageShow(textArea,contextBackground, fileContext, path, thisName, inputTitle, false);
 				}
 			}
 			liElementArr[4].onclick = function() {
@@ -334,8 +355,8 @@ TableList.prototype.ajaxRequest = function(url, methodtype, parameter, funType) 
 						alert(xhr.responseText);
 						tableList.init(path);
 						break;
-					case "watch1" :
-						tableList.showList(xhr.responseText);
+					case "file" :
+						document.getElementById("file_txt").value = xhr.responseText;
 						break;
 				}
 
