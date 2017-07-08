@@ -1,6 +1,7 @@
 package com.huang.dao;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -158,7 +159,12 @@ public class DelFileDao {
 		return new String(folderNameArr);
 	}
 
-	public void downFile(DoInfoBean info) {
-
+	public String getFile(String path) {
+		try {
+			return new String(new Common().file2buf(path));
+		}
+		catch (FileNotFoundException e) {
+			return "";
+		}
 	}
 }

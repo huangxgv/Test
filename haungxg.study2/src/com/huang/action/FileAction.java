@@ -81,6 +81,11 @@ public class FileAction {
 					break;
 				case "add":
 					break;
+				case "file":
+					sendString.append(httpHeader);
+					sendString.append("Content-Type:text/html\r\n\r\n");
+					sendString.append(new DelFileDao().getFile(path)).append("\r\n");
+					break;
 				case "search":
 					break;
 				default:
