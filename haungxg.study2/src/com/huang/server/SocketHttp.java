@@ -45,6 +45,16 @@ class TestReveiveThread implements Runnable {
 		socket = s;
 	}
 
+	protected void doGet(Request request, Response response) {
+		request.parse();
+		response.setRequest(request);
+		response.sendStaticResource();
+	}
+
+	protected void doPost(Request request, Response response) {
+		doGet(request, response);
+	}
+
 	public void run() {
 		BufferedReader input = null;
 		OutputStreamWriter output = null;
@@ -52,11 +62,9 @@ class TestReveiveThread implements Runnable {
 			input = new BufferedReader(new InputStreamReader(socket.getInputStream(), "utf-8"));
 			output = new OutputStreamWriter(socket.getOutputStream(), "UTF-8");
 			Request request = new Request(input);
-			request.parse();
-			//响应请求输出
 			Response response = new Response(output);
-			response.setRequest(request);
-			response.sendStaticResource();
+			doGet(request, response);
+
 		}
 		catch (Exception e) {
 			System.out.println("客户端接受异常" + e.getMessage());
