@@ -24,13 +24,6 @@ TableList.prototype.doubleClick = function(tr) {
 		var fileSizeFlag = tr.childNodes[1].innerHTML;
 		var thisName = this.childNodes[0].innerHTML;
 		var path = document.getElementById("source").innerHTML.substring(1) + thisName;
-		var jsonParame = {
-			"type" : "watch",
-			"name" : "",
-			"path" : path,
-			"isFile" : isFile,
-			"context" : ""
-		}
 		if (!(this.childNodes[0].getAttribute("name") == "folder")) {
 			if (!confirm("确认下载文件?")) {
 				return;
@@ -40,7 +33,7 @@ TableList.prototype.doubleClick = function(tr) {
 				return;
 			}
 		}
-		tableList.ajaxRequest("http://127.0.0.1:8080", "GET", jsonParame, 1);
+		tableList.init(path);
 		if (!isFile) {
 			document.getElementById("source").innerHTML += (thisName + "/");
 		}
@@ -52,6 +45,25 @@ TableList.prototype.doubleClick = function(tr) {
 TableList.prototype.menuHidden = function() {
 
 }
+/**
+ * 编辑界面返回按钮功能
+ */
+TableList.prototype.editBtnReturn = function() {
+	var contextBackground = document.getElementById("file_background");
+	var fileContext = document.getElementById("file_context");
+	contextBackground.style.display = "none";
+	fileContext.style.display = "none";
+}
+
+TableList.prototype.menuPosition = function(menu) {
+	var e = e || window.event;
+	var oX = e.clientX;
+	var oY = e.clientY;
+	menu.style.display = "block";
+	menu.style.left = oX + "px";
+	menu.style.top = oY + "px";
+}
+
 /**
  * 右键功能菜单
  * @param {} menu
@@ -68,18 +80,18 @@ TableList.prototype.menuList = function(menu, trArr) {
 			var thisName = firstChildTd.innerHTML;
 			var path = document.getElementById("source").innerHTML.substring(1) + thisName;
 			var folderFlag = firstChildTd.getAttribute("name") == "folder" ? true : false;
+			var contextBackground = document.getElementById("file_background");
+			var fileContext = document.getElementById("file_context");
+			var inputTitle = fileContext.getElementsByTagName("input")[0];
 			var liElementArr = menu.getElementsByTagName("li");
 			liElementArr[0].onclick = function() {
 				if (folderFlag) {
-					var jsonParame = {
-						"type" : "watch",
-						"name" : "",
-						"path" : path,
-						"isFile" : "",
-						"context" : ""
-					}
-					tableList.ajaxRequest("http://127.0.0.1:8080", "GET", jsonParame);
+					tableList.init(path);
 					document.getElementById("source").innerHTML += (thisName + "/");
+				}
+				else {
+					contextBackground.style.display = "block";
+					fileContext.style.display = "block";
 				}
 			}
 			if (folderFlag) {
@@ -104,26 +116,28 @@ TableList.prototype.menuList = function(menu, trArr) {
 				}
 				if (folderFlag) {
 					if (confirm("确认删除整个文件夹?")) {
-						tableList.delwithFile("http://127.0.0.1:8080", "GET", jsonParame)
+						tableList.ajaxRequest("http://127.0.0.1:8080", "GET", jsonParame, "delete");
 					}
 				}
 				else {
-					tableList.delwithFile("http://127.0.0.1:8080", "GET", jsonParame)
+					tableList.ajaxRequest("http://127.0.0.1:8080", "GET", jsonParame, "delete");
 				}
 			}
 			liElementArr[3].onclick = function() {
+				contextBackground.style.display = "block";
+				fileContext.style.display = "block";
+				if (folderFlag) {
+					inputTitle.value = thisName;
+				}
+				else {
+					inputTitle.value = thisName;
+				}
+			}
+			liElementArr[4].onclick = function() {
 				alert(1)
 			}
-			menu.onclick = function(e) {
-				var e = e || window.event;
-				e.stopPropagation = true;
-			}
-			var e = e || window.event;
-			var oX = e.clientX;
-			var oY = e.clientY;
-			menu.style.display = "block";
-			menu.style.left = oX + "px";
-			menu.style.top = oY + "px";
+			document.getElementsByClassName("update_return")[0].onclick = tableList.editBtnReturn;
+			tableList.menuPosition(menu);
 			return false;
 		}
 	}
@@ -138,17 +152,14 @@ TableList.prototype.retBtn = function() {
 	}
 	path = path.substring(0, path.length - 1);
 	var lastpath = path.substring(0, path.lastIndexOf("/") + 1);
-	var jsonParame = {
-		"type" : "watch",
-		"name" : "",
-		"path" : lastpath,
-		"isFile" : "",
-		"context" : ""
-	}
-	tableList.ajaxRequest("http://127.0.0.1:8080", "GET", jsonParame);
+	tableList.init(lastpath)
 	document.getElementById("source").innerHTML = lastpath;
 }
-
+/**
+ * 设置文件图标
+ * @param {} creadeNodesJson
+ * @param {} tdNode1
+ */
 TableList.prototype.setFileFlag = function(creadeNodesJson, tdNode1) {
 	if (creadeNodesJson.isFile == "true") {
 		var classStyle = (creadeNodesJson.name).split(".");
@@ -305,7 +316,7 @@ TableList.prototype.getajaxHttp = function() {
  * parameter(参数)
  * state_change(回调方法名，不需要引号,这里只有成功的时候才调用)
  */
-TableList.prototype.ajaxRequest = function(url, methodtype, parameter) {
+TableList.prototype.ajaxRequest = function(url, methodtype, parameter, funType) {
 	var xhr = tableList.getajaxHttp();
 	var stringParameter = JSON.stringify(parameter);
 	xhr.onreadystatechange = state_change;
@@ -314,42 +325,41 @@ TableList.prototype.ajaxRequest = function(url, methodtype, parameter) {
 	function state_change() {
 		if (xhr.readyState == 4 && status == 0) {
 			if (xhr.responseText != null || xhr.responseText != "") {
-				tableList.showList(xhr.responseText);
+				switch (funType) {
+					case "watch" :
+						tableList.showList(xhr.responseText);
+						break;
+					case "delete" :
+						var path = document.getElementById("source").innerHTML;
+						alert(xhr.responseText);
+						tableList.init(path);
+						break;
+					case "watch1" :
+						tableList.showList(xhr.responseText);
+						break;
+				}
+
+				// tableList.showList(xhr.responseText);
 			}
 		}
 	};
 }
-/**
- * 下载文件
- * @param {} url
- * @param {} methodtype
- * @param {} parameter
- */
-TableList.prototype.delwithFile = function(url, methodtype, parameter) {
-	var xhr = tableList.getajaxHttp();
-	var stringParameter = JSON.stringify(parameter);
-	xhr.onreadystatechange = state_change;
-	xhr.open(methodtype, url + "/" + stringParameter, true);
-	xhr.send();
-	function state_change() {
-		if (xhr.readyState == 4 && status == 0) {
-			alert(xhr.responseText);
-			tableList.init();
-		}
-	}
-}
+
 /**
  * 页面初始化
  */
-TableList.prototype.init = function() {
+TableList.prototype.init = function(path) {
+	if (path == "" || path == null) {
+		path = "";
+	}
 	var jsonParame = {
 		"type" : "watch",
 		"name" : "",
-		"path" : "",
+		"path" : path,
 		"isFile" : "",
 		"context" : ""
 	}
-	var resultStr = tableList.ajaxRequest("http://127.0.0.1:8080", "GET", jsonParame);
+	var resultStr = tableList.ajaxRequest("http://127.0.0.1:8080", "GET", jsonParame, "watch");
 }
 
 TableList.prototype.clickToOrder = function(flag) {
