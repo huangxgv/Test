@@ -138,4 +138,36 @@ public class Common {
 		}
 		path.delete();
 	}
+
+	/**
+	 * 更新文件名或文件夹名
+	 * <pre>
+	 * updateFileName("notExit","hello.txt")="update fail";
+	 * updateFileName("hello.txt","")="update fail";
+	 * 修改文件名
+	 * updateFileName("test.txt","hello.txt")="update Success";
+	 * 修改文件夹名
+	 * updateFileName("hello","test")="update Success";
+	 * </pre>
+	 * @param path
+	 * @param newName
+	 * @return
+	 */
+	public String updateFileName(String path, String newName) {
+		File file = new File(path);
+		if (!file.exists()) {
+			return "update fail";
+		}
+		if (newName == null || newName == "") {
+			return "update fail";
+		}
+		else {
+			file.renameTo(new File(newName));
+			return "update Success";
+		}
+	}
+
+	public String updateFileContext(String path, String context) {
+		return null;
+	}
 }

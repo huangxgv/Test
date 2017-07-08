@@ -9,6 +9,10 @@ public class FileAction {
 
 	private String path;
 
+	private String name;
+
+	private String context;
+
 	/**
 	 * 获取action类型
 	 * @param uri
@@ -24,6 +28,14 @@ public class FileAction {
 	public void setPath(String path) {
 		this.path = "D:/TestTwo/" + path;
 		System.out.println(this.path);
+	}
+
+	public void setName(String name) {
+		this.name = "D:/TestTwo/" + name;
+	}
+
+	public void setContext(String context) {
+		this.context = context;
 	}
 
 	public String getPath() {
@@ -69,6 +81,9 @@ public class FileAction {
 					sendString.append(com.getFolderList(path)).append("\r\n");
 					break;
 				case "update":
+					sendString.append(httpHeader);
+					sendString.append("Content-Type:text/html\r\n\r\n");
+					sendString.append(new DelFileDao().updateFile(path, name, context));
 					break;
 				case "download":
 					sendString.append(new String(com.file2buf(path)));

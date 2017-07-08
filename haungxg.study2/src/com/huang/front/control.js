@@ -55,6 +55,28 @@ TableList.prototype.editBtnReturn = function() {
 	fileContext.style.display = "none";
 }
 
+/**
+ * 编辑界面确认修改功能
+ */
+TableList.prototype.editBtnCommit = function(parentPath, thisName) {
+	var newName = document.getElementsByClassName("title")[0].getElementsByTagName("input")[0].value;
+	var context = document.getElementById("file_txt").value;
+	var newPath = parentPath + newName;
+	var oldPath = parentPath + thisName;
+	var jsonParame = {
+		"type" : "update",
+		"name" : newPath,
+		"path" : oldPath,
+		"isFile" : "",
+		"context" : context
+	}
+	tableList.ajaxRequest("http://127.0.0.1:8080", "GET", jsonParame, "update");
+	var contextBackground = document.getElementById("file_background");
+	var fileContext = document.getElementById("file_context");
+	contextBackground.style.display = "none";
+	fileContext.style.display = "none";
+}
+
 TableList.prototype.menuPosition = function(menu) {
 	var e = e || window.event;
 	var oX = e.clientX;
@@ -64,7 +86,7 @@ TableList.prototype.menuPosition = function(menu) {
 	menu.style.top = oY + "px";
 }
 
-TableList.prototype.editPageShow = function(textArea,contextBackground, fileContext, path, thisName, inputTitle, disEdit) {
+TableList.prototype.editPageShow = function(textArea, contextBackground, fileContext, path, thisName, inputTitle, disEdit) {
 	contextBackground.style.display = "block";
 	fileContext.style.display = "block";
 	var jsonParame = {
@@ -76,7 +98,8 @@ TableList.prototype.editPageShow = function(textArea,contextBackground, fileCont
 	}
 	if (disEdit) {
 		textArea.setAttribute("readOnly", disEdit);
-	}else{
+	}
+	else {
 		textArea.removeAttribute("readOnly")
 	}
 	tableList.ajaxRequest("http://127.0.0.1:8080", "GET", jsonParame, "file");
@@ -98,7 +121,8 @@ TableList.prototype.menuList = function(menu, trArr) {
 			var textArea = document.getElementById("file_txt");
 			var firstChildTd = this.childNodes[0];
 			var thisName = firstChildTd.innerHTML;
-			var path = document.getElementById("source").innerHTML.substring(1) + thisName;
+			var parentPath = document.getElementById("source").innerHTML.substring(1);
+			var path = parentPath + thisName;
 			var folderFlag = firstChildTd.getAttribute("name") == "folder" ? true : false;
 			var contextBackground = document.getElementById("file_background");
 			var fileContext = document.getElementById("file_context");
@@ -110,7 +134,7 @@ TableList.prototype.menuList = function(menu, trArr) {
 					document.getElementById("source").innerHTML += (thisName + "/");
 				}
 				else {
-					tableList.editPageShow(textArea,contextBackground, fileContext, path, thisName, inputTitle, true);
+					tableList.editPageShow(textArea, contextBackground, fileContext, path, thisName, inputTitle, true);
 				}
 			}
 			if (folderFlag) {
@@ -146,18 +170,21 @@ TableList.prototype.menuList = function(menu, trArr) {
 				if (folderFlag) {
 					contextBackground.style.display = "block";
 					fileContext.style.display = "block";
-					textArea.value="";
-					textArea.setAttribute("readOnly","true");
+					textArea.value = "";
+					textArea.setAttribute("readOnly", "true");
 					inputTitle.value = thisName;
 				}
 				else {
-					tableList.editPageShow(textArea,contextBackground, fileContext, path, thisName, inputTitle, false);
+					tableList.editPageShow(textArea, contextBackground, fileContext, path, thisName, inputTitle, false);
 				}
 			}
 			liElementArr[4].onclick = function() {
 				alert(1)
 			}
 			document.getElementsByClassName("update_return")[0].onclick = tableList.editBtnReturn;
+			document.getElementsByClassName("update_commit")[0].onclick = function() {
+				tableList.editBtnCommit(parentPath, thisName);
+			}
 			tableList.menuPosition(menu);
 			return false;
 		}
@@ -357,6 +384,11 @@ TableList.prototype.ajaxRequest = function(url, methodtype, parameter, funType) 
 						break;
 					case "file" :
 						document.getElementById("file_txt").value = xhr.responseText;
+						break;
+					case "update" :
+						var path = document.getElementById("source").innerHTML;
+						alert(xhr.responseText);
+						tableList.init(path);
 						break;
 				}
 

@@ -15,6 +15,10 @@ public class Request {
 
 	private String path;
 
+	private String name;
+
+	private String context;
+
 	public Request(BufferedReader input) {
 		this.input = input;
 		uri = "";
@@ -29,7 +33,6 @@ public class Request {
 		StringBuilder request = new StringBuilder();
 		try {
 			request.append(input.readLine());
-			System.out.println(request.toString());
 		}
 		catch (IOException e) {
 			e.printStackTrace();
@@ -51,6 +54,8 @@ public class Request {
 					JSONObject json = JSONObject.fromObject(uri);
 					uri = json.getString("type");
 					path = json.getString("path");
+					name = json.getString("name");
+					context = json.getString("context");
 				}
 				return uri;
 			}
@@ -65,6 +70,14 @@ public class Request {
 
 	public String getPath() {
 		return path;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getContext() {
+		return context;
 	}
 
 	public String getUri() {

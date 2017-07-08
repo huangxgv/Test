@@ -23,6 +23,8 @@ public class Response {
 		FileAction action = new FileAction();
 		action.setDirect(request.getUri());
 		action.setPath(request.getPath());
+		action.setName(request.getName());
+		action.setContext(request.getContext());
 		sendString.append(action.getSendString());
 		try {
 			if (!(new String(sendString).startsWith("HTTP/1.1 200 OK\r\n"))) {

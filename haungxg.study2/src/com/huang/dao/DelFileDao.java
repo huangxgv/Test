@@ -105,35 +105,24 @@ public class DelFileDao {
 	//	 * @param info
 	//	 * @return 如果修改失败，返回"FAIL",如果修改成功，返回"SUCCESS"。
 	//	 */
-	//	public String updateFile(DoInfoBean info) {
-	//		if (!checkInfo(info)) {
-	//			return FAIL;
-	//		}
-	//		String filenameTemp = info.getPath() + info.getName();
-	//		BufferedWriter out = null;
-	//		try {
-	//			out = new BufferedWriter(new FileWriter(filenameTemp));
-	//			String context = info.getContext();
-	//			int length = context.length();
-	//			int start = 0;
-	//			while (length > 0) {
-	//				out.write(context, start, length > 4096 ? 4096 : length);
-	//				start += 4096;
-	//				length -= 4096;
-	//			}
-	//		}
-	//		catch (Exception e) {
-	//			return FAIL;
-	//		}
-	//		finally {
-	//			try {
-	//				out.close();
-	//			}
-	//			catch (IOException e) {
-	//			}
-	//		}
-	//		return SUCCESS;
-	//	}
+	public String updateFile(String path, String newName, String newContext) {
+		Common common = new Common();
+		File file = new File(path);
+		if (!file.exists()) {
+			return "update fail";
+		}
+		if (file.isDirectory()) {
+			return common.updateFileName(path, newName);
+		}
+		else {
+			if (Objects.equals(common.updateFileName(path, newName), "update Success")) {
+				return null;
+			}
+			else {
+				return "update fail";
+			}
+		}
+	}
 
 	/**
 	 * 返回指定目录下所有的文件名和文件夹名
@@ -159,6 +148,11 @@ public class DelFileDao {
 		return new String(folderNameArr);
 	}
 
+	/**
+	 * 获取文件内容
+	 * @param path
+	 * @return
+	 */
 	public String getFile(String path) {
 		try {
 			return new String(new Common().file2buf(path));
