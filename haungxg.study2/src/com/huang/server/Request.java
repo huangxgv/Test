@@ -17,6 +17,8 @@ public class Request {
 
 	public Request(BufferedReader input) {
 		this.input = input;
+		uri = "";
+		path = "";
 	}
 
 	/**
