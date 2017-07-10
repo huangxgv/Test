@@ -60,7 +60,8 @@ TableList.prototype.editBtnReturn = function() {
  */
 TableList.prototype.editBtnCommit = function(parentPath, thisName) {
 	var newName = document.getElementsByClassName("title")[0].getElementsByTagName("input")[0].value;
-	var context = document.getElementById("file_txt").value;
+	var content = document.getElementById("file_txt").value;
+	content = content.replace("\n", "");
 	var newPath = parentPath + newName;
 	var oldPath = parentPath + thisName;
 	var jsonParame = {
@@ -68,7 +69,7 @@ TableList.prototype.editBtnCommit = function(parentPath, thisName) {
 		"name" : newPath,
 		"path" : oldPath,
 		"isFile" : "",
-		"context" : context
+		"context" : content
 	}
 	tableList.ajaxRequest("http://127.0.0.1:8080", "GET", jsonParame, "update");
 	var contextBackground = document.getElementById("file_background");
@@ -89,6 +90,7 @@ TableList.prototype.menuPosition = function(menu) {
 TableList.prototype.editPageShow = function(textArea, contextBackground, fileContext, path, thisName, inputTitle, disEdit) {
 	contextBackground.style.display = "block";
 	fileContext.style.display = "block";
+	var btnGroup = document.getElementById("btn_group");
 	var jsonParame = {
 		"type" : "file",
 		"name" : "",
@@ -98,11 +100,16 @@ TableList.prototype.editPageShow = function(textArea, contextBackground, fileCon
 	}
 	if (disEdit) {
 		textArea.setAttribute("readOnly", disEdit);
+		btnGroup.setAttribute("class", "");
+		btnGroup.setAttribute("class", "see");
 	}
 	else {
-		textArea.removeAttribute("readOnly")
+		textArea.removeAttribute("readOnly");
+		btnGroup.setAttribute("class", "");
+		btnGroup.setAttribute("class", "edit");
 	}
-	tableList.ajaxRequest("http://127.0.0.1:8080", "GET", jsonParame, "file");
+	document.getElementById("file_txt").value = "信息加载中......";
+	tableList.ajaxRequest("http://127.0.0.1:8080", "POST", jsonParame, "file");
 	inputTitle.value = thisName;
 }
 
@@ -178,8 +185,22 @@ TableList.prototype.menuList = function(menu, trArr) {
 					tableList.editPageShow(textArea, contextBackground, fileContext, path, thisName, inputTitle, false);
 				}
 			}
-			liElementArr[4].onclick = function() {
-				alert(1)
+			var jParame = {
+				"type" : "watch",
+				"name" : "",
+				"path" : parentPath,
+				"isFile" : "",
+				"context" : ""
+			}
+			for (var i = 1; i < 6; i += 2) {
+				var spanElement = liElementArr[4].childNodes[1].childNodes[i];
+				spanElement.index = i;;
+				spanElement.onclick = function() {
+					var spanValue = this.childNodes[1].innerHTML;
+					var orderType = spanValue == "↓" ? -this.index : this.index;
+					tableList.ajaxRequest("http://127.0.0.1:8080", "GET", jParame, "watch", orderType);
+					return false;
+				}
 			}
 			document.getElementsByClassName("update_return")[0].onclick = tableList.editBtnReturn;
 			document.getElementsByClassName("update_commit")[0].onclick = function() {
@@ -244,12 +265,12 @@ TableList.prototype.setFileFlag = function(creadeNodesJson, tdNode1) {
 				tdNode1.setAttribute("class", "file_type_mp3");
 				break;
 			default :
-				tdNode1.setAttribute("class", "file_type_default");
+				tdNode1.style.backgroundImage = "url(folderImg.jpg)";
 				break;
 		}
 	}
 	else {
-		tdNode1.setAttribute("class", "file_folder");
+		tdNode1.style.backgroundImage = "url(folderImg.jpg)";
 		tdNode1.setAttribute("name", "folder");
 	}
 }
@@ -268,6 +289,90 @@ TableList.prototype.fileLength = function(len) {
 		return len.toFixed(3) + company[index];
 	}
 }
+/**
+ * 排序标准
+ * @param {} resultJson
+ * @param {} orderType
+ * @param {} attr
+ */
+TableList.prototype.mySort = function(resultJson, orderType, attr) {
+	if (orderType < 0) {
+		resultJson.sort(function(parmA, parmB) {
+			    if (attr == "size") {
+				    parmA = isNaN(parseFloat(parmA[attr])) ? 0 : parseFloat(parmA[attr]);
+				    parmB = isNaN(parseFloat(parmB[attr])) ? 0 : parseFloat(parmB[attr]);
+				    return parmB - parmA;
+			    }
+			    return (parmA[attr]) > (parmB[attr]) ? -1 : 1;
+		    });
+	}
+	else {
+		resultJson.sort(function(parmA, parmB) {
+			    if (attr == "size") {
+				    parmA = isNaN(parseFloat(parmA[attr])) ? 0 : parseFloat(parmA[attr]);
+				    parmB = isNaN(parseFloat(parmB[attr])) ? 0 : parseFloat(parmB[attr]);
+				    return parmA - parmB;
+			    }
+			    return (parmA[attr]) > (parmB[attr]) ? 1 : -1;
+		    });
+	}
+}
+
+/**
+ * 对传进的json数组按json属性排序
+ * @param {} list
+ * @param {} resultJson
+ * @param {} orderType
+ */
+TableList.prototype.sortByType = function(resultJson, orderType) {
+	var spanOne = document.getElementById("childMenu").childNodes[1].childNodes[1];
+	var spanTwo = document.getElementById("childMenu").childNodes[3].childNodes[1];
+	var spanThree = document.getElementById("childMenu").childNodes[5].childNodes[1];
+	switch (Math.abs(orderType)) {
+		case 1 :
+			resultJson.sort(tableList.mySort(resultJson, orderType, "name"));
+			if (orderType < 0) {
+				spanTwo.innerHTML = "";
+				spanThree.innerHTML = "";
+				spanOne.innerHTML = "&#8593;";
+			}
+			else {
+				spanTwo.innerHTML = "";
+				spanThree.innerHTML = "";
+				spanOne.innerHTML = "&#8595;";
+			}
+			break;
+		case 3 :
+			resultJson.sort(tableList.mySort(resultJson, orderType, "size"));
+			if (orderType < 0) {
+				spanOne.innerHTML = "";
+				spanThree.innerHTML = "";
+				spanTwo.innerHTML = "&#8593;";
+			}
+			else {
+				spanOne.innerHTML = "";
+				spanThree.innerHTML = "";
+				spanTwo.innerHTML = "&#8595;";
+			}
+			break;
+		case 5 :
+			resultJson.sort(tableList.mySort(resultJson, orderType, "date"));
+			if (orderType < 0) {
+				spanOne.innerHTML = "";
+				spanTwo.innerHTML = "";
+				spanThree.innerHTML = "&#8593;";
+			}
+			else {
+				spanOne.innerHTML = "";
+				spanTwo.innerHTML = "";
+				spanThree.innerHTML = "&#8595;";
+			}
+			break;
+		default :
+			break;
+	}
+	return resultJson;
+}
 
 /**
  * 向tbody中添加node节点
@@ -285,9 +390,9 @@ TableList.prototype.fileLength = function(len) {
  * @param {} resultArr
  * @param {} sortType
  */
-TableList.prototype.appendNodes = function(list, resultJson) {
+TableList.prototype.appendNodes = function(list, resultJson, orderType) {
 	var resultArr = resultJson.callback;
-	resultArr.sort()
+	resultArr = tableList.sortByType(resultArr, orderType);
 	var length = resultArr.length;
 	for (var index = 0; index < length; index++) {
 		var trNode = document.createElement("tr");
@@ -317,7 +422,7 @@ TableList.prototype.appendNodes = function(list, resultJson) {
  * @param {} resultStr
  * @param {} sortType
  */
-TableList.prototype.showList = function(resultStr) {
+TableList.prototype.showList = function(resultStr, orderType) {
 	var resultJson;
 	var list = document.getElementById("bodyList");
 	var resultJson = JSON.parse(resultStr);
@@ -328,7 +433,7 @@ TableList.prototype.showList = function(resultStr) {
 		return;
 	}
 	var list = document.getElementById("bodyList");
-	tableList.appendNodes(list, resultJson);
+	tableList.appendNodes(list, resultJson, orderType);
 	tableList.addEvent();
 }
 
@@ -364,18 +469,24 @@ TableList.prototype.getajaxHttp = function() {
  * parameter(参数)
  * state_change(回调方法名，不需要引号,这里只有成功的时候才调用)
  */
-TableList.prototype.ajaxRequest = function(url, methodtype, parameter, funType) {
+TableList.prototype.ajaxRequest = function(url, methodtype, parameter, funType, orderType) {
 	var xhr = tableList.getajaxHttp();
+	var data = null;
 	var stringParameter = JSON.stringify(parameter);
 	xhr.onreadystatechange = state_change;
-	xhr.open(methodtype, url + "/" + stringParameter, true);
-	xhr.send();
+	url = url + "/" + stringParameter;
+	// if (methodtype == "GET") {
+	// }else{
+	// data=stringParameter;
+	// }
+	xhr.open(methodtype, url, true);
+	xhr.send(data);
 	function state_change() {
 		if (xhr.readyState == 4 && status == 0) {
 			if (xhr.responseText != null || xhr.responseText != "") {
 				switch (funType) {
 					case "watch" :
-						tableList.showList(xhr.responseText);
+						tableList.showList(xhr.responseText, orderType);
 						break;
 					case "delete" :
 						var path = document.getElementById("source").innerHTML;
@@ -390,9 +501,15 @@ TableList.prototype.ajaxRequest = function(url, methodtype, parameter, funType) 
 						alert(xhr.responseText);
 						tableList.init(path);
 						break;
+					case "create" :
+						var path = document.getElementById("source").innerHTML;
+						alert(xhr.responseText);
+						tableList.init(path);
+						break;
+					default :
+						alert("未知错误！");
+						break;
 				}
-
-				// tableList.showList(xhr.responseText);
 			}
 		}
 	};
@@ -415,8 +532,22 @@ TableList.prototype.init = function(path) {
 	var resultStr = tableList.ajaxRequest("http://127.0.0.1:8080", "GET", jsonParame, "watch");
 }
 
-TableList.prototype.clickToOrder = function(flag) {
-
+TableList.prototype.fileCreate = function(flag) {
+	var fileName = document.getElementById("createFileName");
+	var select = document.getElementById("select");
+	var index = select.selectedIndex;
+	// var text = select.options[index].text; // 选中文本
+	var value = select.options[index].value;
+	var path = document.getElementById("source").innerHTML.substring(1);
+	alert(path + ":" + fileName.value + ":" + value)
+	var jsonParame = {
+		"type" : "create",
+		"name" : fileName.value,
+		"path" : path,
+		"isFile" : value,
+		"context" : ""
+	}
+	var resultStr = tableList.ajaxRequest("http://127.0.0.1:8080", "GET", jsonParame, "create");
 }
 
 /**
@@ -435,8 +566,8 @@ TableList.prototype.addEvent = function() {
 	}
 	// 返回按钮点击事件
 	document.getElementById("return").onclick = tableList.retBtn;
-	// 点击排序
-
+	// 点击创建文件（夹）
+	document.getElementById("fileCreateBtn").onclick = tableList.fileCreate;
 }
 
 window.onload = function() {

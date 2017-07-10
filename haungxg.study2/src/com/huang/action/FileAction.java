@@ -13,6 +13,8 @@ public class FileAction {
 
 	private String context;
 
+	private String isFile;
+
 	/**
 	 * 获取action类型
 	 * @param uri
@@ -36,6 +38,10 @@ public class FileAction {
 
 	public void setContext(String context) {
 		this.context = context;
+	}
+
+	public void setIsFile(String isFile) {
+		this.isFile = isFile;
 	}
 
 	public String getPath() {
@@ -72,8 +78,8 @@ public class FileAction {
 					break;
 				case "folderImg.png":
 					sendString.append(httpHeader);
-					sendString.append("Content-Type:image/png\r\n\r\n");
-					sendString.append(new String(com.file2buf("folderImg.png"), "UTF-8")).append("\r\n");
+					sendString.append("Content-Type:text/html\r\n\r\n");
+					sendString.append("folderImg.png").append("\r\n");
 					break;
 				case "watch":
 					sendString.append(httpHeader);
@@ -94,7 +100,10 @@ public class FileAction {
 					sendString.append("Content-Type:text/html\r\n\r\n");
 					sendString.append("Delete Success").append("\r\n");
 					break;
-				case "add":
+				case "create":
+					sendString.append(httpHeader);
+					sendString.append("Content-Type:text/html\r\n\r\n");
+					sendString.append(new DelFileDao().createFile(path + name, isFile)).append("\r\n");
 					break;
 				case "file":
 					sendString.append(httpHeader);

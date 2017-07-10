@@ -3,6 +3,7 @@ package com.huang.common;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -168,6 +169,73 @@ public class Common {
 	}
 
 	public String updateFileContext(String path, String context) {
-		return null;
+		File file = new File(path);
+		FileOutputStream fos = null;
+		int index = 0;
+		int length = context.length();
+		try {
+			byte bytes[] = new byte[4096];
+			while (index < length) {
+				if (length < index + 4096) {
+					bytes = (context.substring(index, length).getBytes());
+				}
+				else {
+					bytes = (context.substring(index, index + 4096)).getBytes();
+				}
+				int bytesLength = bytes.length;
+				index += bytesLength;
+				fos = new FileOutputStream(file);
+				fos.write(bytes, 0, bytesLength);
+				fos.flush();
+			}
+		}
+		catch (Exception e) {
+			return "update fail";
+		}
+		finally {
+			if (fos != null) {
+				try {
+					fos.close();
+				}
+				catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return "update success";
+	}
+
+	/**
+	 * 创建单个文件
+	 * @param filePath
+	 * @return
+	 */
+	public String createFile(File file) {
+		try {
+			if (file.createNewFile()) {
+				return "create success";
+			}
+			else {
+				return "create fail";
+			}
+		}
+		catch (IOException e) {// 捕获异常
+			e.printStackTrace();
+			return "create fail";
+		}
+	}
+
+	/**
+	 * 创建目录
+	 * @param destDirName
+	 * @return
+	 */
+	public String createDir(File dir) {
+		if (dir.mkdirs()) {
+			return "create success";
+		}
+		else {
+			return "create fail";
+		}
 	}
 }

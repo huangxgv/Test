@@ -279,7 +279,7 @@ button {
 	background: #000;
 	opacity: 0.5;
 	z-index: 9900;
-	display:none;
+	display: none;
 }
 
 #file_context {
@@ -287,13 +287,14 @@ button {
 	top: 100px;
 	left: 300px;
 	width: 800px;
-	height: 600px; border : 2px groove #D5DCEE;
+	height: 600px;
+	border: 2px groove #D5DCEE;
 	border-radius: 10px;
 	opacity: 1;
 	background: #FFF;
 	z-index: 9999;
 	border: 2px groove #D5DCEE;
-	display:none;
+	display: none;
 }
 
 #file_context .title {
@@ -313,14 +314,23 @@ button {
 	padding: 20px 0 0 60px;
 }
 
-#file_context .context textarea{
-	 resize:none;
-	 
+#file_context .context textarea {
+	resize: none;
 }
-#file_context .btn_group{
-	padding:10px 80px;
+
+#btn_group {
+	padding: 10px 80px;
 }
-#file_context .btn_group button{
-	margin-left:140px;
-	width:100px
+
+#file_context .edit button {
+	margin-left: 140px;
+	width: 100px
+}
+
+#file_context .see button:nth-of-type(2) {
+	display: none;
+}
+
+#file_context .see button:nth-of-type(1) {
+	margin-left: 230px;
 }

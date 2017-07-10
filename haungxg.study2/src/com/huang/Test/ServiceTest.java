@@ -1,7 +1,5 @@
 package com.huang.Test;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 
 import com.huang.beans.DoInfoBean;
@@ -22,16 +20,16 @@ public class ServiceTest {
 
 	@Test
 	public void delFileDaoTest() {
-		init("test.txt", "D:/", true, "", "");
-		assertEquals("success", fileDao.delFile(doBean));
-		init("test.txt", "D:/", true, "", "");
-		assertEquals("success", fileDao.addFile(doBean));
-		init("test.txt", "D:/", true, "", "welcome");
-		assertEquals("success", fileDao.updateFile(doBean));
-		init("test.txt", "D:/", true, "", "");
-		assertEquals("welcome", fileDao.getFileContext(doBean));
-		init("", "D:/workSpace/", true, "", "");
-		assertEquals(".metadata:.recommenders:front:service", fileDao.getFolderList(doBean));
+		//		init("test.txt", "D:/", true, "", "");
+		//		assertEquals("success", fileDao.delFile(doBean));
+		//		init("test.txt", "D:/", true, "", "");
+		//		assertEquals("success", fileDao.addFile(doBean));
+		//		init("test.txt", "D:/", true, "", "welcome");
+		//		assertEquals("success", fileDao.updateFile(doBean));
+		//		init("test.txt", "D:/", true, "", "");
+		//		assertEquals("welcome", fileDao.getFileContext(doBean));
+		//		init("", "D:/workSpace/", true, "", "");
+		//		assertEquals(".metadata:.recommenders:front:service", fileDao.getFolderList(doBean));
 	}
 
 }

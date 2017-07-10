@@ -23,43 +23,25 @@ public class DelFileDao {
 	DoInfoBean dInfoBean = new DoInfoBean();
 
 	/**
-	 * 在指定的目录中添加文件
+	 * 在指定的目录中添加文件(夹)
 	 * <pre>
 	 * 	addFile(null)=FAIL;
 	 * </pre>
 	 * @param info
 	 * @return 如果添加失败，返回"FAIL",如果添加成功，返回"SUCCESS"。
 	 */
-	//	public String addFile(String path) {
-	//		File file = new File(path);
-	//		if (!file.exists()) {
-	//			return FAIL;
-	//		}
-	//		String filenameTemp = info.getPath() + info.getName();
-	//		File file = new File(filenameTemp);
-	//		if (file.exists()) {
-	//			return FAIL;
-	//		}
-	//		boolean isfile = info.getIsFile();
-	//		boolean isEndWithSptor = filenameTemp.endsWith(File.separator);
-	//		if (isfile && !isEndWithSptor) {
-	//			try {
-	//				file.createNewFile();
-	//			}
-	//			catch (IOException e) {
-	//				return FAIL;
-	//			}
-	//		}
-	//		else if (!isEndWithSptor) {
-	//			if (!file.mkdirs()) {
-	//				return FAIL;
-	//			}
-	//		}
-	//		else {
-	//			return FAIL;
-	//		}
-	//		return SUCCESS;
-	//	}
+	public String createFile(String path, String isFile) {
+		File file = new File(path);
+		if (file.exists() || Objects.equals(file, null)) {
+			return "create fail";
+		}
+		if (Objects.equals(isFile, "true")) {
+			return new Common().createFile(file);
+		}
+		else {
+			return new Common().createDir(file);
+		}
+	}
 
 	/**
 	 * 删除指定的文件
@@ -108,6 +90,9 @@ public class DelFileDao {
 	public String updateFile(String path, String newName, String newContext) {
 		Common common = new Common();
 		File file = new File(path);
+		if (Objects.equals(file, null)) {
+			return "update fail";
+		}
 		if (!file.exists()) {
 			return "update fail";
 		}
@@ -116,7 +101,7 @@ public class DelFileDao {
 		}
 		else {
 			if (Objects.equals(common.updateFileName(path, newName), "update Success")) {
-				return null;
+				return common.updateFileContext(path, newContext);
 			}
 			else {
 				return "update fail";

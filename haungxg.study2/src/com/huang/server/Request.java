@@ -19,6 +19,8 @@ public class Request {
 
 	private String context;
 
+	private String isFile;
+
 	public Request(BufferedReader input) {
 		this.input = input;
 		uri = "";
@@ -56,6 +58,7 @@ public class Request {
 					path = json.getString("path");
 					name = json.getString("name");
 					context = json.getString("context");
+					isFile = json.getString("isFile");
 				}
 				return uri;
 			}
@@ -78,6 +81,10 @@ public class Request {
 
 	public String getContext() {
 		return context;
+	}
+
+	public String getIsFile() {
+		return isFile;
 	}
 
 	public String getUri() {
