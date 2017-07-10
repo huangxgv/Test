@@ -1,10 +1,13 @@
 package com.huang.common;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -236,6 +239,30 @@ public class Common {
 		}
 		else {
 			return "create fail";
+		}
+	}
+
+	public void closeSource(BufferedReader input, OutputStreamWriter output, Socket socket) {
+		try {
+			if (input != null) {
+				input.close();
+			}
+		}
+		catch (IOException e) {
+		}
+		try {
+			if (output != null) {
+				output.close();
+			}
+		}
+		catch (IOException e) {
+		}
+		try {
+			if (socket != null) {
+				socket.close();
+			}
+		}
+		catch (IOException e) {
 		}
 	}
 }

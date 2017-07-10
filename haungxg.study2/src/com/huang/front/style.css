@@ -145,7 +145,7 @@ button {
 	height: 100%;
 	display: inline-block;
 	position: absolute;
-	right: 50px;
+	right: 150px;
 }
 
 #folderList {
@@ -284,7 +284,7 @@ button {
 
 #file_context {
 	position: fixed;
-	top: 100px;
+	top: 50px;
 	left: 300px;
 	width: 800px;
 	height: 600px;
@@ -311,7 +311,7 @@ button {
 }
 
 #file_context .context {
-	padding: 20px 0 0 60px;
+	padding: 0 0 0 60px;
 }
 
 #file_context .context textarea {
@@ -319,7 +319,7 @@ button {
 }
 
 #btn_group {
-	padding: 10px 80px;
+	padding: 0px 80px;
 }
 
 #file_context .edit button {

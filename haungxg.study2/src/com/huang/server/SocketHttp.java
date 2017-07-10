@@ -1,11 +1,12 @@
 package com.huang.server;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+
+import com.huang.common.Common;
 
 /**
  * 用socket来收发http协议报文
@@ -70,27 +71,7 @@ class TestReveiveThread implements Runnable {
 			System.out.println("客户端接受异常" + e.getMessage());
 		}
 		finally {
-			try {
-				if (input != null) {
-					input.close();
-				}
-			}
-			catch (IOException e) {
-			}
-			try {
-				if (output != null) {
-					output.close();
-				}
-			}
-			catch (IOException e) {
-			}
-			try {
-				if (socket != null) {
-					socket.close();
-				}
-			}
-			catch (IOException e) {
-			}
+			new Common().closeSource(input, output, socket);
 		}
 	}
 }

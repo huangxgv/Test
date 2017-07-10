@@ -529,25 +529,29 @@ TableList.prototype.init = function(path) {
 		"isFile" : "",
 		"context" : ""
 	}
-	var resultStr = tableList.ajaxRequest("http://127.0.0.1:8080", "GET", jsonParame, "watch");
+	tableList.ajaxRequest("http://127.0.0.1:8080", "GET", jsonParame, "watch");
 }
 
 TableList.prototype.fileCreate = function(flag) {
-	var fileName = document.getElementById("createFileName");
+	var fileNameNode = document.getElementById("createFileName");
+	var fileNameValue = fileNameNode.value;
+	if (fileNameValue.indexOf("/") != -1) {
+		alert("名称不合格");
+		return;
+	}
 	var select = document.getElementById("select");
 	var index = select.selectedIndex;
-	// var text = select.options[index].text; // 选中文本
 	var value = select.options[index].value;
 	var path = document.getElementById("source").innerHTML.substring(1);
-	alert(path + ":" + fileName.value + ":" + value)
 	var jsonParame = {
 		"type" : "create",
-		"name" : fileName.value,
+		"name" : fileNameValue,
 		"path" : path,
 		"isFile" : value,
 		"context" : ""
 	}
-	var resultStr = tableList.ajaxRequest("http://127.0.0.1:8080", "GET", jsonParame, "create");
+	tableList.ajaxRequest("http://127.0.0.1:8080", "GET", jsonParame, "create");
+	fileNameNode.value="";
 }
 
 /**

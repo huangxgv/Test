@@ -59,6 +59,15 @@ public class FileAction {
 		Common com = new Common();
 
 		String httpHeader = "HTTP/1.1 200 OK\r\n";
+		//		String select;
+		//		System.out.println(uri);
+		//		if (uri == "" || uri == null) {
+		//			select = "";
+		//		}
+		//		else {
+		//			String[] selectArr = uri.split("");
+		//			select = selectArr[selectArr.length - 1];
+		//		}
 		try {
 			switch (uri) {
 				case "":
@@ -78,7 +87,7 @@ public class FileAction {
 					break;
 				case "folderImg.png":
 					sendString.append(httpHeader);
-					sendString.append("Content-Type:text/html\r\n\r\n");
+					sendString.append("Content-Type:image/png\r\n\r\n");
 					sendString.append("folderImg.png").append("\r\n");
 					break;
 				case "watch":
@@ -103,7 +112,7 @@ public class FileAction {
 				case "create":
 					sendString.append(httpHeader);
 					sendString.append("Content-Type:text/html\r\n\r\n");
-					sendString.append(new DelFileDao().createFile(path + name, isFile)).append("\r\n");
+					sendString.append(new DelFileDao().createFile(name, isFile)).append("\r\n");
 					break;
 				case "file":
 					sendString.append(httpHeader);

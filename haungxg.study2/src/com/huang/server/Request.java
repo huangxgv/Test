@@ -4,7 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import net.sf.json.JSONObject;
 
@@ -54,6 +56,8 @@ public class Request {
 				uri = URLDecoder.decode(requestString.split(" ")[1].substring(1), "utf-8");
 				if (uri.startsWith("{")) {
 					JSONObject json = JSONObject.fromObject(uri);
+					Set<Map.Entry<String, String>> jsonArr = json.entrySet();
+					jsonArr.iterator();
 					uri = json.getString("type");
 					path = json.getString("path");
 					name = json.getString("name");
