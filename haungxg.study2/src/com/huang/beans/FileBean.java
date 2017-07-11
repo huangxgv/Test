@@ -1,6 +1,6 @@
 package com.huang.beans;
 
-public class DoInfoBean {
+public class FileBean {
 	private String type;
 
 	private String isFile;
@@ -51,3 +51,4 @@ public class DoInfoBean {
 		this.context = context;
 	}
 }
+

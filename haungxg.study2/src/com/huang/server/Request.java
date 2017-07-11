@@ -57,7 +57,7 @@ public class Request {
 				if (uri.startsWith("{")) {
 					JSONObject json = JSONObject.fromObject(uri);
 					Set<Map.Entry<String, String>> jsonArr = json.entrySet();
-					jsonArr.iterator();
+
 					uri = json.getString("type");
 					path = json.getString("path");
 					name = json.getString("name");

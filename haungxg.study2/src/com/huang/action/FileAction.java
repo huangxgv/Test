@@ -15,32 +15,11 @@ public class FileAction {
 
 	private String isFile;
 
-	/**
-	 * 获取action类型
-	 * @param uri
-	 */
-	public void setDirect(String uri) {
+	public FileAction(String uri, String path, String name, String context, String isFile) {
 		this.uri = uri;
-	}
-
-	/**
-	 * 获取action路径
-	 * @param path
-	 */
-	public void setPath(String path) {
 		this.path = "D:/TestTwo/" + path;
-		System.out.println(this.path);
-	}
-
-	public void setName(String name) {
 		this.name = "D:/TestTwo/" + name;
-	}
-
-	public void setContext(String context) {
 		this.context = context;
-	}
-
-	public void setIsFile(String isFile) {
 		this.isFile = isFile;
 	}
 
