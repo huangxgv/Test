@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.Objects;
 
-import com.huang.beans.DoInfoBean;
+import com.huang.beans.FileBean;
 import com.huang.common.Common;
 
 /**
@@ -20,7 +20,7 @@ public class DelFileDao {
 
 	private static final String FAIL = "fail";
 
-	DoInfoBean dInfoBean = new DoInfoBean();
+	FileBean dInfoBean = new FileBean();
 
 	/**
 	 * 在指定的目录中添加文件(夹)
@@ -117,7 +117,7 @@ public class DelFileDao {
 	 * @param info
 	 * @return
 	 */
-	public String getFolderList(DoInfoBean info) {
+	public String getFolderList(FileBean info) {
 		if (Objects.equals(info, null)) {
 			return FAIL;
 		}

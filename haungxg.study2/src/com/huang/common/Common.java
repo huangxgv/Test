@@ -8,8 +8,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 /**
  * 工具类
@@ -96,8 +94,6 @@ public class Common {
 		if (Catalog.isFile()) {
 			return null;
 		}
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Calendar cal = Calendar.getInstance();
 		StringBuilder jsonString = new StringBuilder("{\"callback\":[");
 		String[] listNameArr = Catalog.list();
 		int length = listNameArr.length;
@@ -113,15 +109,13 @@ public class Common {
 			jsonString.append("{\"name\":\"").append(name).append("\",");
 			jsonString.append("\"size\":\"").append(file.isFile() ? file.length() : "").append("\",");
 			jsonString.append("\"isFile\":\"").append(file.isFile()).append("\",");
-			cal.setTimeInMillis(file.lastModified());
-			jsonString.append("\"date\":\"").append(sdf.format(cal.getTime())).append("\"},");
+			jsonString.append("\"date\":\"").append(file.lastModified()).append("\"},");
 		}
 		File fileLast = files[length - 1];
 		jsonString.append("{\"name\":\"").append(listNameArr[length - 1]).append("\",");
 		jsonString.append("\"size\":\"").append(fileLast.isFile() ? fileLast.length() : "").append("\",");
 		jsonString.append("\"isFile\":\"").append(fileLast.isFile()).append("\",");
-		cal.setTimeInMillis(fileLast.lastModified());
-		jsonString.append("\"date\":\"").append(sdf.format(cal.getTime())).append("\"}]}");
+		jsonString.append("\"date\":\"").append(fileLast.lastModified()).append("\"}]}");
 		return new String(jsonString);
 	}
 
@@ -242,6 +236,12 @@ public class Common {
 		}
 	}
 
+	/**
+	 * 关闭流
+	 * @param input
+	 * @param output
+	 * @param socket
+	 */
 	public void closeSource(BufferedReader input, OutputStreamWriter output, Socket socket) {
 		try {
 			if (input != null) {

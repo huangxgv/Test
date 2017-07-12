@@ -83,6 +83,12 @@ TableList.prototype.menuPosition = function(menu) {
 	var oX = e.clientX;
 	var oY = e.clientY;
 	menu.style.display = "block";
+	if (oX > 1200) {
+		oX -= 120;
+	}
+	if (oY > 480) {
+		oY -= 160;
+	}
 	menu.style.left = oX + "px";
 	menu.style.top = oY + "px";
 }
@@ -192,16 +198,6 @@ TableList.prototype.menuList = function(menu, trArr) {
 				"isFile" : "",
 				"context" : ""
 			}
-			for (var i = 1; i < 6; i += 2) {
-				var spanElement = liElementArr[4].childNodes[1].childNodes[i];
-				spanElement.index = i;;
-				spanElement.onclick = function() {
-					var spanValue = this.childNodes[1].innerHTML;
-					var orderType = spanValue == "↓" ? -this.index : this.index;
-					tableList.ajaxRequest("http://127.0.0.1:8080", "GET", jParame, "watch", orderType);
-					return false;
-				}
-			}
 			document.getElementsByClassName("update_return")[0].onclick = tableList.editBtnReturn;
 			document.getElementsByClassName("update_commit")[0].onclick = function() {
 				tableList.editBtnCommit(parentPath, thisName);
@@ -224,56 +220,6 @@ TableList.prototype.retBtn = function() {
 	tableList.init(lastpath)
 	document.getElementById("source").innerHTML = lastpath;
 }
-/**
- * 设置文件图标
- * @param {} creadeNodesJson
- * @param {} tdNode1
- */
-TableList.prototype.setFileFlag = function(creadeNodesJson, tdNode1) {
-	if (creadeNodesJson.isFile == "true") {
-		var classStyle = (creadeNodesJson.name).split(".");
-		var fileNameLength = classStyle.length;
-		switch (classStyle[fileNameLength - 1]) {
-			case "txt" :
-				tdNode1.setAttribute("class", "file_type_txt");
-				break;
-			case "pdf" :
-				tdNode1.setAttribute("class", "file_type_pdf");
-				break;
-			case "zip" :
-				tdNode1.setAttribute("class", "file_type_zip");
-				break;
-			case "docx" :
-				tdNode1.setAttribute("class", "file_type_doc");
-				break;
-			case "js" :
-				tdNode1.setAttribute("class", "file_type_js");
-				break;
-			case "css" :
-				tdNode1.setAttribute("class", "file_type_css");
-				break;
-			case "html" :
-				tdNode1.setAttribute("class", "file_type_html");
-				break;
-			case "png" :
-				tdNode1.setAttribute("class", "file_type_png");
-				break;
-			case "jpg" :
-				tdNode1.setAttribute("class", "file_type_jpg");
-				break;
-			case "mp3" :
-				tdNode1.setAttribute("class", "file_type_mp3");
-				break;
-			default :
-				tdNode1.style.backgroundImage = "url(folderImg.jpg)";
-				break;
-		}
-	}
-	else {
-		tdNode1.style.backgroundImage = "url(folderImg.jpg)";
-		tdNode1.setAttribute("name", "folder");
-	}
-}
 
 TableList.prototype.fileLength = function(len) {
 	var company = ["B", "KB", "M", "G"];
@@ -289,91 +235,6 @@ TableList.prototype.fileLength = function(len) {
 		return len.toFixed(3) + company[index];
 	}
 }
-/**
- * 排序标准
- * @param {} resultJson
- * @param {} orderType
- * @param {} attr
- */
-TableList.prototype.mySort = function(resultJson, orderType, attr) {
-	if (orderType < 0) {
-		resultJson.sort(function(parmA, parmB) {
-			    if (attr == "size") {
-				    parmA = isNaN(parseFloat(parmA[attr])) ? 0 : parseFloat(parmA[attr]);
-				    parmB = isNaN(parseFloat(parmB[attr])) ? 0 : parseFloat(parmB[attr]);
-				    return parmB - parmA;
-			    }
-			    return (parmA[attr]) > (parmB[attr]) ? -1 : 1;
-		    });
-	}
-	else {
-		resultJson.sort(function(parmA, parmB) {
-			    if (attr == "size") {
-				    parmA = isNaN(parseFloat(parmA[attr])) ? 0 : parseFloat(parmA[attr]);
-				    parmB = isNaN(parseFloat(parmB[attr])) ? 0 : parseFloat(parmB[attr]);
-				    return parmA - parmB;
-			    }
-			    return (parmA[attr]) > (parmB[attr]) ? 1 : -1;
-		    });
-	}
-}
-
-/**
- * 对传进的json数组按json属性排序
- * @param {} list
- * @param {} resultJson
- * @param {} orderType
- */
-TableList.prototype.sortByType = function(resultJson, orderType) {
-	var spanOne = document.getElementById("childMenu").childNodes[1].childNodes[1];
-	var spanTwo = document.getElementById("childMenu").childNodes[3].childNodes[1];
-	var spanThree = document.getElementById("childMenu").childNodes[5].childNodes[1];
-	switch (Math.abs(orderType)) {
-		case 1 :
-			resultJson.sort(tableList.mySort(resultJson, orderType, "name"));
-			if (orderType < 0) {
-				spanTwo.innerHTML = "";
-				spanThree.innerHTML = "";
-				spanOne.innerHTML = "&#8593;";
-			}
-			else {
-				spanTwo.innerHTML = "";
-				spanThree.innerHTML = "";
-				spanOne.innerHTML = "&#8595;";
-			}
-			break;
-		case 3 :
-			resultJson.sort(tableList.mySort(resultJson, orderType, "size"));
-			if (orderType < 0) {
-				spanOne.innerHTML = "";
-				spanThree.innerHTML = "";
-				spanTwo.innerHTML = "&#8593;";
-			}
-			else {
-				spanOne.innerHTML = "";
-				spanThree.innerHTML = "";
-				spanTwo.innerHTML = "&#8595;";
-			}
-			break;
-		case 5 :
-			resultJson.sort(tableList.mySort(resultJson, orderType, "date"));
-			if (orderType < 0) {
-				spanOne.innerHTML = "";
-				spanTwo.innerHTML = "";
-				spanThree.innerHTML = "&#8593;";
-			}
-			else {
-				spanOne.innerHTML = "";
-				spanTwo.innerHTML = "";
-				spanThree.innerHTML = "&#8595;";
-			}
-			break;
-		default :
-			break;
-	}
-	return resultJson;
-}
-
 /**
  * 向tbody中添加node节点
  * <pre>
@@ -392,18 +253,19 @@ TableList.prototype.sortByType = function(resultJson, orderType) {
  */
 TableList.prototype.appendNodes = function(list, resultJson, orderType) {
 	var resultArr = resultJson.callback;
-	resultArr = tableList.sortByType(resultArr, orderType);
 	var length = resultArr.length;
 	for (var index = 0; index < length; index++) {
 		var trNode = document.createElement("tr");
 		var tdNode1 = document.createElement("td");
 		var creadeNodesJson = resultArr[index];
 		var creadeNodesJsonName = creadeNodesJson.name;
-		tableList.setFileFlag(creadeNodesJson, tdNode1)
+		if (!(creadeNodesJson.isFile == "true")) {
+			tdNode1.setAttribute("name", "folder");
+		}
 		var tdNode2 = document.createElement("td");
 		var tdNode3 = document.createElement("td");
 		var textNode1 = document.createTextNode(creadeNodesJsonName);
-		var textNode3 = document.createTextNode(creadeNodesJson.date);
+		var textNode3 = document.createTextNode(new Date(creadeNodesJson.date * 1).toLocaleString());
 		tdNode1.appendChild(textNode1);
 		if (creadeNodesJson.size != "") {
 			var textNode2 = document.createTextNode(tableList.fileLength(creadeNodesJson.size));
@@ -474,12 +336,16 @@ TableList.prototype.ajaxRequest = function(url, methodtype, parameter, funType, 
 	var data = null;
 	var stringParameter = JSON.stringify(parameter);
 	xhr.onreadystatechange = state_change;
-	url = url + "/" + stringParameter;
-	// if (methodtype == "GET") {
-	// }else{
-	// data=stringParameter;
-	// }
-	xhr.open(methodtype, url, true);
+	if (methodtype == "GET") {
+		url = url + "/" + stringParameter;
+		xhr.open(methodtype, url, true);
+	}
+	else {
+		xhr.open(methodtype, url, true);
+		xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		data = stringParameter;
+	}
+
 	xhr.send(data);
 	function state_change() {
 		if (xhr.readyState == 4 && status == 0) {
@@ -513,6 +379,7 @@ TableList.prototype.ajaxRequest = function(url, methodtype, parameter, funType, 
 			}
 		}
 	};
+	// xhr.send(data);
 }
 
 /**
@@ -529,7 +396,7 @@ TableList.prototype.init = function(path) {
 		"isFile" : "",
 		"context" : ""
 	}
-	tableList.ajaxRequest("http://127.0.0.1:8080", "GET", jsonParame, "watch");
+	tableList.ajaxRequest("http://127.0.0.1:8080", "POST", jsonParame, "watch");
 }
 
 TableList.prototype.fileCreate = function(flag) {
@@ -551,7 +418,7 @@ TableList.prototype.fileCreate = function(flag) {
 		"context" : ""
 	}
 	tableList.ajaxRequest("http://127.0.0.1:8080", "GET", jsonParame, "create");
-	fileNameNode.value="";
+	fileNameNode.value = "";
 }
 
 /**

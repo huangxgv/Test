@@ -64,14 +64,9 @@ public class FileAction {
 					sendString.append("Content-Type:application/x-javascript\r\n\r\n");
 					sendString.append(new String(com.file2buf("src/com/huang/front/control.js"))).append("\r\n");
 					break;
-				case "folderImg.png":
-					sendString.append(httpHeader);
-					sendString.append("Content-Type:image/png\r\n\r\n");
-					sendString.append("folderImg.png").append("\r\n");
-					break;
 				case "watch":
 					sendString.append(httpHeader);
-					sendString.append("Access-Control-Allow-Origin:*\r\n\r\n");
+					sendString.append("Content-Type:text/html\r\n\r\n");
 					sendString.append(com.getFolderList(path)).append("\r\n");
 					break;
 				case "update":

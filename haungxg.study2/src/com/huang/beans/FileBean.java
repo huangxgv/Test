@@ -1,5 +1,9 @@
 package com.huang.beans;
 
+import java.util.Objects;
+
+import net.sf.json.JSONObject;
+
 public class FileBean {
 	private String type;
 
@@ -11,7 +15,18 @@ public class FileBean {
 
 	private String context;
 
+	public void sets(JSONObject json) {
+		this.type = json.getString("type");
+		this.isFile = json.getString("isFile");
+		this.name = json.getString("name");
+		this.path = json.getString("path");
+		this.context = json.getString("context");
+	}
+
 	public String getType() {
+		if (Objects.equals(type, null)) {
+			return "";
+		}
 		return type;
 	}
 
@@ -20,6 +35,9 @@ public class FileBean {
 	}
 
 	public String getIsFile() {
+		if (Objects.equals(isFile, null)) {
+			return "";
+		}
 		return isFile;
 	}
 
@@ -28,6 +46,9 @@ public class FileBean {
 	}
 
 	public String getName() {
+		if (Objects.equals(name, null)) {
+			return "";
+		}
 		return name;
 	}
 
@@ -36,6 +57,9 @@ public class FileBean {
 	}
 
 	public String getPath() {
+		if (Objects.equals(path, null)) {
+			return "";
+		}
 		return path;
 	}
 
@@ -44,6 +68,9 @@ public class FileBean {
 	}
 
 	public String getContext() {
+		if (Objects.equals(context, null)) {
+			return "";
+		}
 		return context;
 	}
 
@@ -51,4 +78,3 @@ public class FileBean {
 		this.context = context;
 	}
 }
-
