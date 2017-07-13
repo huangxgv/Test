@@ -1,8 +1,7 @@
 package com.huang.server;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -51,30 +50,18 @@ class TestReveiveThread implements Runnable {
 		socket = s;
 	}
 
-	//	protected void doGet(Request request, Response response) {
-	//		FileBean bean = new FileBean();
-	//		request.parse(bean);
-	//		response.setBean(request.getBean());
-	//		response.sendStaticResource();
-	//	}
-	//
-	//	protected void doPost(Request request, Response response) {
-	//		doGet(request, response);
-	//	}
-
 	public void run() {
-		BufferedReader input = null;
-		OutputStreamWriter output = null;
+		InputStream input = null;
+		OutputStream output = null;
 		try {
-			input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			output = new OutputStreamWriter(socket.getOutputStream());
-			Request request = new Request(input);
-			Response response = new Response(output);
+			input = socket.getInputStream();
+			output = socket.getOutputStream();
+			Request request = new Request(socket.getInputStream());
+			Response response = new Response(socket.getOutputStream());
 			FileBean bean = new FileBean();
 			request.parse(bean);
 			response.setBean(request.getBean());
 			response.sendStaticResource();
-
 		}
 		catch (Exception e) {
 			System.out.println("客户端接受异常" + e.getMessage());

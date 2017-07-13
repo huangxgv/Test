@@ -115,7 +115,7 @@ TableList.prototype.editPageShow = function(textArea, contextBackground, fileCon
 		btnGroup.setAttribute("class", "edit");
 	}
 	document.getElementById("file_txt").value = "信息加载中......";
-	tableList.ajaxRequest("http://127.0.0.1:8080", "POST", jsonParame, "file");
+	tableList.ajaxRequest("http://127.0.0.1:8080/watch", "POST", jsonParame, "file");
 	inputTitle.value = thisName;
 }
 
@@ -261,6 +261,7 @@ TableList.prototype.appendNodes = function(list, resultJson, orderType) {
 		var creadeNodesJsonName = creadeNodesJson.name;
 		if (!(creadeNodesJson.isFile == "true")) {
 			tdNode1.setAttribute("name", "folder");
+			// tdNode1.setAttribute("backgroundImage","url(foldeImg.png)")
 		}
 		var tdNode2 = document.createElement("td");
 		var tdNode3 = document.createElement("td");
@@ -335,19 +336,18 @@ TableList.prototype.ajaxRequest = function(url, methodtype, parameter, funType, 
 	var xhr = tableList.getajaxHttp();
 	var data = null;
 	var stringParameter = JSON.stringify(parameter);
-	xhr.onreadystatechange = state_change;
 	if (methodtype == "GET") {
 		url = url + "/" + stringParameter;
 		xhr.open(methodtype, url, true);
 	}
 	else {
 		xhr.open(methodtype, url, true);
-		xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xhr.setRequestHeader("Content-type", "application/json");
 		data = stringParameter;
 	}
-
 	xhr.send(data);
-	function state_change() {
+	// xhr.onreadystatechange = state_change;
+	xhr.onreadystatechange = function() {
 		if (xhr.readyState == 4 && status == 0) {
 			if (xhr.responseText != null || xhr.responseText != "") {
 				switch (funType) {
@@ -379,7 +379,7 @@ TableList.prototype.ajaxRequest = function(url, methodtype, parameter, funType, 
 			}
 		}
 	};
-	// xhr.send(data);
+
 }
 
 /**
@@ -396,7 +396,7 @@ TableList.prototype.init = function(path) {
 		"isFile" : "",
 		"context" : ""
 	}
-	tableList.ajaxRequest("http://127.0.0.1:8080", "POST", jsonParame, "watch");
+	tableList.ajaxRequest("http://127.0.0.1:8080/index.html", "POST", jsonParame, "watch");
 }
 
 TableList.prototype.fileCreate = function(flag) {
@@ -443,5 +443,5 @@ TableList.prototype.addEvent = function() {
 
 window.onload = function() {
 	tableList.init();
-	setTimeout(tableList.addEvent, 500);
+	tableList.addEvent();
 }

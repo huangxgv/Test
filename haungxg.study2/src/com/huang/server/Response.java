@@ -1,17 +1,18 @@
 package com.huang.server;
 
 import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.OutputStream;
 
 import com.huang.action.FileAction;
 import com.huang.beans.FileBean;
+import com.huang.common.Common;
 
 public class Response {
-	private OutputStreamWriter output;
+	private OutputStream output;
 
 	private FileBean bean;
 
-	public Response(OutputStreamWriter output) {
+	public Response(OutputStream output) {
 		this.output = output;
 	}
 
@@ -20,20 +21,39 @@ public class Response {
 	}
 
 	public void sendStaticResource() {
-		StringBuilder sendString = new StringBuilder();
+		//		StringBuilder sendString = new StringBuilder();
 		FileAction action = new FileAction(bean.getType(), bean.getPath(), bean.getName(), bean.getContext(),
 				bean.getIsFile());
-		sendString.append(action.getSendString());
+		String contentType = "";
+		Common com = new Common();
+		String actionResult = action.getSendString();
 		try {
-			if (!(new String(sendString).startsWith("HTTP/1.1 200 OK\r\n"))) {
+			if (!(actionResult.startsWith("HTTP/1.1 200 OK\r\n"))) {
 				String[] pathArr = bean.getPath().split("/");
 				String path = pathArr[pathArr.length - 1];
-				output.write("HTTP/1.1 200 OK\r\n");
-				output.write("Content-Disposition:attachment;filename=" + path + "\r\n\r\n");
-				output.write(action.getSendString());
+
+				if (actionResult.endsWith(".html")) {
+					actionResult = "webRoot/front/html/" + actionResult;
+					contentType = "Content-Type:text/html\r\n\r\n";
+				}
+				else if (actionResult.endsWith(".css")) {
+					actionResult = "webRoot/front/css/" + actionResult;
+					contentType = "Content-Type:text/css\r\n\r\n";
+				}
+				else if (actionResult.endsWith(".js")) {
+					actionResult = "webRoot/front/js/" + actionResult;
+					contentType = "Content-Type:application/x-javascript\r\n\r\n";
+				}
+				else {
+					contentType = "Content-Disposition:attachment;filename=" + path + "\r\n\r\n";
+				}
+				output.write("HTTP/1.1 200 OK\r\n".getBytes("UTF-8"));
+				output.write(contentType.getBytes("UTF-8"));
+				output.write(com.file2buf(actionResult));
 			}
 			else {
-				output.write(new String(sendString));
+				System.out.println(actionResult);
+				output.write(actionResult.getBytes("UTF-8"));
 			}
 			output.flush();
 		}

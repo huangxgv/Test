@@ -38,35 +38,11 @@ public class FileAction {
 		Common com = new Common();
 
 		String httpHeader = "HTTP/1.1 200 OK\r\n";
-		//		String select;
-		//		System.out.println(uri);
-		//		if (uri == "" || uri == null) {
-		//			select = "";
-		//		}
-		//		else {
-		//			String[] selectArr = uri.split("");
-		//			select = selectArr[selectArr.length - 1];
-		//		}
 		try {
 			switch (uri) {
-				case "":
-					sendString.append(httpHeader);
-					sendString.append("Content-Type:text/html\r\n\r\n");
-					sendString.append(new String(com.file2buf("src/com/huang/front/index.html"))).append("\r\n");
-					break;
-				case "style.css":
-					sendString.append(httpHeader);
-					sendString.append("Content-Type:text/css\r\n\r\n");
-					sendString.append(new String(com.file2buf("src/com/huang/front/style.css"))).append("\r\n");
-					break;
-				case "control.js":
-					sendString.append(httpHeader);
-					sendString.append("Content-Type:application/x-javascript\r\n\r\n");
-					sendString.append(new String(com.file2buf("src/com/huang/front/control.js"))).append("\r\n");
-					break;
 				case "watch":
 					sendString.append(httpHeader);
-					sendString.append("Content-Type:text/html\r\n\r\n");
+					sendString.append("Content-Type:text/html\r\n");
 					sendString.append(com.getFolderList(path)).append("\r\n");
 					break;
 				case "update":
@@ -96,6 +72,7 @@ public class FileAction {
 				case "search":
 					break;
 				default:
+					sendString.append(uri);
 					break;
 			}
 		}

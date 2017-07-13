@@ -1,13 +1,15 @@
 package com.huang.server;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URLDecoder;
 import java.util.Objects;
 
 import com.huang.beans.FileBean;
 
 public class Request {
-	private BufferedReader input;
+	private InputStream input;
 
 	private FileBean bean;
 
@@ -15,10 +17,12 @@ public class Request {
 		this.bean = bean;
 	}
 
-	public Request(BufferedReader input) {
+	public Request(InputStream input) {
 		this.input = input;
-		//		bean.setType("");
-		//		bean.setPath("");
+	}
+
+	public BufferedReader fileStreamToBufStream(InputStream input) {
+		return new BufferedReader(new InputStreamReader(input));
 	}
 
 	/**
@@ -27,52 +31,25 @@ public class Request {
 	 */
 	public void parse(FileBean bean) {
 		this.bean = bean;
-		//		StringBuilder request = new StringBuilder();
 		try {
 			Servlet servlet = new Servlet(bean);
-			String info = input.readLine();
+			BufferedReader bif = fileStreamToBufStream(input);
+			String info = bif.readLine();
 			String uri = null;
 			if (!Objects.equals(info, null)) {
 				uri = URLDecoder.decode(info.split(" ")[0], "utf-8");
 			}
 			if ("POST".equals(uri)) {
-				servlet.doPost(input);
+				servlet.doPost(bif);
 			}
 			else if ("GET".equals(uri)) {
-				servlet.doGet(info, input);
+				servlet.doGet(info, bif);
 			}
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-		//		this.bean.setType(parseUri(request.toString()));
 	}
-
-	//	/**
-	//	 * 处理读取到的URI字符串
-	//	 * @param requestString
-	//	 * @return
-	//	 */
-	//	private String parseUri(String requestString) {
-	//		String uri = "";
-	//		if (!Objects.equals(requestString, "null")) {
-	//			try {
-	//				uri = URLDecoder.decode(requestString.split(" ")[1].substring(1), "utf-8");
-	//				if (uri.startsWith("{")) {
-	//					JSONObject json = JSONObject.fromObject(uri);
-	//					bean.sets(json);
-	//					return bean.getType();
-	//				}
-	//				return uri;
-	//			}
-	//			catch (UnsupportedEncodingException e) {
-	//				return uri;
-	//			}
-	//		}
-	//		else {
-	//			return uri;
-	//		}
-	//	}
 
 	public FileBean getBean() {
 		return bean;

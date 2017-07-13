@@ -1,12 +1,12 @@
 package com.huang.common;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 
 /**
@@ -40,7 +40,11 @@ public class Common {
 	 * @throws NullPointerException  如果传入的是null
 	 */
 	public byte[] file2buf(String fileInput) throws FileNotFoundException {
+		if ("favicon.ico".equals(fileInput)) {
+			return new byte[0];
+		}
 		File file = new File(fileInput);
+		System.out.println(file.getAbsolutePath());
 		if (file.isDirectory()) {
 			return null;
 		}
@@ -242,7 +246,7 @@ public class Common {
 	 * @param output
 	 * @param socket
 	 */
-	public void closeSource(BufferedReader input, OutputStreamWriter output, Socket socket) {
+	public void closeSource(InputStream input, OutputStream output, Socket socket) {
 		try {
 			if (input != null) {
 				input.close();
