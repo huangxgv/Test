@@ -29,7 +29,19 @@ public class Servlet {
 		if (!Objects.equals(path, "null")) {
 			try {
 				uri = URLDecoder.decode(path.split(" ")[1].substring(1), "utf-8");
-				bean.setType(uri);
+				String[] pathArr = uri.split("[?]");
+				if (pathArr.length > 1) {
+					bean.setType(pathArr[0]);
+					if (pathArr[1].startsWith("{") && pathArr[1].endsWith("}")) {
+						bean.sets(JSONObject.fromObject(pathArr[1]));
+					}
+					else {
+						bean.setPath(pathArr[1]);
+					}
+				}
+				else {
+					bean.setType(uri);
+				}
 			}
 			catch (Exception e) {
 				e.printStackTrace();
@@ -37,7 +49,7 @@ public class Servlet {
 		}
 	}
 
-	public void doPost(BufferedReader buf) throws IOException {
+	public void doPost(String info, BufferedReader buf) throws IOException {
 		StringBuilder sBuilder = new StringBuilder();
 		String lines = null;
 		while (true) {
@@ -50,6 +62,5 @@ public class Servlet {
 		lines = buf.readLine();
 		JSONObject json = JSONObject.fromObject(lines);
 		bean.sets(json);
-		System.out.println(lines);
 	}
 }

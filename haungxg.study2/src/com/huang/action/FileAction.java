@@ -18,7 +18,7 @@ public class FileAction {
 	public FileAction(String uri, String path, String name, String context, String isFile) {
 		this.uri = uri;
 		this.path = "D:/TestTwo/" + path;
-		this.name = "D:/TestTwo/" + name;
+		this.name = this.path + "/" + name;
 		this.context = context;
 		this.isFile = isFile;
 	}
@@ -41,9 +41,10 @@ public class FileAction {
 		try {
 			switch (uri) {
 				case "watch":
+					String liString = com.getFolderList(path);
 					sendString.append(httpHeader);
-					sendString.append("Content-Type:text/html\r\n");
-					sendString.append(com.getFolderList(path)).append("\r\n");
+					sendString.append("Content-Type:text/html\r\n\r\n");
+					sendString.append(liString).append("\r\n");
 					break;
 				case "update":
 					sendString.append(httpHeader);
@@ -64,11 +65,11 @@ public class FileAction {
 					sendString.append("Content-Type:text/html\r\n\r\n");
 					sendString.append(new DelFileDao().createFile(name, isFile)).append("\r\n");
 					break;
-				case "file":
-					sendString.append(httpHeader);
-					sendString.append("Content-Type:text/html\r\n\r\n");
-					sendString.append(new DelFileDao().getFile(path)).append("\r\n");
-					break;
+				//				case "file":
+				////					sendString.append(httpHeader);
+				////					sendString.append("Content-Type:text/html\r\n\r\n");
+				//					sendString.append(path).append("\r\n");
+				//					break;
 				case "search":
 					break;
 				default:

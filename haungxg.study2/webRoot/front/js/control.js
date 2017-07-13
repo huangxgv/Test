@@ -97,13 +97,14 @@ TableList.prototype.editPageShow = function(textArea, contextBackground, fileCon
 	contextBackground.style.display = "block";
 	fileContext.style.display = "block";
 	var btnGroup = document.getElementById("btn_group");
-	var jsonParame = {
-		"type" : "file",
-		"name" : "",
-		"path" : path,
-		"isFile" : "",
-		"context" : ""
-	}
+	var jsonParame = "{\"type\":\"create\",\"name\":\"" + fileNameValue + "\",\"path\":\"" + path + "\",\"isFile\":\"" + value + "\",\"context\":\"\"}";
+	// var jsonParame = {
+	// "type" : thisName,
+	// "name" : "",
+	// "path" : path,
+	// "isFile" : "",
+	// "context" : ""
+	// };
 	if (disEdit) {
 		textArea.setAttribute("readOnly", disEdit);
 		btnGroup.setAttribute("class", "");
@@ -115,7 +116,7 @@ TableList.prototype.editPageShow = function(textArea, contextBackground, fileCon
 		btnGroup.setAttribute("class", "edit");
 	}
 	document.getElementById("file_txt").value = "信息加载中......";
-	tableList.ajaxRequest("http://127.0.0.1:8080/watch", "POST", jsonParame, "file");
+	tableList.ajaxRequest("http://127.0.0.1:8080/wtach", "GET", jsonParame, "file");
 	inputTitle.value = thisName;
 }
 
@@ -134,7 +135,7 @@ TableList.prototype.menuList = function(menu, trArr) {
 			var textArea = document.getElementById("file_txt");
 			var firstChildTd = this.childNodes[0];
 			var thisName = firstChildTd.innerHTML;
-			var parentPath = document.getElementById("source").innerHTML.substring(1);
+			var parentPath = document.getElementById("source").innerHTML;
 			var path = parentPath + thisName;
 			var folderFlag = firstChildTd.getAttribute("name") == "folder" ? true : false;
 			var contextBackground = document.getElementById("file_background");
@@ -159,24 +160,18 @@ TableList.prototype.menuList = function(menu, trArr) {
 				liElementArr[1].setAttribute("class", "");
 				liElementArr[1].onclick = function(e) {
 					var path = document.getElementById("source").innerHTML.substring(1) + thisName;
-					window.open("http://127.0.0.1:8080/{\"type\":\"download\",\"name\":\"\",\"path\":\"" + path + "\",\"isFile\":true,\"context\":\"\"}");
+					window.open("http://127.0.0.1:8080/dowload/{\"type\":\"download\",\"name\":\"\",\"path\":\"" + path + "\",\"isFile\":true,\"context\":\"\"}");
 				}
 			}
 			liElementArr[2].onclick = function() {
-				var jsonParame = {
-					"type" : "delete",
-					"name" : "",
-					"path" : path,
-					"isFile" : "",
-					"context" : ""
-				}
+				var jsonParame = "{\"type\":\"delete\",\"name\":\"\",\"path\":\"" + path + "\",\"isFile\":\"\",\"context\":\"\"}";
 				if (folderFlag) {
 					if (confirm("确认删除整个文件夹?")) {
-						tableList.ajaxRequest("http://127.0.0.1:8080", "GET", jsonParame, "delete");
+						tableList.ajaxRequest("http://127.0.0.1:8080/delete", "GET", jsonParame, "delete");
 					}
 				}
 				else {
-					tableList.ajaxRequest("http://127.0.0.1:8080", "GET", jsonParame, "delete");
+					tableList.ajaxRequest("http://127.0.0.1:8080/delete", "GET", jsonParame, "delete");
 				}
 			}
 			liElementArr[3].onclick = function() {
@@ -216,7 +211,7 @@ TableList.prototype.retBtn = function() {
 		return;
 	}
 	path = path.substring(0, path.length - 1);
-	var lastpath = path.substring(0, path.lastIndexOf("/") + 1);
+	var lastpath = path.substring(0, path.lastIndexOf("/"));
 	tableList.init(lastpath)
 	document.getElementById("source").innerHTML = lastpath;
 }
@@ -335,14 +330,16 @@ TableList.prototype.getajaxHttp = function() {
 TableList.prototype.ajaxRequest = function(url, methodtype, parameter, funType, orderType) {
 	var xhr = tableList.getajaxHttp();
 	var data = null;
-	var stringParameter = JSON.stringify(parameter);
 	if (methodtype == "GET") {
-		url = url + "/" + stringParameter;
+		if (parameter != "") {
+			url = url + "?" + parameter;
+		}
 		xhr.open(methodtype, url, true);
 	}
 	else {
+		var stringParameter = JSON.stringify(parameter);
 		xhr.open(methodtype, url, true);
-		xhr.setRequestHeader("Content-type", "application/json");
+		xhr.setRequestHeader("Content-type", "application/json ");
 		data = stringParameter;
 	}
 	xhr.send(data);
@@ -389,14 +386,7 @@ TableList.prototype.init = function(path) {
 	if (path == "" || path == null) {
 		path = "";
 	}
-	var jsonParame = {
-		"type" : "watch",
-		"name" : "",
-		"path" : path,
-		"isFile" : "",
-		"context" : ""
-	}
-	tableList.ajaxRequest("http://127.0.0.1:8080/index.html", "POST", jsonParame, "watch");
+	tableList.ajaxRequest("http://127.0.0.1:8080/watch", "GET", path, "watch");
 }
 
 TableList.prototype.fileCreate = function(flag) {
@@ -409,15 +399,10 @@ TableList.prototype.fileCreate = function(flag) {
 	var select = document.getElementById("select");
 	var index = select.selectedIndex;
 	var value = select.options[index].value;
-	var path = document.getElementById("source").innerHTML.substring(1);
-	var jsonParame = {
-		"type" : "create",
-		"name" : fileNameValue,
-		"path" : path,
-		"isFile" : value,
-		"context" : ""
-	}
-	tableList.ajaxRequest("http://127.0.0.1:8080", "GET", jsonParame, "create");
+	var path = document.getElementById("source").innerHTML;
+	path = path.substring(0, path.length - 1);
+	var jsonParame = "{\"type\":\"create\",\"name\":\"" + fileNameValue + "\",\"path\":\"" + path + "\",\"isFile\":\"" + value + "\",\"context\":\"\"}";
+	tableList.ajaxRequest("http://127.0.0.1:8080/create", "GET", jsonParame, "create");
 	fileNameNode.value = "";
 }
 

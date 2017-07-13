@@ -44,16 +44,20 @@ public class Response {
 					actionResult = "webRoot/front/js/" + actionResult;
 					contentType = "Content-Type:application/x-javascript\r\n\r\n";
 				}
+				else if (actionResult.endsWith(".docx")) {
+					actionResult = "D:/TestTwo/" + actionResult;
+					contentType = "Content-Type:text/html\r\n\r\n";
+				}
 				else {
 					contentType = "Content-Disposition:attachment;filename=" + path + "\r\n\r\n";
 				}
-				output.write("HTTP/1.1 200 OK\r\n".getBytes("UTF-8"));
-				output.write(contentType.getBytes("UTF-8"));
+				output.write(("HTTP/1.1 200 OK\r\n" + contentType).getBytes("UTF-8"));
+				//				output.write(contentType.getBytes("UTF-8"));
 				output.write(com.file2buf(actionResult));
 			}
 			else {
-				System.out.println(actionResult);
 				output.write(actionResult.getBytes("UTF-8"));
+				//				output.write("\n\r\n\r".getBytes("UTF-8"));
 			}
 			output.flush();
 		}

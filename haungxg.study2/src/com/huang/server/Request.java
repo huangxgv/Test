@@ -40,7 +40,7 @@ public class Request {
 				uri = URLDecoder.decode(info.split(" ")[0], "utf-8");
 			}
 			if ("POST".equals(uri)) {
-				servlet.doPost(bif);
+				servlet.doPost(info, bif);
 			}
 			else if ("GET".equals(uri)) {
 				servlet.doGet(info, bif);
