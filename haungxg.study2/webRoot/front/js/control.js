@@ -164,14 +164,13 @@ TableList.prototype.menuList = function(menu, trArr) {
 				}
 			}
 			liElementArr[2].onclick = function() {
-				var jsonParame = "{\"type\":\"delete\",\"name\":\"\",\"path\":\"" + path + "\",\"isFile\":\"\",\"context\":\"\"}";
 				if (folderFlag) {
 					if (confirm("确认删除整个文件夹?")) {
-						tableList.ajaxRequest("http://127.0.0.1:8080/delete", "GET", jsonParame, "delete");
+						tableList.ajaxRequest("http://127.0.0.1:8080/servlet/com.huang.servlet.Delete", "GET", path, "delete");
 					}
 				}
 				else {
-					tableList.ajaxRequest("http://127.0.0.1:8080/delete", "GET", jsonParame, "delete");
+						tableList.ajaxRequest("http://127.0.0.1:8080/servlet/com.huang.servlet.Delete", "GET", path, "delete");
 				}
 			}
 			liElementArr[3].onclick = function() {

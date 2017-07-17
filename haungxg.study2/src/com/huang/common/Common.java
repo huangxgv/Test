@@ -123,7 +123,7 @@ public class Common {
 	 * 删除文件夹
 	 * @param path
 	 */
-	public void deleteAllFilesOfDir(File path) {
+	public static void deleteAllFilesOfDir(File path) {
 		if (!path.exists())
 			return;
 		if (path.isFile()) {
