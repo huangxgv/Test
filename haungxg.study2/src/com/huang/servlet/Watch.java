@@ -1,5 +1,6 @@
-package com.huang.common;
+package com.huang.servlet;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -10,6 +11,9 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+
+import com.huang.beans.FileBean;
+import com.huang.common.Common;
 
 public class Watch implements Servlet {
 	@Override
@@ -22,12 +26,15 @@ public class Watch implements Servlet {
 		System.out.println("from service");
 		PrintWriter out = response.getWriter();
 		String contentType = null;
+		String filePath = null;
+		String parma = FileBean.parma == null ? "" : FileBean.parma;
 		Properties prop = new Properties();
 		InputStream in = null;
 		try {
 			in = getClass().getResourceAsStream("/data.properties");
 			prop.load(in);
-			contentType = prop.getProperty("watch");
+			contentType = prop.getProperty("Watch");
+			filePath = prop.getProperty("path");
 		}
 		catch (IOException e) {
 			e.printStackTrace();
@@ -42,9 +49,24 @@ public class Watch implements Servlet {
 				}
 			}
 		}
-		out.println("HTTP/1.1 200 OK\r\n" + contentType + "\r\n\r\n" + "112233");
-		//		out.println("值得注意的是，要是去web应用去找一个文件那么直接指定物理路径找就好了，要是用类加载加载一个class文件，是要在classpath里面去找的");
-		//		out.println("现在一般不需要配置java的classpath了，默认情况就是当前的工作路径，也就是这个项目的bin下面的路径，在类加载找这个文件的时候一定要写上包名");
+		out.println("HTTP/1.1 200 OK\r\n" + contentType + "\r\n");
+		System.out.println(filePath + "/" + FileBean.parma);
+		String path = filePath + "/" + FileBean.parma;
+		File file = new File(filePath + "/" + FileBean.parma);
+		if (file == null) {
+			return;
+		}
+		if (!file.exists()) {
+			return;
+		}
+		if (file.isDirectory()) {
+			out.println(Common.getFolderList(filePath + "/" + parma));
+		}
+		if (file.isFile()) {
+			Common.fileRead(out, path);
+		}
+		out.flush();
+		out.close();
 	}
 
 	public void destroy() {

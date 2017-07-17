@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 /**
@@ -23,7 +24,7 @@ public class Common {
 	 * @param fileInput
 	 * @return
 	 */
-	public String getFolderList(String fileInput) {
+	public static String getFolderList(String fileInput) {
 		File file = new File(fileInput);
 		if (file.isDirectory()) {
 			return getFilesJson(file);
@@ -39,21 +40,17 @@ public class Common {
 	 * @throws FileNotFoundException 如果文件不存在或者传入的是目录
 	 * @throws NullPointerException  如果传入的是null
 	 */
-	public byte[] file2buf(String fileInput) throws FileNotFoundException {
-		if ("favicon.ico".equals(fileInput)) {
-			return new byte[0];
-		}
+	public static void fileRead(PrintWriter out, String fileInput) throws FileNotFoundException {
 		File file = new File(fileInput);
-		System.out.println(file.getAbsolutePath());
 		if (file.isDirectory()) {
-			return null;
+			return;
 		}
 		if (!file.exists())
 			throw new FileNotFoundException();
 		long fileSize = file.length();
 		if (fileSize > Integer.MAX_VALUE) {
 			System.out.println("file too big...");
-			return null;
+			return;
 		}
 		int offset = 0;
 		int numRead = 0;
@@ -75,17 +72,16 @@ public class Common {
 			e.printStackTrace();
 		}
 		finally {
-			try {
+				try {
 				if (fi != null) {
 					fi.close();
 				}
+				}
+				catch (IOException e) {
+				}
 			}
-			catch (IOException e) {
-			}
+		out.print(new String(buffer));
 		}
-		return buffer;
-	}
-
 	/**
 	 * 返回文件信息Json字符串
 	 * <pre>
@@ -94,7 +90,7 @@ public class Common {
 	 * @param Catalog 文件夹
 	 * @return
 	 */
-	private String getFilesJson(File Catalog) {
+	private static String getFilesJson(File Catalog) {
 		if (Catalog.isFile()) {
 			return null;
 		}

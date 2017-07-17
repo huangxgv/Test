@@ -97,7 +97,7 @@ TableList.prototype.editPageShow = function(textArea, contextBackground, fileCon
 	contextBackground.style.display = "block";
 	fileContext.style.display = "block";
 	var btnGroup = document.getElementById("btn_group");
-	var jsonParame = "{\"type\":\"create\",\"name\":\"\",\"path\":\"" + path + "\",\"isFile\":\"\",\"context\":\"\"}";
+//	var jsonParame = "{\"type\":\"create\",\"name\":\"\",\"path\":\"" + path + "\",\"isFile\":\"\",\"context\":\"\"}";
 	// var jsonParame = {
 	// "type" : thisName,
 	// "name" : "",
@@ -116,7 +116,7 @@ TableList.prototype.editPageShow = function(textArea, contextBackground, fileCon
 		btnGroup.setAttribute("class", "edit");
 	}
 	document.getElementById("file_txt").value = "信息加载中......";
-	tableList.ajaxRequest("http://127.0.0.1:8080/wtach", "GET", jsonParame, "file");
+	tableList.ajaxRequest("http://127.0.0.1:8080/servlet/com.huang.servlet.Watch", "GET", path, "file");
 	inputTitle.value = thisName;
 }
 
@@ -160,7 +160,7 @@ TableList.prototype.menuList = function(menu, trArr) {
 				liElementArr[1].setAttribute("class", "");
 				liElementArr[1].onclick = function(e) {
 					var path = document.getElementById("source").innerHTML.substring(1) + thisName;
-					window.open("http://127.0.0.1:8080/dowload/{\"type\":\"download\",\"name\":\"\",\"path\":\"" + path + "\",\"isFile\":true,\"context\":\"\"}");
+					window.open("http://127.0.0.1:8080/servlet/com.huang.servlet.Dowload?"+path);
 				}
 			}
 			liElementArr[2].onclick = function() {
@@ -207,13 +207,13 @@ TableList.prototype.menuList = function(menu, trArr) {
  */
 TableList.prototype.retBtn = function() {
 	var path = document.getElementById("source").innerHTML;
-	if (path == "/") {
+	if (path == "/" || path == "") {
 		return;
 	}
 	path = path.substring(0, path.length - 1);
 	var lastpath = path.substring(0, path.lastIndexOf("/"));
 	tableList.init(lastpath)
-	document.getElementById("source").innerHTML = lastpath;
+	document.getElementById("source").innerHTML = lastpath + "/";
 }
 
 TableList.prototype.fileLength = function(len) {
@@ -349,8 +349,8 @@ TableList.prototype.ajaxRequest = function(url, methodtype, parameter, funType, 
 			if (xhr.responseText != null || xhr.responseText != "") {
 				switch (funType) {
 					case "watch" :
-					console.log(xhr.responseText)
-//						tableList.showList(xhr.responseText, orderType);
+						console.log(xhr.responseText)
+						tableList.showList(xhr.responseText, orderType);
 						break;
 					case "delete" :
 						var path = document.getElementById("source").innerHTML;
@@ -387,7 +387,7 @@ TableList.prototype.init = function(path) {
 	if (path == "" || path == null) {
 		path = "";
 	}
-	tableList.ajaxRequest("http://127.0.0.1:8080/servlet/com.huang.common.watch", "GET", path, "watch");
+	tableList.ajaxRequest("http://127.0.0.1:8080/servlet/com.huang.servlet.Watch", "GET", path, "watch");
 }
 
 TableList.prototype.fileCreate = function(flag) {
