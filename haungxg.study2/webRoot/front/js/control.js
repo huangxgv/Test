@@ -97,7 +97,7 @@ TableList.prototype.editPageShow = function(textArea, contextBackground, fileCon
 	contextBackground.style.display = "block";
 	fileContext.style.display = "block";
 	var btnGroup = document.getElementById("btn_group");
-	var jsonParame = "{\"type\":\"create\",\"name\":\"" + fileNameValue + "\",\"path\":\"" + path + "\",\"isFile\":\"" + value + "\",\"context\":\"\"}";
+	var jsonParame = "{\"type\":\"create\",\"name\":\"\",\"path\":\"" + path + "\",\"isFile\":\"\",\"context\":\"\"}";
 	// var jsonParame = {
 	// "type" : thisName,
 	// "name" : "",
@@ -349,7 +349,8 @@ TableList.prototype.ajaxRequest = function(url, methodtype, parameter, funType, 
 			if (xhr.responseText != null || xhr.responseText != "") {
 				switch (funType) {
 					case "watch" :
-						tableList.showList(xhr.responseText, orderType);
+					console.log(xhr.responseText)
+//						tableList.showList(xhr.responseText, orderType);
 						break;
 					case "delete" :
 						var path = document.getElementById("source").innerHTML;
@@ -386,7 +387,7 @@ TableList.prototype.init = function(path) {
 	if (path == "" || path == null) {
 		path = "";
 	}
-	tableList.ajaxRequest("http://127.0.0.1:8080/watch", "GET", path, "watch");
+	tableList.ajaxRequest("http://127.0.0.1:8080/servlet/com.huang.common.watch", "GET", path, "watch");
 }
 
 TableList.prototype.fileCreate = function(flag) {

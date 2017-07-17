@@ -1,58 +1,218 @@
 package com.huang.server;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URLDecoder;
-import java.util.Objects;
+import java.io.UnsupportedEncodingException;
+import java.util.Enumeration;
+import java.util.Locale;
+import java.util.Map;
 
-import com.huang.beans.FileBean;
+import javax.servlet.AsyncContext;
+import javax.servlet.DispatcherType;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletInputStream;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 
-public class Request {
+public class Request implements ServletRequest {
 	private InputStream input;
 
-	private FileBean bean;
-
-	public void setBean(FileBean bean) {
-		this.bean = bean;
-	}
+	private String uri;
 
 	public Request(InputStream input) {
 		this.input = input;
 	}
 
-	public BufferedReader fileStreamToBufStream(InputStream input) {
-		return new BufferedReader(new InputStreamReader(input));
+	public String getUri() {
+		return uri;
 	}
 
-	/**
-	 * 读取path
-	 * 如地址为localhost：8080/hello,获取hello
-	 */
-	public void parse(FileBean bean) {
-		this.bean = bean;
+	private String parseUri(String requestString) {
+		int index1, index2;
+		index1 = requestString.indexOf(' ');
+		if (index1 != -1) {
+			index2 = requestString.indexOf(' ', index1 + 1);
+			if (index2 > index1)
+				return requestString.substring(index1 + 1, index2);
+		}
+		return null;
+	}
+
+	public void parse() {
+		// Read a set of characters from the socket  
+		StringBuffer request = new StringBuffer(2048);
+		int i;
+		byte[] buffer = new byte[2048];
 		try {
-			Servlet servlet = new Servlet(bean);
-			BufferedReader bif = fileStreamToBufStream(input);
-			String info = bif.readLine();
-			String uri = null;
-			if (!Objects.equals(info, null)) {
-				uri = URLDecoder.decode(info.split(" ")[0], "utf-8");
-			}
-			if ("POST".equals(uri)) {
-				servlet.doPost(info, bif);
-			}
-			else if ("GET".equals(uri)) {
-				servlet.doGet(info, bif);
-			}
+			i = input.read(buffer);
 		}
-		catch (Exception e) {
+		catch (IOException e) {
 			e.printStackTrace();
+			i = -1;
 		}
+		for (int j = 0; j < i; j++) {
+			request.append((char) buffer[j]);
+		}
+		System.out.print(request.toString());
+		uri = parseUri(request.toString());
 	}
 
-	public FileBean getBean() {
-		return bean;
+	public Object getAttribute(String attribute) {
+		return null;
 	}
 
+	public Enumeration getAttributeNames() {
+		return null;
+	}
+
+	public String getRealPath(String path) {
+		return null;
+	}
+
+	public RequestDispatcher getRequestDispatcher(String path) {
+		return null;
+	}
+
+	public boolean isSecure() {
+		return false;
+	}
+
+	public String getCharacterEncoding() {
+		return null;
+	}
+
+	public int getContentLength() {
+		return 0;
+	}
+
+	public String getContentType() {
+		return null;
+	}
+
+	public ServletInputStream getInputStream() throws IOException {
+		return null;
+	}
+
+	public Locale getLocale() {
+		return null;
+	}
+
+	public Enumeration getLocales() {
+		return null;
+	}
+
+	public String getParameter(String name) {
+		return null;
+	}
+
+	public Map getParameterMap() {
+		return null;
+	}
+
+	public Enumeration getParameterNames() {
+		return null;
+	}
+
+	public String[] getParameterValues(String parameter) {
+		return null;
+	}
+
+	public String getProtocol() {
+		return null;
+	}
+
+	public BufferedReader getReader() throws IOException {
+		return null;
+	}
+
+	public String getRemoteAddr() {
+		return null;
+	}
+
+	public String getRemoteHost() {
+		return null;
+	}
+
+	public String getScheme() {
+		return null;
+	}
+
+	public String getServerName() {
+		return null;
+	}
+
+	public int getServerPort() {
+		return 0;
+	}
+
+	public void removeAttribute(String attribute) {
+	}
+
+	public void setAttribute(String key, Object value) {
+	}
+
+	public void setCharacterEncoding(String encoding) throws UnsupportedEncodingException {
+	}
+
+	@Override
+	public String getLocalAddr() {
+		return null;
+	}
+
+	@Override
+	public String getLocalName() {
+		return null;
+	}
+
+	@Override
+	public int getLocalPort() {
+		return 0;
+	}
+
+	@Override
+	public int getRemotePort() {
+		return 0;
+	}
+
+	@Override
+	public AsyncContext getAsyncContext() {
+		return null;
+	}
+
+	@Override
+	public long getContentLengthLong() {
+		return 0;
+	}
+
+	@Override
+	public DispatcherType getDispatcherType() {
+		return null;
+	}
+
+	@Override
+	public ServletContext getServletContext() {
+		return null;
+	}
+
+	@Override
+	public boolean isAsyncStarted() {
+		return false;
+	}
+
+	@Override
+	public boolean isAsyncSupported() {
+		return false;
+	}
+
+	@Override
+	public AsyncContext startAsync() throws IllegalStateException {
+		return null;
+	}
+
+	@Override
+	public AsyncContext startAsync(ServletRequest arg0, ServletResponse arg1) throws IllegalStateException {
+		return null;
+	}
 }

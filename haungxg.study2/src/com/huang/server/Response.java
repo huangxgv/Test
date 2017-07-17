@@ -1,69 +1,153 @@
 package com.huang.server;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.util.Locale;
+import java.util.Properties;
 
-import com.huang.action.FileAction;
-import com.huang.beans.FileBean;
-import com.huang.common.Common;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.ServletResponse;
 
-public class Response {
-	private OutputStream output;
+public class Response implements ServletResponse {
+	private static final int BUFFER_SIZE = 1024;
 
-	private FileBean bean;
+	public static final String WEB_ROOT = System.getProperty("user.dir") + File.separator + "webRoot";
+
+	private String contentType;
+
+	Request request;
+
+	OutputStream output;
+
+	PrintWriter writer;
 
 	public Response(OutputStream output) {
 		this.output = output;
 	}
 
-	public void setBean(FileBean bean) {
-		this.bean = bean;
+	public Response() {
 	}
 
-	public void sendStaticResource() {
-		//		StringBuilder sendString = new StringBuilder();
-		FileAction action = new FileAction(bean.getType(), bean.getPath(), bean.getName(), bean.getContext(),
-				bean.getIsFile());
-		String contentType = "";
-		Common com = new Common();
-		String actionResult = action.getSendString();
-		try {
-			if (!(actionResult.startsWith("HTTP/1.1 200 OK\r\n"))) {
-				String[] pathArr = bean.getPath().split("/");
-				String path = pathArr[pathArr.length - 1];
+	public void setRequest(Request request) {
+		this.request = request;
+	}
 
-				if (actionResult.endsWith(".html")) {
-					actionResult = "webRoot/front/html/" + actionResult;
-					contentType = "Content-Type:text/html\r\n\r\n";
-				}
-				else if (actionResult.endsWith(".css")) {
-					actionResult = "webRoot/front/css/" + actionResult;
-					contentType = "Content-Type:text/css\r\n\r\n";
-				}
-				else if (actionResult.endsWith(".js")) {
-					actionResult = "webRoot/front/js/" + actionResult;
-					contentType = "Content-Type:application/x-javascript\r\n\r\n";
-				}
-				else if (actionResult.endsWith(".docx")) {
-					actionResult = "D:/TestTwo/" + actionResult;
-					contentType = "Content-Type:text/html\r\n\r\n";
-				}
-				else {
-					contentType = "Content-Disposition:attachment;filename=" + path + "\r\n\r\n";
-				}
-				output.write(("HTTP/1.1 200 OK\r\n" + contentType).getBytes("UTF-8"));
-				//				output.write(contentType.getBytes("UTF-8"));
-				output.write(com.file2buf(actionResult));
+	/* This method is used to serve static pages */
+	public void sendStaticResource() throws IOException {
+		byte[] bytes = new byte[BUFFER_SIZE];
+		FileInputStream fis = null;
+		try {
+			String uri = request.getUri();
+			File file = new File(WEB_ROOT, uri);
+			fis = new FileInputStream(file);
+			int ch = fis.read(bytes, 0, BUFFER_SIZE);
+			setContentType(uri);
+			String contentType = getContentType();
+			output.write(("HTTP/1.1 200 OK\r\n" + contentType + "\r\n\r\n").getBytes());
+			while (ch != -1) {
+				output.write(bytes, 0, ch);
+				ch = fis.read(bytes, 0, BUFFER_SIZE);
 			}
-			else {
-				output.write(actionResult.getBytes("UTF-8"));
-				//				output.write("\n\r\n\r".getBytes("UTF-8"));
-			}
-			output.flush();
+		}
+		catch (FileNotFoundException e) {
+			String errorMessage = "HTTP/1.1 404 File Not Found\r\n" + "Content-Type: text/html\r\n"
+					+ "Content-Length: 23\r\n" + "\r\n" + "<h1>File Not Found</h1>";
+			output.write(errorMessage.getBytes());
+		}
+		finally {
+			if (fis != null)
+				fis.close();
+		}
+	}
+
+	/** implementation of ServletResponse */
+	public void flushBuffer() throws IOException {
+	}
+
+	public int getBufferSize() {
+		return 0;
+	}
+
+	public String getCharacterEncoding() {
+		return null;
+	}
+
+	public Locale getLocale() {
+		return null;
+	}
+
+	public ServletOutputStream getOutputStream() throws IOException {
+		return null;
+	}
+
+	public PrintWriter getWriter() throws IOException {
+		writer = new PrintWriter(output, true);
+		return writer;
+	}
+
+	public boolean isCommitted() {
+		return false;
+	}
+
+	public void reset() {
+	}
+
+	public void resetBuffer() {
+	}
+
+	public void setBufferSize(int size) {
+	}
+
+	public void setContentLength(int length) {
+	}
+
+	public void setContentType(String type) {
+		if (type == null) {
+			return;
+		}
+		Properties prop = new Properties();
+		InputStream in = null;
+		try {
+			in = getClass().getResourceAsStream("/data.properties");
+			prop.load(in);
+			contentType = prop.getProperty(type);
 		}
 		catch (IOException e) {
 			e.printStackTrace();
 		}
+		finally {
+			if (in != null) {
+				try {
+					in.close();
+				}
+				catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	@Override
+	public void setLocale(Locale locale) {
+	}
+
+	@Override
+	public String getContentType() {
+		return contentType;
+	}
+
+	@Override
+	public void setCharacterEncoding(String arg0) {
+
+	}
+
+	@Override
+	public void setContentLengthLong(long arg0) {
 	}
 
 }

@@ -37,18 +37,13 @@ public class FileAction {
 
 		Common com = new Common();
 
-		String httpHeader = "HTTP/1.1 200 OK\r\n";
 		try {
 			switch (uri) {
 				case "watch":
 					String liString = com.getFolderList(path);
-					sendString.append(httpHeader);
-					sendString.append("Content-Type:text/html\r\n\r\n");
 					sendString.append(liString).append("\r\n");
 					break;
 				case "update":
-					sendString.append(httpHeader);
-					sendString.append("Content-Type:text/html\r\n\r\n");
 					sendString.append(new DelFileDao().updateFile(path, name, context));
 					break;
 				case "download":
@@ -56,18 +51,14 @@ public class FileAction {
 					break;
 				case "delete":
 					new DelFileDao().delFile(path);
-					sendString.append(httpHeader);
-					sendString.append("Content-Type:text/html\r\n\r\n");
 					sendString.append("Delete Success").append("\r\n");
 					break;
 				case "create":
-					sendString.append(httpHeader);
-					sendString.append("Content-Type:text/html\r\n\r\n");
 					sendString.append(new DelFileDao().createFile(name, isFile)).append("\r\n");
 					break;
 				//				case "file":
-				////					sendString.append(httpHeader);
-				////					sendString.append("Content-Type:text/html\r\n\r\n");
+				//					sendString.append(httpHeader);
+				//					sendString.append("Content-Type:text/html\r\n\r\n");
 				//					sendString.append(path).append("\r\n");
 				//					break;
 				case "search":
