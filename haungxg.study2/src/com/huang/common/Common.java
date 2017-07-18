@@ -166,7 +166,7 @@ public class Common {
 		}
 	}
 
-	public String updateFileContext(String path, String context) {
+	public static String updateFileContext(String path, String context) {
 		File file = new File(path);
 		FileOutputStream fos = null;
 		int index = 0;
@@ -175,10 +175,10 @@ public class Common {
 			byte bytes[] = new byte[4096];
 			while (index < length) {
 				if (length < index + 4096) {
-					bytes = (context.substring(index, length).getBytes());
+					bytes = (context.substring(index, length).getBytes("UTF-8"));
 				}
 				else {
-					bytes = (context.substring(index, index + 4096)).getBytes();
+					bytes = (context.substring(index, index + 4096)).getBytes("UTF-8");
 				}
 				int bytesLength = bytes.length;
 				index += bytesLength;

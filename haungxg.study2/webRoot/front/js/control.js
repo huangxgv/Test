@@ -71,7 +71,7 @@ TableList.prototype.editBtnCommit = function(parentPath, thisName) {
 		"isFile" : "",
 		"context" : content
 	}
-	tableList.ajaxRequest("http://127.0.0.1:8080", "GET", jsonParame, "update");
+	tableList.ajaxRequest("http://127.0.0.1:8080/servlet/com.huang.servlet.Update", "POST", jsonParame, "update");
 	var contextBackground = document.getElementById("file_background");
 	var fileContext = document.getElementById("file_context");
 	contextBackground.style.display = "none";
@@ -338,7 +338,7 @@ TableList.prototype.ajaxRequest = function(url, methodtype, parameter, funType, 
 	else {
 		var stringParameter = JSON.stringify(parameter);
 		xhr.open(methodtype, url, true);
-		xhr.setRequestHeader("Content-type", "application/json ");
+		xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		data = stringParameter;
 	}
 	xhr.send(data);
@@ -353,7 +353,7 @@ TableList.prototype.ajaxRequest = function(url, methodtype, parameter, funType, 
 						break;
 					case "delete" :
 						var path = document.getElementById("source").innerHTML;
-						alert(xhr.responseText);
+//						alert(xhr.responseText);
 						tableList.init(path);
 						break;
 					case "file" :
@@ -361,7 +361,7 @@ TableList.prototype.ajaxRequest = function(url, methodtype, parameter, funType, 
 						break;
 					case "update" :
 						var path = document.getElementById("source").innerHTML;
-						alert(xhr.responseText);
+//						alert(xhr.responseText);
 						tableList.init(path);
 						break;
 					case "create" :
@@ -370,7 +370,7 @@ TableList.prototype.ajaxRequest = function(url, methodtype, parameter, funType, 
 						tableList.init(path);
 						break;
 					default :
-						alert("未知错误！");
+//						alert("未知错误！");
 						break;
 				}
 			}

@@ -32,8 +32,9 @@ public class Request implements ServletRequest {
 		return uri;
 	}
 
-	public String doPost(String requestString) {
-		return null;
+	public void doPost(String requestString) {
+		String[] requestArr = requestString.split("\n\r");
+		FileBean.parma = requestArr[1];
 	}
 
 	private String parseUri(String requestString) {
@@ -50,7 +51,10 @@ public class Request implements ServletRequest {
 			index2 = requestString.indexOf(' ', index1 + 1);
 			if (index2 > index1) {
 				pramArr = (requestString.substring(index1 + 1, index2)).split("[?]");
-				if (pramArr.length > 1) {
+				if (requestString.startsWith("POST")) {
+					doPost(requestString);
+				}
+				else if (pramArr.length > 1) {
 					FileBean.parma = pramArr[1];
 				}
 				else {
@@ -63,10 +67,8 @@ public class Request implements ServletRequest {
 	}
 
 	public void parse() {
-		// Read a set of characters from the socket  
-		StringBuffer request = new StringBuffer(2048);
 		int i;
-		byte[] buffer = new byte[2048];
+		byte[] buffer = new byte[8192];
 		try {
 			i = input.read(buffer);
 		}
@@ -74,11 +76,20 @@ public class Request implements ServletRequest {
 			e.printStackTrace();
 			i = -1;
 		}
-		for (int j = 0; j < i; j++) {
-			request.append((char) buffer[j]);
+		String request = null;
+		try {
+			request = new String(buffer, "UTF-8");
 		}
-		System.out.print(request.toString());
-		uri = parseUri(request.toString());
+		catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+		}
+		try {
+			System.out.print(URLDecoder.decode(request, "utf-8"));
+		}
+		catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		uri = parseUri(request);
 	}
 
 	public Object getAttribute(String attribute) {
@@ -122,13 +133,6 @@ public class Request implements ServletRequest {
 	}
 
 	public Enumeration getLocales() {
-		return null;
-	}
-
-	public String getParameter(String requestString) {
-		if (requestString.startsWith("POST")) {
-			return doPost(requestString);
-		}
 		return null;
 	}
 
@@ -238,6 +242,12 @@ public class Request implements ServletRequest {
 
 	@Override
 	public AsyncContext startAsync(ServletRequest arg0, ServletResponse arg1) throws IllegalStateException {
+		return null;
+	}
+
+	@Override
+	public String getParameter(String arg0) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 }
