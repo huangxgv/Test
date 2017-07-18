@@ -6,23 +6,21 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.Properties;
 
-import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 
 import com.huang.beans.FileBean;
 import com.huang.common.Common;
+import com.huang.server.Request;
+import com.huang.server.Response;
 
-public class Dowload implements Servlet {
+public class Download implements Servlet {
 	@Override
-	public void init(ServletConfig config) throws ServletException {
+	public void init() {
 		System.out.println("init");
 	}
 
 	@Override
-	public void service(ServletRequest request, ServletResponse response) throws ServletException, IOException {
+	public void service(Request request, Response response) throws IOException {
 		System.out.println("from service");
 		PrintWriter out = response.getWriter();
 		String contentType = null;
@@ -33,7 +31,7 @@ public class Dowload implements Servlet {
 		try {
 			in = getClass().getResourceAsStream("/data.properties");
 			prop.load(in);
-			contentType = prop.getProperty("Watch");
+			contentType = prop.getProperty("Download");
 			filePath = prop.getProperty("path");
 		}
 		catch (IOException e) {
@@ -51,8 +49,8 @@ public class Dowload implements Servlet {
 		}
 		out.println("HTTP/1.1 200 OK\r\n" + contentType + "\r\n");
 		System.out.println(filePath + "/" + FileBean.parma);
-		String path = filePath + "/" + FileBean.parma;
-		File file = new File(filePath + "/" + FileBean.parma);
+		String path = filePath + "/" + parma;
+		File file = new File(path);
 		if (file == null) {
 			return;
 		}
@@ -69,6 +67,7 @@ public class Dowload implements Servlet {
 		out.close();
 	}
 
+	@Override
 	public void destroy() {
 		System.out.println("destroy");
 	}

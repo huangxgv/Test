@@ -29,7 +29,7 @@ TableList.prototype.doubleClick = function(tr) {
 				return;
 			}
 			else {
-				window.open("http://127.0.0.1:8080/{\"type\":\"download\",\"name\":\"\",\"path\":\"" + path + "\",\"isFile\":true,\"context\":\"\"}");
+				window.open("http://127.0.0.1:8080/servlet/com.huang.servlet.Download?" + path);
 				return;
 			}
 		}
@@ -97,7 +97,7 @@ TableList.prototype.editPageShow = function(textArea, contextBackground, fileCon
 	contextBackground.style.display = "block";
 	fileContext.style.display = "block";
 	var btnGroup = document.getElementById("btn_group");
-//	var jsonParame = "{\"type\":\"create\",\"name\":\"\",\"path\":\"" + path + "\",\"isFile\":\"\",\"context\":\"\"}";
+	// var jsonParame = "{\"type\":\"create\",\"name\":\"\",\"path\":\"" + path + "\",\"isFile\":\"\",\"context\":\"\"}";
 	// var jsonParame = {
 	// "type" : thisName,
 	// "name" : "",
@@ -160,7 +160,7 @@ TableList.prototype.menuList = function(menu, trArr) {
 				liElementArr[1].setAttribute("class", "");
 				liElementArr[1].onclick = function(e) {
 					var path = document.getElementById("source").innerHTML.substring(1) + thisName;
-					window.open("http://127.0.0.1:8080/servlet/com.huang.servlet.Dowload?"+path);
+					window.open("http://127.0.0.1:8080/servlet/com.huang.servlet.Download?" + path);
 				}
 			}
 			liElementArr[2].onclick = function() {
@@ -170,7 +170,7 @@ TableList.prototype.menuList = function(menu, trArr) {
 					}
 				}
 				else {
-						tableList.ajaxRequest("http://127.0.0.1:8080/servlet/com.huang.servlet.Delete", "GET", path, "delete");
+					tableList.ajaxRequest("http://127.0.0.1:8080/servlet/com.huang.servlet.Delete", "GET", path, "delete");
 				}
 			}
 			liElementArr[3].onclick = function() {
@@ -366,7 +366,7 @@ TableList.prototype.ajaxRequest = function(url, methodtype, parameter, funType, 
 						break;
 					case "create" :
 						var path = document.getElementById("source").innerHTML;
-						alert(xhr.responseText);
+						// alert(xhr.responseText);
 						tableList.init(path);
 						break;
 					default :
@@ -400,9 +400,14 @@ TableList.prototype.fileCreate = function(flag) {
 	var index = select.selectedIndex;
 	var value = select.options[index].value;
 	var path = document.getElementById("source").innerHTML;
-	path = path.substring(0, path.length - 1);
-	var jsonParame = "{\"type\":\"create\",\"name\":\"" + fileNameValue + "\",\"path\":\"" + path + "\",\"isFile\":\"" + value + "\",\"context\":\"\"}";
-	tableList.ajaxRequest("http://127.0.0.1:8080/create", "GET", jsonParame, "create");
+	if (path.indexOf('/') == 0) {
+		path = path.substring(1, path.length);
+	}
+	else {
+		path = path.substring(0, path.length);
+	}
+	var param = path + fileNameValue + "&" + value;
+	tableList.ajaxRequest("http://127.0.0.1:8080/servlet/com.huang.servlet.Create", "GET", param, "create");
 	fileNameNode.value = "";
 }
 

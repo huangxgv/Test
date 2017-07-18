@@ -13,6 +13,9 @@ import java.util.Properties;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletResponse;
 
+//import javax.servlet.ServletOutputStream;
+//import javax.servlet.ServletResponse;
+
 public class Response implements ServletResponse {
 	private static final int BUFFER_SIZE = 1024;
 

@@ -6,9 +6,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLStreamHandler;
 
-import javax.servlet.Servlet;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import com.huang.servlet.Servlet;
 
 public class ServletProcessor {
 	public void process(Request request, Response response) {
@@ -38,7 +36,7 @@ public class ServletProcessor {
 		try {
 			//跑一下反射，初始化一个实例，然后调用这个servlet的service方法。
 			servlet = (Servlet) myClass.newInstance();
-			servlet.service((ServletRequest) request, (ServletResponse) response);
+			servlet.service(request, response);
 		}
 		catch (Exception e) {
 			System.out.println(e.toString());

@@ -11,7 +11,7 @@ import com.huang.common.Common;
 import com.huang.server.Request;
 import com.huang.server.Response;
 
-public class Delete implements Servlet {
+public class Create implements Servlet {
 	@Override
 	public void init() {
 		System.out.println("init");
@@ -29,7 +29,7 @@ public class Delete implements Servlet {
 		try {
 			in = getClass().getResourceAsStream("/data.properties");
 			prop.load(in);
-			contentType = prop.getProperty("Delete");
+			contentType = prop.getProperty("Create");
 			filePath = prop.getProperty("path");
 		}
 		catch (IOException e) {
@@ -47,21 +47,20 @@ public class Delete implements Servlet {
 		}
 		out.println("HTTP/1.1 200 OK\r\n" + contentType + "\r\n");
 		System.out.println(filePath + "/" + FileBean.parma);
-		String path = filePath + "/" + FileBean.parma;
-		File file = new File(filePath + "/" + FileBean.parma);
+		String[] parArr = (FileBean.parma).split("&");
+		String path = filePath + "/" + parArr[0];
+		File file = new File(path);
 		if (file == null) {
 			return;
 		}
-		if (!file.exists()) {
+		if (file.exists()) {
 			return;
 		}
-		if (file.isDirectory()) {
-			Common.deleteAllFilesOfDir(file);
-			out.print("delete success");
+		if ("2".equals(parArr[1])) {
+			Common.createDir(file);
 		}
-		if (file.isFile()) {
-			Common.deleteAllFilesOfDir(file);
-			out.print("delete success");
+		else {
+			Common.createFile(file);
 		}
 		out.flush();
 		out.close();

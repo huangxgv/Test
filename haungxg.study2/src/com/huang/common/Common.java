@@ -72,16 +72,17 @@ public class Common {
 			e.printStackTrace();
 		}
 		finally {
-				try {
+			try {
 				if (fi != null) {
 					fi.close();
 				}
-				}
-				catch (IOException e) {
-				}
 			}
-		out.print(new String(buffer));
+			catch (IOException e) {
+			}
 		}
+		out.print(new String(buffer));
+	}
+
 	/**
 	 * 返回文件信息Json字符串
 	 * <pre>
@@ -207,7 +208,7 @@ public class Common {
 	 * @param filePath
 	 * @return
 	 */
-	public String createFile(File file) {
+	public static String createFile(File file) {
 		try {
 			if (file.createNewFile()) {
 				return "create success";
@@ -227,7 +228,7 @@ public class Common {
 	 * @param destDirName
 	 * @return
 	 */
-	public String createDir(File dir) {
+	public static String createDir(File dir) {
 		if (dir.mkdirs()) {
 			return "create success";
 		}
