@@ -113,8 +113,10 @@ button {
 }
 
 #source {
+	position:absolute;
 	display: inline-block;
 	margin-left: 20px;
+	width:1200px;
 }
 
 #path button {

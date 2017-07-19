@@ -23,7 +23,13 @@ TableList.prototype.doubleClick = function(tr) {
 	tr.ondblclick = function() {
 		var fileSizeFlag = tr.childNodes[1].innerHTML;
 		var thisName = this.childNodes[0].innerHTML;
-		var path = document.getElementById("source").innerHTML.substring(1) + thisName;
+		var index = 1;
+		// if (typeof(path) == "undefined") {
+		// var path2 = document.getElementById("source").childNodes[2].innerHTML;
+		// index = 2;
+		// }
+		var select = document.getElementById("source");
+		var path = typeof(select.childNodes[1].innerHTML) == "undefined" ? select.childNodes[2].innerHTML + thisName : select.childNodes[1].innerHTML + thisName;
 		if (!(this.childNodes[0].getAttribute("name") == "folder")) {
 			if (!confirm("确认下载文件?")) {
 				return;
@@ -35,7 +41,7 @@ TableList.prototype.doubleClick = function(tr) {
 		}
 		tableList.init(path);
 		if (!isFile) {
-			document.getElementById("source").innerHTML += (thisName + "/");
+			(document.getElementById("source").childNodes[1]).innerHTML += (thisName + "/");
 		}
 	}
 }
@@ -135,7 +141,7 @@ TableList.prototype.menuList = function(menu, trArr) {
 			var textArea = document.getElementById("file_txt");
 			var firstChildTd = this.childNodes[0];
 			var thisName = firstChildTd.innerHTML;
-			var parentPath = document.getElementById("source").innerHTML;
+			var parentPath = document.getElementById("source").childNodes[1].innerHTML;
 			var path = parentPath + thisName;
 			var folderFlag = firstChildTd.getAttribute("name") == "folder" ? true : false;
 			var contextBackground = document.getElementById("file_background");
@@ -145,7 +151,7 @@ TableList.prototype.menuList = function(menu, trArr) {
 			liElementArr[0].onclick = function() {
 				if (folderFlag) {
 					tableList.init(path);
-					document.getElementById("source").innerHTML += (thisName + "/");
+					document.getElementById("source").childNodes[1].innerHTML += (thisName + "/");
 				}
 				else {
 					tableList.editPageShow(textArea, contextBackground, fileContext, path, thisName, inputTitle, true);
@@ -159,7 +165,7 @@ TableList.prototype.menuList = function(menu, trArr) {
 			else {
 				liElementArr[1].setAttribute("class", "");
 				liElementArr[1].onclick = function(e) {
-					var path = document.getElementById("source").innerHTML.substring(1) + thisName;
+					var path = document.getElementById("source").childNodes[1].innerHTML.substring(1) + thisName;
 					window.open("http://127.0.0.1:8080/servlet/com.huang.servlet.Download?" + path);
 				}
 			}
@@ -205,14 +211,19 @@ TableList.prototype.menuList = function(menu, trArr) {
  * 返回按钮点击事件
  */
 TableList.prototype.retBtn = function() {
-	var path = document.getElementById("source").innerHTML;
+	var path = document.getElementById("source").childNodes[1].innerHTML;
+	var index = 1;
+	if (typeof(path) == "undefined") {
+		var path = document.getElementById("source").childNodes[2].innerHTML;
+		index = 2;
+	}
 	if (path == "/" || path == "") {
 		return;
 	}
 	path = path.substring(0, path.length - 1);
 	var lastpath = path.substring(0, path.lastIndexOf("/"));
 	tableList.init(lastpath)
-	document.getElementById("source").innerHTML = lastpath + "/";
+	document.getElementById("source").childNodes[index].innerHTML = lastpath + "/";
 }
 
 TableList.prototype.fileLength = function(len) {
@@ -318,6 +329,27 @@ TableList.prototype.getajaxHttp = function() {
 	}
 	return xmlHttp;
 }
+TableList.prototype.doParam = function(responseText) {
+	if ("" == responseText) {
+		return;
+	}
+	var selectElement = document.getElementById("source");
+	var resultArr = responseText.split(",");
+	var length = resultArr.length;
+	selectElement.length = 0;
+	for (var i = 0; i < length - 1; i++) {
+		var option = document.createElement("option");
+		var res = resultArr[i];
+		option.setAttribute("name", i)
+		option.setAttribute("value", i)
+		// option.setAttribute("name",res)
+		var textNode = document.createTextNode(res);
+		option.appendChild(textNode);
+		selectElement.appendChild(option);
+		// document.getElementById("source").childNodes[i + 1].innerHTML = resultArr[i];
+		// alert(document.getElementById("source").childNodes[1].innerHTML)
+	}
+}
 /**
  * 发送ajax请求,获取服务器处理数据
  * url--url
@@ -352,25 +384,32 @@ TableList.prototype.ajaxRequest = function(url, methodtype, parameter, funType, 
 						tableList.showList(xhr.responseText, orderType);
 						break;
 					case "delete" :
-						var path = document.getElementById("source").innerHTML;
-//						alert(xhr.responseText);
+						var path = document.getElementById("source").childNodes[1].innerHTML;
+						// alert(xhr.responseText);
 						tableList.init(path);
 						break;
 					case "file" :
 						document.getElementById("file_txt").value = xhr.responseText;
 						break;
+					case "search" :
+						var length = xhr.responseText.length;
+						var param = xhr.responseText.substring(0, length - 1);
+						tableList.ajaxRequest("http://127.0.0.1:8080/servlet/com.huang.servlet.Watch", "GET", param, "watch");
+						// document.getElementById("source").childNodes[1].innerHTML = xhr.responseText + "/";
+						tableList.doParam(xhr.responseText);
+						break;
 					case "update" :
-						var path = document.getElementById("source").innerHTML;
-//						alert(xhr.responseText);
+						var path = document.getElementById("source").childNodes[1].innerHTML;
+						// alert(xhr.responseText);
 						tableList.init(path);
 						break;
 					case "create" :
-						var path = document.getElementById("source").innerHTML;
+						var path = document.getElementById("source").childNodes[1].innerHTML;
 						// alert(xhr.responseText);
 						tableList.init(path);
 						break;
 					default :
-//						alert("未知错误！");
+						// alert("未知错误！");
 						break;
 				}
 			}
@@ -399,7 +438,7 @@ TableList.prototype.fileCreate = function(flag) {
 	var select = document.getElementById("select");
 	var index = select.selectedIndex;
 	var value = select.options[index].value;
-	var path = document.getElementById("source").innerHTML;
+	var path = document.getElementById("source").childNodes[1].innerHTML;
 	if (path.indexOf('/') == 0) {
 		path = path.substring(1, path.length);
 	}
@@ -409,6 +448,17 @@ TableList.prototype.fileCreate = function(flag) {
 	var param = path + fileNameValue + "&" + value;
 	tableList.ajaxRequest("http://127.0.0.1:8080/servlet/com.huang.servlet.Create", "GET", param, "create");
 	fileNameNode.value = "";
+}
+
+TableList.prototype.searchFile = function() {
+	var value = document.getElementById("searchFileName").value;
+	if (value == "") {
+		return;
+	}
+	var path = document.getElementById("source").childNodes[1].innerHTML;
+	var param = path + "&" + value;
+	tableList.ajaxRequest("http://127.0.0.1:8080/servlet/com.huang.servlet.Search", "GET", param, "search");
+	document.getElementById("searchFileName").value = "";
 }
 
 /**
@@ -425,6 +475,8 @@ TableList.prototype.addEvent = function() {
 	for (var i = 0, len = trArr.length; i < len; i++) {
 		tableList.doubleClick(trArr[i]);
 	}
+	// 搜索按钮点击事件
+	document.getElementById("searchBtn").onclick = tableList.searchFile;
 	// 返回按钮点击事件
 	document.getElementById("return").onclick = tableList.retBtn;
 	// 点击创建文件（夹）

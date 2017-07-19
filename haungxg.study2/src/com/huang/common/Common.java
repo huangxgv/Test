@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Objects;
 
 /**
  * 工具类
@@ -264,6 +265,23 @@ public class Common {
 			}
 		}
 		catch (IOException e) {
+		}
+	}
+
+	public static void getPath(int len, StringBuilder result, String root, String fileName) {
+		File file = new File(root);
+		File[] files = file.listFiles();
+		if (Objects.equals(files, null)) {
+			return;
+		}
+		String[] liStrings = file.list();
+		for (int i = 0, length = liStrings.length; i < length; i++) {
+			if (Objects.equals(liStrings[i], fileName)) {
+				result.append(root.substring(len)).append(',');
+			}
+			else if (files[i].isDirectory()) {
+				getPath(len, result, files[i].getAbsolutePath(), fileName);
+			}
 		}
 	}
 }
