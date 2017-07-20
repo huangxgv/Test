@@ -419,7 +419,10 @@ TableList.prototype.init = function(path) {
 	}
 	tableList.ajaxRequest("http://127.0.0.1:8080/servlet/com.huang.servlet.Watch", "GET", path, "watch");
 }
-
+/**
+ * 创建文件和文件夹
+ * @param {} flag
+ */
 TableList.prototype.fileCreate = function(flag) {
 	var fileNameNode = document.getElementById("createFileName");
 	var fileNameValue = fileNameNode.value;
@@ -454,6 +457,9 @@ TableList.prototype.searchFile = function() {
 	tableList.ajaxRequest("http://127.0.0.1:8080/servlet/com.huang.servlet.Search", "GET", value, "search");
 	document.getElementById("searchFileName").value = "";
 }
+/**
+ * 改变下拉列表选择的选项触发函数
+ */
 TableList.prototype.selectChange = function() {
 	select = document.getElementById("source");
 	var index = select.selectedIndex + 1;

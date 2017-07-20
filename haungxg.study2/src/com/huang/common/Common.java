@@ -81,7 +81,9 @@ public class Common {
 			catch (IOException e) {
 			}
 		}
-		out.print(new String(buffer));
+		String reString = new String(buffer);
+		out.write(reString, 0, reString.length());
+		//		out.print(reString);
 	}
 
 	/**
