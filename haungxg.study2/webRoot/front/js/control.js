@@ -227,6 +227,62 @@ TableList.prototype.fileLength = function(len) {
 		return len.toFixed(3) + company[index];
 	}
 }
+
+TableList.prototype.setFileFlag = function(creadeNodesJson, tdNode1) {
+	if (creadeNodesJson.isFile == "true") {
+		var classStyle = (creadeNodesJson.name).split(".");
+		var fileNameLength = classStyle.length;
+		switch (classStyle[fileNameLength - 1]) {
+			case "txt" :
+				tdNode1.setAttribute("class", "file_type_txt");
+				break;
+			case "pdf" :
+				tdNode1.setAttribute("class", "file_type_pdf");
+				break;
+			case "zip" :
+				tdNode1.setAttribute("class", "file_type_zip");
+				break;
+			case "docx" :
+				tdNode1.setAttribute("class", "file_type_doc");
+				break;
+			case "js" :
+				tdNode1.setAttribute("class", "file_type_js");
+				break;
+			case "css" :
+				tdNode1.setAttribute("class", "file_type_css");
+				break;
+			case "java" :
+				tdNode1.setAttribute("class", "file_type_java");
+				break;
+			case "xlsx" :
+				tdNode1.setAttribute("class", "file_type_xls");
+				break;
+			case "exe" :
+				tdNode1.setAttribute("class", "file_type_exe");
+				break;
+			case "html" :
+				tdNode1.setAttribute("class", "file_type_html");
+				break;
+			case "png" :
+				tdNode1.setAttribute("class", "file_type_png");
+				break;
+			case "jpg" :
+				tdNode1.setAttribute("class", "file_type_jpg");
+				break;
+			case "mp3" :
+				tdNode1.setAttribute("class", "file_type_mp3");
+				break;
+			default :
+				tdNode1.setAttribute("class", "file_type_default");
+				break;
+		}
+	}
+	else {
+		tdNode1.setAttribute("class", "file_type_folder");
+		tdNode1.setAttribute("name", "folder");
+	}
+}
+
 /**
  * 向tbody中添加node节点
  * <pre>
@@ -251,10 +307,11 @@ TableList.prototype.appendNodes = function(list, resultJson, orderType) {
 		var tdNode1 = document.createElement("td");
 		var creadeNodesJson = resultArr[index];
 		var creadeNodesJsonName = creadeNodesJson.name;
-		if (!(creadeNodesJson.isFile == "true")) {
-			tdNode1.setAttribute("name", "folder");
-			// tdNode1.setAttribute("backgroundImage","url(foldeImg.png)")
-		}
+		// if (!(creadeNodesJson.isFile == "true")) {
+		// tdNode1.setAttribute("name", "folder");
+		// tdNode1.setAttribute("class","file_type_folder")
+		// }
+		tableList.setFileFlag(creadeNodesJson, tdNode1);
 		var tdNode2 = document.createElement("td");
 		var tdNode3 = document.createElement("td");
 		var textNode1 = document.createTextNode(creadeNodesJsonName);
@@ -426,14 +483,17 @@ TableList.prototype.init = function(path) {
 TableList.prototype.fileCreate = function(flag) {
 	var fileNameNode = document.getElementById("createFileName");
 	var fileNameValue = fileNameNode.value;
+	alert(fileNameValue)
 	if (fileNameValue.indexOf("/") != -1) {
 		alert("名称不合格");
 		return;
 	}
-	var select = document.getElementById("select");
-	var index = select.selectedIndex + 1;
-	var value = select.options[index].value;
-	var path = select.childNodes[index].innerHTML;
+	var selectPath = document.getElementById("source");
+	var selectType = document.getElementById("select");
+	var index1 = selectPath.selectedIndex + 1;
+	var index2 = selectType.selectedIndex * 2 + 1;
+	var value = selectType.childNodes[index2].value;
+	var path = selectPath.childNodes[index1].innerHTML;
 	if (path.indexOf('/') == 0) {
 		path = path.substring(1, path.length);
 	}
@@ -441,6 +501,7 @@ TableList.prototype.fileCreate = function(flag) {
 		path = path.substring(0, path.length);
 	}
 	var param = path + fileNameValue + "&" + value;
+	alert(param);
 	tableList.ajaxRequest("http://127.0.0.1:8080/servlet/com.huang.servlet.Create", "GET", param, "create");
 	fileNameNode.value = "";
 }
@@ -453,7 +514,7 @@ TableList.prototype.searchFile = function() {
 	select = document.getElementById("source");
 	var index = select.selectedIndex + 1;
 	var path = select.childNodes[index].innerHTML;
-//	var param = value;
+	// var param = value;
 	tableList.ajaxRequest("http://127.0.0.1:8080/servlet/com.huang.servlet.Search", "GET", value, "search");
 	document.getElementById("searchFileName").value = "";
 }
@@ -464,6 +525,7 @@ TableList.prototype.selectChange = function() {
 	select = document.getElementById("source");
 	var index = select.selectedIndex + 1;
 	var path = select.childNodes[index].innerHTML;
+	// document.getElementById("img").src="127.0.0.1:8080/front/source/cssImg.png";
 	tableList.init(path);
 }
 

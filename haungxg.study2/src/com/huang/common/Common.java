@@ -7,7 +7,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Objects;
 
@@ -41,7 +40,7 @@ public class Common {
 	 * @throws FileNotFoundException 如果文件不存在或者传入的是目录
 	 * @throws NullPointerException  如果传入的是null
 	 */
-	public static void fileRead(PrintWriter out, String fileInput) throws FileNotFoundException {
+	public static void fileRead(OutputStream out, String fileInput) throws FileNotFoundException {
 		File file = new File(fileInput);
 		if (file.isDirectory()) {
 			return;
@@ -81,9 +80,12 @@ public class Common {
 			catch (IOException e) {
 			}
 		}
-		String reString = new String(buffer);
-		out.write(reString, 0, reString.length());
-		//		out.print(reString);
+		try {
+			out.write(buffer, 0, buffer.length);
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**

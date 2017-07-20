@@ -76,7 +76,6 @@ body {
 	color: black;
 	text-align: center;
 }*/
-
 #order:hover #childMenu li:hover {
 	background: #D9DADC;
 	color: blue;
@@ -113,10 +112,10 @@ button {
 }
 
 #source {
-	position:absolute;
+	position: absolute;
 	display: inline-block;
 	margin-left: 20px;
-	width:1200px;
+	width: 1200px;
 }
 
 #path button {
@@ -142,7 +141,8 @@ button {
 	display: inline-block;
 	margin-left: 50px;
 }
-#top_tools .topCreate input{
+
+#top_tools .topCreate input {
 	
 }
 
@@ -194,6 +194,11 @@ button {
 
 #bodyList tr td:nth-child(1) {
 	cursor: pointer;
+	padding-left:30px;
+	word-break:keep-all;
+	white-space:nowrap;
+	overflow:hidden;
+	text-overflow:ellipsis;
 }
 
 #bodyList tr td:nth-child(1):hover {
@@ -265,4 +270,94 @@ button {
 
 #file_context .see button:nth-of-type(1) {
 	margin-left: 230px;
+}
+
+#bodyList .file_type_pdf {
+	background-image: url("../source/pdfImg.png");
+	background-repeat: no-repeat;
+	background-size: 30px 30px;
+}
+
+#bodyList .file_type_folder {
+	background-image: url("../source/folderImg.png");
+	background-repeat: no-repeat;
+	background-size: 30px 30px;
+}
+
+#bodyList .file_type_zip {
+	background-image: url("../source/zipImg.png");
+	background-repeat: no-repeat;
+	background-size: 30px 30px;
+}
+
+#bodyList .file_type_doc {
+	background-image: url("../source/docImg.png");
+	background-repeat: no-repeat;
+	background-size: 30px 30px;
+}
+
+#bodyList .file_type_js {
+	background-image: url("../source/jsImg.png");
+	background-repeat: no-repeat;
+	background-size: 30px 30px;
+}
+
+#bodyList .file_type_css {
+	background-image: url("../source/cssImg.png");
+	background-repeat: no-repeat;
+	background-size: 30px 30px;
+}
+
+#bodyList .file_type_html {
+	background-image: url("../source/htmlImg.png");
+	background-repeat: no-repeat;
+	background-size: 30px 30px;
+}
+
+#bodyList .file_type_png {
+	background-image: url("../source/pngImg.png");
+	background-repeat: no-repeat;
+	background-size: 30px 30px;
+}
+
+#bodyList .file_type_txt {
+	background-image: url("../source/txtImg.png");
+	background-repeat: no-repeat;
+	background-size: 30px 30px;
+}
+
+#bodyList .file_type_java {
+	background-image: url("../source/javaImg.png");
+	background-repeat: no-repeat;
+	background-size: 30px 30px;
+}
+
+#bodyList .file_type_xls {
+	background-image: url("../source/xlsImg.png");
+	background-repeat: no-repeat;
+	background-size: 30px 30px;
+}
+
+#bodyList .file_type_exe {
+	background-image: url("../source/exeImg.png");
+	background-repeat: no-repeat;
+	background-size: 30px 30px;
+}
+
+#bodyList .file_type_jpg {
+	background-image: url("../source/jpgImg.png");
+	background-repeat: no-repeat;
+	background-size: 30px 30px;
+}
+
+#bodyList .file_type_mp3 {
+	background-image: url("../source/mp3Img.png");
+	background-repeat: no-repeat;
+	background-size: 30px 30px;
+}
+
+#bodyList .file_type_default {
+	background-image: url("../source/defaultImg.png");
+	background-repeat: no-repeat;
+	background-size: 30px 30px;
 }

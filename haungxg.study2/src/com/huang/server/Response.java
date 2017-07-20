@@ -10,8 +10,6 @@ import java.io.PrintWriter;
 import java.util.Locale;
 import java.util.Properties;
 
-import javax.servlet.ServletOutputStream;
-
 public class Response {
 	private static final int BUFFER_SIZE = 1024;
 
@@ -79,8 +77,8 @@ public class Response {
 		return null;
 	}
 
-	public ServletOutputStream getOutputStream() throws IOException {
-		return null;
+	public OutputStream getOutputStream() throws IOException {
+		return output;
 	}
 
 	public PrintWriter getWriter() throws IOException {

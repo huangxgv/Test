@@ -3,7 +3,7 @@ package com.huang.servlet;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
+import java.io.OutputStream;
 import java.util.Properties;
 
 import com.huang.beans.FileBean;
@@ -19,8 +19,8 @@ public class Create implements Servlet {
 
 	@Override
 	public void service(Request request, Response response) throws IOException {
-		System.out.println("from service");
-		PrintWriter out = response.getWriter();
+		System.out.println("from service create");
+		OutputStream out = response.getOutputStream();
 		String contentType = null;
 		String filePath = null;
 		String parma = FileBean.parma == null ? "" : FileBean.parma;
@@ -45,7 +45,7 @@ public class Create implements Servlet {
 				}
 			}
 		}
-		out.println("HTTP/1.1 200 OK\r\n" + contentType + "\r\n");
+		out.write(("HTTP/1.1 200 OK\r\n" + contentType + "\r\n").getBytes("UTF-8"));
 		System.out.println(filePath + "/" + FileBean.parma);
 		String[] parArr = (FileBean.parma).split("&");
 		String path = filePath + "/" + parArr[0];
@@ -57,10 +57,10 @@ public class Create implements Servlet {
 			return;
 		}
 		if ("2".equals(parArr[1])) {
-			Common.createDir(file);
+			out.write((Common.createDir(file)).getBytes("UTF-8"));
 		}
 		else {
-			Common.createFile(file);
+			out.write((Common.createFile(file)).getBytes("UTF-8"));
 		}
 		out.flush();
 		out.close();
