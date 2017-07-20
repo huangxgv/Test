@@ -277,7 +277,7 @@ public class Common {
 		String[] liStrings = file.list();
 		for (int i = 0, length = liStrings.length; i < length; i++) {
 			if (Objects.equals(liStrings[i], fileName)) {
-				result.append(root.substring(len)).append(',');
+				result.append(root.substring(len)).append('/').append(',');
 			}
 			else if (files[i].isDirectory()) {
 				getPath(len, result, files[i].getAbsolutePath(), fileName);

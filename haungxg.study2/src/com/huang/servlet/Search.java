@@ -45,21 +45,12 @@ public class Search implements Servlet {
 				}
 			}
 		}
-		String[] paramArr = parma.split("&");
 		StringBuilder sb = new StringBuilder();
-		Common.getPath(filePath.length(), sb, filePath + paramArr[0], paramArr[1]);
+		Common.getPath(filePath.length(), sb, filePath, parma);
 		if (Objects.equals(sb, null)) {
 			return;
 		}
-		//		int len = filePath.length();
-		//		sb.replace(0, len + 1, "");
-		//		String reString = new String(sb);
 		filePath = filePath.replace("/", "\\");
-		//		String[] resultArr = reString.split(filePath);
-		//		for (int i = 0, length = resultArr.length; i < length; i++) {
-		//			resultArr[i] = resultArr[i].replace("\\", "/");
-		//		}
-		//		reString = reString.replace("\\", "/");
 		System.out.println("&&&&&&&&" + sb);
 		String result = new String(sb);
 		out.print("HTTP/1.1 200 OK\r\n" + contentType + "\r\n");

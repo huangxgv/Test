@@ -23,13 +23,9 @@ TableList.prototype.doubleClick = function(tr) {
 	tr.ondblclick = function() {
 		var fileSizeFlag = tr.childNodes[1].innerHTML;
 		var thisName = this.childNodes[0].innerHTML;
-		var index = 1;
-		// if (typeof(path) == "undefined") {
-		// var path2 = document.getElementById("source").childNodes[2].innerHTML;
-		// index = 2;
-		// }
 		var select = document.getElementById("source");
-		var path = typeof(select.childNodes[1].innerHTML) == "undefined" ? select.childNodes[2].innerHTML + thisName : select.childNodes[1].innerHTML + thisName;
+		var index = select.selectedIndex + 1;
+		var path = select.childNodes[index].innerHTML + thisName;
 		if (!(this.childNodes[0].getAttribute("name") == "folder")) {
 			if (!confirm("确认下载文件?")) {
 				return;
@@ -41,7 +37,7 @@ TableList.prototype.doubleClick = function(tr) {
 		}
 		tableList.init(path);
 		if (!isFile) {
-			(document.getElementById("source").childNodes[1]).innerHTML += (thisName + "/");
+			(select.childNodes[index]).innerHTML += (thisName + "/");
 		}
 	}
 }
@@ -103,14 +99,6 @@ TableList.prototype.editPageShow = function(textArea, contextBackground, fileCon
 	contextBackground.style.display = "block";
 	fileContext.style.display = "block";
 	var btnGroup = document.getElementById("btn_group");
-	// var jsonParame = "{\"type\":\"create\",\"name\":\"\",\"path\":\"" + path + "\",\"isFile\":\"\",\"context\":\"\"}";
-	// var jsonParame = {
-	// "type" : thisName,
-	// "name" : "",
-	// "path" : path,
-	// "isFile" : "",
-	// "context" : ""
-	// };
 	if (disEdit) {
 		textArea.setAttribute("readOnly", disEdit);
 		btnGroup.setAttribute("class", "");
@@ -141,7 +129,9 @@ TableList.prototype.menuList = function(menu, trArr) {
 			var textArea = document.getElementById("file_txt");
 			var firstChildTd = this.childNodes[0];
 			var thisName = firstChildTd.innerHTML;
-			var parentPath = document.getElementById("source").childNodes[1].innerHTML;
+			var select = document.getElementById("source");
+			var index = select.selectedIndex + 1;
+			var parentPath = select.childNodes[index].innerHTML;
 			var path = parentPath + thisName;
 			var folderFlag = firstChildTd.getAttribute("name") == "folder" ? true : false;
 			var contextBackground = document.getElementById("file_background");
@@ -151,7 +141,7 @@ TableList.prototype.menuList = function(menu, trArr) {
 			liElementArr[0].onclick = function() {
 				if (folderFlag) {
 					tableList.init(path);
-					document.getElementById("source").childNodes[1].innerHTML += (thisName + "/");
+					select.childNodes[index].innerHTML += (thisName + "/");
 				}
 				else {
 					tableList.editPageShow(textArea, contextBackground, fileContext, path, thisName, inputTitle, true);
@@ -165,7 +155,7 @@ TableList.prototype.menuList = function(menu, trArr) {
 			else {
 				liElementArr[1].setAttribute("class", "");
 				liElementArr[1].onclick = function(e) {
-					var path = document.getElementById("source").childNodes[1].innerHTML.substring(1) + thisName;
+					var path = select.childNodes[index].innerHTML.substring(1) + thisName;
 					window.open("http://127.0.0.1:8080/servlet/com.huang.servlet.Download?" + path);
 				}
 			}
@@ -211,19 +201,16 @@ TableList.prototype.menuList = function(menu, trArr) {
  * 返回按钮点击事件
  */
 TableList.prototype.retBtn = function() {
-	var path = document.getElementById("source").childNodes[1].innerHTML;
-	var index = 1;
-	if (typeof(path) == "undefined") {
-		var path = document.getElementById("source").childNodes[2].innerHTML;
-		index = 2;
-	}
+	var select = document.getElementById("source");
+	var index = select.selectedIndex + 1;
+	var path = select.childNodes[index].innerHTML;
 	if (path == "/" || path == "") {
 		return;
 	}
 	path = path.substring(0, path.length - 1);
 	var lastpath = path.substring(0, path.lastIndexOf("/"));
 	tableList.init(lastpath)
-	document.getElementById("source").childNodes[index].innerHTML = lastpath + "/";
+	select.childNodes[index].innerHTML = lastpath + "/";
 }
 
 TableList.prototype.fileLength = function(len) {
@@ -333,21 +320,26 @@ TableList.prototype.doParam = function(responseText) {
 	if ("" == responseText) {
 		return;
 	}
+	var parendNode = document.getElementById("path");
 	var selectElement = document.getElementById("source");
+	path.removeChild(selectElement);
 	var resultArr = responseText.split(",");
 	var length = resultArr.length;
-	selectElement.length = 0;
+	var select = document.createElement("select");
+	var brNode = document.createElement("br");
+	select.appendChild(brNode);
+	select.setAttribute("id", "source");
 	for (var i = 0; i < length - 1; i++) {
 		var option = document.createElement("option");
 		var res = resultArr[i];
-		option.setAttribute("name", i)
-		option.setAttribute("value", i)
+		option.setAttribute("name", i);
+		option.setAttribute("value", i);
+		// option.innerHTML = resultArr[i];
 		// option.setAttribute("name",res)
 		var textNode = document.createTextNode(res);
 		option.appendChild(textNode);
-		selectElement.appendChild(option);
-		// document.getElementById("source").childNodes[i + 1].innerHTML = resultArr[i];
-		// alert(document.getElementById("source").childNodes[1].innerHTML)
+		select.appendChild(option);
+		parendNode.appendChild(select);
 	}
 }
 /**
@@ -394,9 +386,9 @@ TableList.prototype.ajaxRequest = function(url, methodtype, parameter, funType, 
 					case "search" :
 						var length = xhr.responseText.length;
 						var param = xhr.responseText.substring(0, length - 1);
-						tableList.ajaxRequest("http://127.0.0.1:8080/servlet/com.huang.servlet.Watch", "GET", param, "watch");
-						// document.getElementById("source").childNodes[1].innerHTML = xhr.responseText + "/";
 						tableList.doParam(xhr.responseText);
+						var path = document.getElementById("source").childNodes[1].innerHTML;
+						tableList.ajaxRequest("http://127.0.0.1:8080/servlet/com.huang.servlet.Watch", "GET", path, "watch");
 						break;
 					case "update" :
 						var path = document.getElementById("source").childNodes[1].innerHTML;
@@ -436,9 +428,9 @@ TableList.prototype.fileCreate = function(flag) {
 		return;
 	}
 	var select = document.getElementById("select");
-	var index = select.selectedIndex;
+	var index = select.selectedIndex + 1;
 	var value = select.options[index].value;
-	var path = document.getElementById("source").childNodes[1].innerHTML;
+	var path = select.childNodes[index].innerHTML;
 	if (path.indexOf('/') == 0) {
 		path = path.substring(1, path.length);
 	}
@@ -455,10 +447,18 @@ TableList.prototype.searchFile = function() {
 	if (value == "") {
 		return;
 	}
-	var path = document.getElementById("source").childNodes[1].innerHTML;
-	var param = path + "&" + value;
-	tableList.ajaxRequest("http://127.0.0.1:8080/servlet/com.huang.servlet.Search", "GET", param, "search");
+	select = document.getElementById("source");
+	var index = select.selectedIndex + 1;
+	var path = select.childNodes[index].innerHTML;
+//	var param = value;
+	tableList.ajaxRequest("http://127.0.0.1:8080/servlet/com.huang.servlet.Search", "GET", value, "search");
 	document.getElementById("searchFileName").value = "";
+}
+TableList.prototype.selectChange = function() {
+	select = document.getElementById("source");
+	var index = select.selectedIndex + 1;
+	var path = select.childNodes[index].innerHTML;
+	tableList.init(path);
 }
 
 /**
@@ -469,12 +469,15 @@ TableList.prototype.addEvent = function() {
 	var fileNameList = document.getElementById("bodyList");
 	var trArr = fileNameList.getElementsByTagName("tr");
 	var thead = document.getElementById("fileInfo");
+	var select = document.getElementById("source");
 	// 右键菜单
 	tableList.menuList(menu, trArr);
 	// 双击进入目录下一页
 	for (var i = 0, len = trArr.length; i < len; i++) {
 		tableList.doubleClick(trArr[i]);
 	}
+	// 下拉列表选择事件
+	select.onchange = tableList.selectChange;
 	// 搜索按钮点击事件
 	document.getElementById("searchBtn").onclick = tableList.searchFile;
 	// 返回按钮点击事件
