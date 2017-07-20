@@ -11,12 +11,8 @@ import java.util.Locale;
 import java.util.Properties;
 
 import javax.servlet.ServletOutputStream;
-import javax.servlet.ServletResponse;
 
-//import javax.servlet.ServletOutputStream;
-//import javax.servlet.ServletResponse;
-
-public class Response implements ServletResponse {
+public class Response {
 	private static final int BUFFER_SIZE = 1024;
 
 	public static final String WEB_ROOT = System.getProperty("user.dir") + File.separator + "webRoot";
@@ -40,7 +36,6 @@ public class Response implements ServletResponse {
 		this.request = request;
 	}
 
-	/* This method is used to serve static pages */
 	public void sendStaticResource() throws IOException {
 		byte[] bytes = new byte[BUFFER_SIZE];
 		FileInputStream fis = null;
@@ -135,22 +130,8 @@ public class Response implements ServletResponse {
 		}
 	}
 
-	@Override
-	public void setLocale(Locale locale) {
-	}
-
-	@Override
 	public String getContentType() {
 		return contentType;
-	}
-
-	@Override
-	public void setCharacterEncoding(String arg0) {
-
-	}
-
-	@Override
-	public void setContentLengthLong(long arg0) {
 	}
 
 }

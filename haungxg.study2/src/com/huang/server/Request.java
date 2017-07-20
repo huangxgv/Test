@@ -5,21 +5,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.Enumeration;
 import java.util.Locale;
-import java.util.Map;
-
-import javax.servlet.AsyncContext;
-import javax.servlet.DispatcherType;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletInputStream;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 
 import com.huang.beans.FileBean;
 
-public class Request implements ServletRequest {
+public class Request {
 	private InputStream input;
 
 	private static String uri;
@@ -96,15 +86,7 @@ public class Request implements ServletRequest {
 		return null;
 	}
 
-	public Enumeration getAttributeNames() {
-		return null;
-	}
-
 	public String getRealPath(String path) {
-		return null;
-	}
-
-	public RequestDispatcher getRequestDispatcher(String path) {
 		return null;
 	}
 
@@ -124,23 +106,7 @@ public class Request implements ServletRequest {
 		return null;
 	}
 
-	public ServletInputStream getInputStream() throws IOException {
-		return null;
-	}
-
 	public Locale getLocale() {
-		return null;
-	}
-
-	public Enumeration getLocales() {
-		return null;
-	}
-
-	public Map getParameterMap() {
-		return null;
-	}
-
-	public Enumeration getParameterNames() {
 		return null;
 	}
 
@@ -183,71 +149,5 @@ public class Request implements ServletRequest {
 	}
 
 	public void setCharacterEncoding(String encoding) throws UnsupportedEncodingException {
-	}
-
-	@Override
-	public String getLocalAddr() {
-		return null;
-	}
-
-	@Override
-	public String getLocalName() {
-		return null;
-	}
-
-	@Override
-	public int getLocalPort() {
-		return 0;
-	}
-
-	@Override
-	public int getRemotePort() {
-		return 0;
-	}
-
-	@Override
-	public AsyncContext getAsyncContext() {
-		return null;
-	}
-
-	@Override
-	public long getContentLengthLong() {
-		return 0;
-	}
-
-	@Override
-	public DispatcherType getDispatcherType() {
-		return null;
-	}
-
-	@Override
-	public ServletContext getServletContext() {
-		return null;
-	}
-
-	@Override
-	public boolean isAsyncStarted() {
-		return false;
-	}
-
-	@Override
-	public boolean isAsyncSupported() {
-		return false;
-	}
-
-	@Override
-	public AsyncContext startAsync() throws IllegalStateException {
-		return null;
-	}
-
-	@Override
-	public AsyncContext startAsync(ServletRequest arg0, ServletResponse arg1) throws IllegalStateException {
-		return null;
-	}
-
-	@Override
-	public String getParameter(String arg0) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }
